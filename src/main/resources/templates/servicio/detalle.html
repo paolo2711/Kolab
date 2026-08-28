@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+      th:replace="~{layout :: base(~{::title}, ~{::main})}">
+<head>
+    <title>Servicio en curso · KOLAB</title>
+</head>
+<body>
+
+<main>
+    <div th:replace="~{fragmentos/componentes :: aviso}"></div>
+
+    <p class="k-migas"><a th:href="@{/mis-solicitudes}">&larr; Mi actividad</a></p>
+
+    <div class="k-encabezado">
+        <h1 th:text="${servicio.titulo}">Título del servicio</h1>
+        <p>
+            <span th:text="${servicio.categoria}">Idiomas</span> ·
+            con <span th:text="${servicio.contraparte.nombre}">Luis Mendoza</span> ·
+            <span th:text="${servicio.fechaInicio}">empezó hace 4 días</span>
+        </p>
+    </div>
+
+    <div class="k-dos-columnas k-principal-ancha">
+        <div>
+            <div class="k-tarjeta" style="margin-bottom:1.5rem;">
+                <div class="k-cabecera-precio">
+                    <div>
+                        <span th:replace="~{fragmentos/componentes :: estado(${servicio.estado})}"></span>
+                        <p style="margin:0.9rem 0 0; color:var(--tinta-2);" th:if="${servicio.enCurso()}">
+                            Ya pueden coordinar por el chat. Cuando terminen, se cierra el servicio y
+                            cada uno califica al otro.</p>
+                        <p style="margin:0.9rem 0 0; color:var(--tinta-2);" th:unless="${servicio.enCurso()}">
+                            Este servicio ya está cerrado y calificado.</p>
+                    </div>
+                    <div class="k-bloque-precio">
+                        <div class="k-etiqueta">Monto acordado</div>
+                        <span th:replace="~{fragmentos/componentes :: precio(${servicio.montoFinal}, 'k-precio-xl')}"></span>
+                    </div>
+                </div>
+
+                <dl class="k-datos" style="margin-top:1.5rem;">
+                    <dt>Comisión de la plataforma</dt>
+                    <dd><span th:replace="~{fragmentos/componentes :: precio(${servicio.comision}, 'k-precio-m')}"></span></dd>
+                    <dt>Neto para el experto</dt>
+                    <dd><span th:replace="~{fragmentos/componentes :: precio(${servicio.neto}, 'k-precio-m')}"></span></dd>
+                </dl>
+
+                <div class="k-acciones" th:if="${servicio.enCurso()}">
+                    <a class="k-btn k-btn-principal" th:href="@{/servicios/{id}/cerrar(id=${servicio.id})}">
+                        Cerrar el servicio y calificar</a>
+                </div>
+            </div>
+
+            <div class="k-tarjeta" style="margin-bottom:1.5rem;">
+                <h2 class="k-tarjeta-titulo">En qué va</h2>
+                <div th:replace="~{fragmentos/componentes :: hitos(${servicio.hitos()})}"></div>
+            </div>
+
+            <div class="k-tarjeta">
+                <h2 class="k-tarjeta-titulo">Con quién estás trabajando</h2>
+                <div style="display:flex; align-items:center; gap:0.9rem;">
+                    <span th:replace="~{fragmentos/componentes :: cara(${servicio.contraparte}, '2.9rem')}"></span>
+                    <div>
+                        <div class="k-oferta-nombre" th:text="${servicio.contraparte.nombre}">Luis Mendoza</div>
+                        <div class="k-oferta-meta">
+                            <span th:replace="~{fragmentos/componentes :: nota(${servicio.calificacionContraparte})}"></span>
+                            · <span th:text="${servicio.serviciosContraparte}">33</span> servicios ·
+                            miembro desde <span th:text="${servicio.miembroDesde}">marzo de 2026</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="k-chat">
+            <div class="k-chat-cabecera">
+                <span th:replace="~{fragmentos/componentes :: cara(${servicio.contraparte}, '2rem')}"></span>
+                Mensajes con <span th:text="${servicio.contraparte.nombre}">Luis Mendoza</span>
+            </div>
+            <div class="k-chat-hilo">
+                <div th:each="m : ${servicio.mensajes}" class="k-burbuja"
+                     th:classappend="${m.mio} ? 'k-burbuja-mio' : 'k-burbuja-otro'">
+                    <span th:text="${m.contenido}">Mensaje</span>
+                    <span class="k-burbuja-hora" th:text="${m.hora}">10:12</span>
+                </div>
+            </div>
+            <form class="k-chat-envio" th:action="@{/mensajes}" method="get">
+                <input type="text" name="contenido" placeholder="Escribe un mensaje" autocomplete="off">
+                <button type="submit" class="k-btn k-btn-oscuro">Enviar</button>
+            </form>
+        </div>
+    </div>
+</main>
+
+</body>
+</html>

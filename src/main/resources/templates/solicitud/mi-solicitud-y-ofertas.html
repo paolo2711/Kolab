@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layout :: base(~{::title}, ~{::main})}">
+<head>
+    <title>Mi solicitud y sus ofertas · KOLAB</title>
+</head>
+<body>
+
+<main>
+    <div th:replace="~{fragmentos/componentes :: aviso}"></div>
+
+    <p class="k-migas"><a th:href="@{/mis-solicitudes}">&larr; Mis solicitudes</a></p>
+
+    <div class="k-encabezado">
+        <h1 th:text="${solicitud.titulo}">Título de la solicitud</h1>
+        <p>
+            <span th:text="${solicitud.categoria}">Música</span> ·
+            <span th:text="${solicitud.modalidad.etiqueta}">Presencial</span>
+            <span th:if="${solicitud.distrito}"> · <span th:text="${solicitud.distrito}">Jesús María</span></span>
+            · para el <span th:text="${#temporals.format(solicitud.fechaDeseada, 'dd/MM/yyyy')}">12/09/2026</span>
+        </p>
+    </div>
+
+    <div class="k-dos-columnas k-principal-ancha">
+        <div>
+            <div class="k-tarjeta" style="margin-bottom:1.5rem;">
+                <span th:replace="~{fragmentos/componentes :: estado(${solicitud.estado})}"></span>
+                <p style="margin:0.9rem 0 0; color:var(--tinta-2);" th:text="${solicitud.descripcion}">Descripción</p>
+            </div>
+
+            <div class="k-tarjeta" th:if="${#lists.isEmpty(solicitud.ofertas)}">
+                <h2 class="k-tarjeta-titulo">Todavía sin ofertas</h2>
+                <p class="k-vacio" style="margin:0;">Los expertos de
+                    <span th:text="${solicitud.categoria}">la categoría</span> ya ven tu solicitud.
+                    Puede tardar unas horas o unos días. Cuando alguien oferte te aparece acá.</p>
+            </div>
+
+            <div th:unless="${#lists.isEmpty(solicitud.ofertas)}">
+                <h2 class="k-tarjeta-titulo">
+                    Ofertas recibidas (<span th:text="${#lists.size(solicitud.ofertas)}">3</span>)
+                </h2>
+
+                <div class="k-lista">
+                    <div class="k-oferta-caja" th:each="o, i : ${solicitud.ofertas}">
+                        <div class="k-oferta" th:classappend="${i.first} ? 'k-oferta-destacada'">
+                            <span th:replace="~{fragmentos/componentes :: cara(${o.persona}, '2.6rem')}"></span>
+                            <div class="k-oferta-datos">
+                                <div class="k-oferta-nombre" th:text="${o.persona.nombre}">Luis Mendoza</div>
+                                <div class="k-oferta-meta">
+                                    <span th:replace="~{fragmentos/componentes :: nota(${o.calificacion})}"></span>
+                                    · <span th:text="${o.servicios}">32</span> servicios
+                                </div>
+                                <div class="k-oferta-meta" style="margin-top:0.25rem;" th:text="${o.mensaje}">Mensaje</div>
+                            </div>
+                            <span th:replace="~{fragmentos/componentes :: precio(${o.monto}, 'k-precio-g')}"></span>
+
+                            <button type="button" class="k-chat-boton" th:attr="data-hilo=${o.id}"
+                                    th:title="'Mensajes con ' + ${o.persona.nombre}">
+                                <i class="bi bi-chat-dots"></i>
+                                <span class="k-chat-punto" th:if="${o.tieneSinLeer()}" th:text="${o.sinLeer}">2</span>
+                            </button>
+
+                            <form th:if="${solicitud.admiteOfertas()}"
+                                  th:action="@{/mis-solicitudes/{id}/ofertas/{idOferta}(id=${solicitud.id}, idOferta=${o.id})}"
+                                  method="post">
+                                <button type="submit" class="k-btn k-btn-principal k-btn-chico">Aceptar</button>
+                            </form>
+                        </div>
+
+                        <div class="k-hilo" th:id="'hilo-' + ${o.id}" hidden>
+                            <div class="k-chat-hilo">
+                                <div th:each="m : ${hilos.get(o.id)}" class="k-burbuja"
+                                     th:classappend="${m.mio} ? 'k-burbuja-mio' : 'k-burbuja-otro'">
+                                    <span th:text="${m.contenido}">Mensaje</span>
+                                    <span class="k-burbuja-hora" th:text="${m.hora}">10:12</span>
+                                </div>
+                                <p class="k-vacio" style="margin:0;" th:if="${#lists.isEmpty(hilos.get(o.id))}">
+                                    Todavía no se han escrito.</p>
+                            </div>
+                            <form class="k-chat-envio" th:action="@{/mensajes/{id}(id=${o.id})}" method="get">
+                                <input type="text" name="contenido" placeholder="Escribe un mensaje" autocomplete="off">
+                                <button type="submit" class="k-btn k-btn-oscuro">Enviar</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="k-tarjeta">
+            <div class="k-etiqueta">Tu precio propuesto</div>
+            <span th:replace="~{fragmentos/componentes :: precio(${solicitud.precioPropuesto}, 'k-precio-xl')}"></span>
+            <div class="k-solicitud-ofertas" style="margin-bottom:1.4rem;"
+                 th:text="'Publicada ' + ${solicitud.publicada}">Publicada hace 2 horas</div>
+
+            <h2 class="k-tarjeta-titulo">En qué va</h2>
+            <div th:replace="~{fragmentos/componentes :: hitos(${solicitud.hitos()})}"></div>
+        </div>
+    </div>
+
+    <script th:inline="none">
+        document.querySelectorAll('.k-chat-boton[data-hilo]').forEach(function (boton) {
+            boton.addEventListener('click', function () {
+                var hilo = document.getElementById('hilo-' + boton.dataset.hilo);
+                var abierto = !hilo.hidden;
+                document.querySelectorAll('.k-hilo').forEach(function (h) { h.hidden = true; });
+                document.querySelectorAll('.k-chat-boton').forEach(function (b) { b.classList.remove('activo'); });
+                if (!abierto) {
+                    hilo.hidden = false;
+                    boton.classList.add('activo');
+                }
+            });
+        });
+    </script>
+</main>
+
+</body>
+</html>

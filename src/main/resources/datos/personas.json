@@ -1,0 +1,172 @@
+[
+  {
+    "id": 1,
+    "nombre": "Luis Mendoza",
+    "iniciales": "LM",
+    "distrito": "Pueblo Libre",
+    "calificacion": 4.8,
+    "servicios": 32,
+    "categorias": [
+      1,
+      3
+    ],
+    "titular": "Profesor de guitarra y de inglés conversacional",
+    "ultimaResena": "Muy paciente. En cuatro clases ya sacaba canciones completas.",
+    "verificado": true,
+    "cara": 12
+  },
+  {
+    "id": 2,
+    "nombre": "Ana Ramírez",
+    "iniciales": "AR",
+    "distrito": "Surco",
+    "calificacion": 4.9,
+    "servicios": 51,
+    "categorias": [
+      2
+    ],
+    "titular": "Gasfitería y reparaciones del hogar",
+    "ultimaResena": "Lo dejó sin goteo y limpió todo antes de irse.",
+    "verificado": true,
+    "cara": 45
+  },
+  {
+    "id": 3,
+    "nombre": "Carlos Talavera",
+    "iniciales": "CT",
+    "distrito": "Pueblo Libre",
+    "calificacion": 4.5,
+    "servicios": 12,
+    "categorias": [
+      1,
+      4
+    ],
+    "titular": "Guitarra criolla y diseño de marca",
+    "ultimaResena": "Buen trabajo, aunque se demoró un día más de lo acordado.",
+    "verificado": false,
+    "cara": 0
+  },
+  {
+    "id": 4,
+    "nombre": "Nadia Flores",
+    "iniciales": "NF",
+    "distrito": "Miraflores",
+    "calificacion": 4.9,
+    "servicios": 62,
+    "categorias": [
+      3
+    ],
+    "titular": "Inglés conversacional y preparación de entrevistas",
+    "ultimaResena": "En dos meses pasé la entrevista. Explica clarísimo.",
+    "verificado": true,
+    "cara": 47
+  },
+  {
+    "id": 5,
+    "nombre": "Paula Lizana",
+    "iniciales": "PL",
+    "distrito": "Barranco",
+    "calificacion": 4.9,
+    "servicios": 77,
+    "categorias": [
+      4
+    ],
+    "titular": "Identidad de marca para emprendimientos",
+    "ultimaResena": "Tres rondas de cambios y quedó mejor de lo que imaginaba.",
+    "verificado": true,
+    "cara": 20
+  },
+  {
+    "id": 6,
+    "nombre": "Hugo Ochoa",
+    "iniciales": "HO",
+    "distrito": "San Miguel",
+    "calificacion": 4.7,
+    "servicios": 23,
+    "categorias": [
+      5
+    ],
+    "titular": "Cámaras de seguridad y redes",
+    "ultimaResena": "Dejó todo configurado en el celular antes de irse.",
+    "verificado": true,
+    "cara": 0
+  },
+  {
+    "id": 7,
+    "nombre": "Jorge Vílchez",
+    "iniciales": "JV",
+    "distrito": "Surco",
+    "calificacion": 4.6,
+    "servicios": 28,
+    "categorias": [
+      2
+    ],
+    "titular": "Gasfitería de emergencia",
+    "ultimaResena": "Vino el mismo día que lo llamé.",
+    "verificado": false,
+    "cara": 52
+  },
+  {
+    "id": 8,
+    "nombre": "Sofía Bermúdez",
+    "iniciales": "SB",
+    "distrito": "Lince",
+    "calificacion": 4.7,
+    "servicios": 19,
+    "categorias": [
+      3,
+      6
+    ],
+    "titular": "Inglés y matemática escolar",
+    "ultimaResena": "Mi hijo subió de nota en un bimestre.",
+    "verificado": true,
+    "cara": 9
+  },
+  {
+    "id": 9,
+    "nombre": "María Pineda",
+    "iniciales": "MP",
+    "distrito": "Surco",
+    "calificacion": 4.6,
+    "servicios": 18,
+    "categorias": [
+      2
+    ],
+    "titular": "Gasfitería y arreglos de emergencia",
+    "ultimaResena": "Vino el mismo día y dejó todo limpio.",
+    "verificado": true,
+    "cara": 31
+  },
+  {
+    "id": 10,
+    "nombre": "Rosa Salazar",
+    "iniciales": "RS",
+    "distrito": "Lince",
+    "calificacion": 4.4,
+    "servicios": 9,
+    "categorias": [
+      2,
+      7
+    ],
+    "titular": "Pintura de interiores y acabados",
+    "ultimaResena": "Buen precio, aunque se demoró un día más de lo hablado.",
+    "verificado": false,
+    "cara": 0
+  },
+  {
+    "id": 11,
+    "nombre": "Diego Ynga",
+    "iniciales": "DY",
+    "distrito": "Magdalena del Mar",
+    "calificacion": 4.9,
+    "servicios": 41,
+    "categorias": [
+      4,
+      5
+    ],
+    "titular": "Diseñador gráfico, marcas y empaques",
+    "ultimaResena": "Entendió la idea a la primera y mandó tres propuestas.",
+    "verificado": true,
+    "cara": 0
+  }
+]

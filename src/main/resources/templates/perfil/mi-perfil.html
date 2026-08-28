@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layout :: base(~{::title}, ~{::main})}">
+<head>
+    <title>Mi perfil · KOLAB</title>
+</head>
+<body>
+
+<main>
+    <div class="k-perfil-cabecera">
+        <span class="k-avatar" th:text="${usuario.iniciales}">PR</span>
+
+        <div class="k-perfil-datos">
+            <div class="k-perfil-nombre" th:text="${usuario.nombreCompleto}">Paolo Rodríguez Paredes</div>
+            <div class="k-perfil-meta">
+                <span th:text="${perfil.ubicacion}">Jesús María, Lima</span> ·
+                miembro desde <span th:text="${perfil.miembroDesde}">agosto de 2026</span>
+            </div>
+
+            <div class="k-perfil-nota" th:unless="${perfil.sinCalificar()}">
+                <span th:replace="~{fragmentos/componentes :: nota(${perfil.calificacion})}"></span>
+                <span>de 5 · <span th:text="${perfil.calificaciones}">7</span> calificaciones</span>
+            </div>
+            <div class="k-perfil-nota" th:if="${perfil.sinCalificar()}">
+                Todavía sin calificaciones.
+            </div>
+
+            <div class="k-sellos">
+                <span class="k-sello"><i class="bi bi-check-circle-fill"></i> Correo verificado</span>
+                <span class="k-sello"><i class="bi bi-check-circle-fill"></i> Celular verificado</span>
+                <span class="k-sello"><i class="bi bi-lightning-charge-fill"></i>
+                    Responde el <span th:text="${perfil.tasaRespuesta}">96</span> % de los mensajes</span>
+            </div>
+        </div>
+
+        <button type="button" class="k-btn k-btn-linea k-btn-chico" disabled>Editar perfil</button>
+    </div>
+
+    <div class="k-dos-columnas k-principal-ancha">
+        <div>
+            <div class="k-tarjeta" style="margin-bottom:1.5rem;">
+                <h2 class="k-tarjeta-titulo">Sobre mí</h2>
+                <p style="margin:0; color:var(--tinta-2);" th:text="${perfil.descripcion}">Descripción</p>
+            </div>
+
+            <div class="k-tarjeta" style="margin-bottom:1.5rem;">
+                <div class="k-titulo-fila">
+                    <h2 class="k-tarjeta-titulo" style="margin:0;">Lo que sé hacer</h2>
+                    <a th:href="@{/bienvenida}">Cambiar</a>
+                </div>
+
+                <div class="k-chips" th:if="${!#lists.isEmpty(misCategorias)}">
+                    <span class="k-chip" th:each="c : ${misCategorias}" th:text="${c.nombre}">Categoría</span>
+                </div>
+                <p class="k-vacio" style="margin:0;" th:if="${#lists.isEmpty(misCategorias)}">
+                    Todavía no dijiste qué sabes hacer. Cuando lo hagas, aquí lo ve quien mire tu perfil
+                    y a ti te empiezan a llegar solicitudes de esas categorías.</p>
+            </div>
+
+            <div class="k-tarjeta">
+                <h2 class="k-tarjeta-titulo">
+                    Lo que dicen de mí (<span th:text="${#lists.size(perfil.resenas)}">3</span>)
+                </h2>
+
+                <div class="k-resena" th:each="r : ${perfil.resenas}">
+                    <div class="k-resena-cab">
+                        <span class="k-inicial" style="width:2.1rem; height:2.1rem; font-size:0.75rem;"
+                              th:text="${r.iniciales}">LM</span>
+                        <div>
+                            <div class="k-oferta-nombre" th:text="${r.autor}">Luis Mendoza</div>
+                            <div class="k-oferta-meta">
+                                <span th:replace="~{fragmentos/componentes :: nota(${r.puntaje})}"></span>
+                                <span th:text="${r.fecha}">hace 3 días</span>
+                            </div>
+                        </div>
+                    </div>
+                    <p class="k-resena-texto" th:text="${r.comentario}">Comentario</p>
+                    <div class="k-resena-servicio" th:text="${r.servicio}">Servicio</div>
+                </div>
+            </div>
+        </div>
+
+        <div>
+            <div class="k-metricas">
+                <div class="k-metrica">
+                    <div class="k-metrica-valor" th:text="${perfil.serviciosCerrados}">7</div>
+                    <div class="k-metrica-nombre">Servicios concretados</div>
+                </div>
+                <div class="k-metrica">
+                    <div class="k-metrica-valor" th:text="${perfil.calificaciones}">7</div>
+                    <div class="k-metrica-nombre">Calificaciones recibidas</div>
+                </div>
+                <div class="k-metrica" th:if="${perfil.solicitudesPublicadas > 0}">
+                    <div class="k-metrica-valor" th:text="${perfil.solicitudesPublicadas}">12</div>
+                    <div class="k-metrica-nombre">Solicitudes publicadas</div>
+                </div>
+                <div class="k-metrica" th:if="${!#lists.isEmpty(misCategorias)}">
+                    <div class="k-metrica-valor" th:text="${#lists.size(misCategorias)}">2</div>
+                    <div class="k-metrica-nombre">Categorías en las que trabajo</div>
+                </div>
+            </div>
+
+            <div class="k-tarjeta">
+                <h2 class="k-tarjeta-titulo">Datos de la cuenta</h2>
+                <dl class="k-datos">
+                    <dt>Correo</dt>
+                    <dd th:text="${usuario.username}">correo@ejemplo.com</dd>
+                    <dt>Ubicación</dt>
+                    <dd th:text="${perfil.ubicacion}">Jesús María, Lima</dd>
+                </dl>
+            </div>
+        </div>
+    </div>
+</main>
+
+</body>
+</html>

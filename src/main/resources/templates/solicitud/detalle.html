@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layout :: base(~{::title}, ~{::main})}">
+<head>
+    <title>Detalle de la solicitud y oferta · KOLAB</title>
+</head>
+<body>
+
+<main>
+    <p class="k-migas"><a th:href="@{/solicitudes}">&larr; Todas las solicitudes</a></p>
+
+    <div class="k-encabezado">
+        <h1 th:text="${solicitud.titulo}">Título de la solicitud</h1>
+        <p>
+            <span th:text="${solicitud.categoria}">Música</span> ·
+            <span th:text="${solicitud.modalidad.etiqueta}">Presencial</span>
+            <span th:if="${solicitud.distrito}"> · <span th:text="${solicitud.distrito}">Jesús María</span></span>
+            · para el <span th:text="${#temporals.format(solicitud.fechaDeseada, 'dd/MM/yyyy')}">12/09/2026</span>
+        </p>
+    </div>
+
+    <div class="k-dos-columnas k-principal-ancha">
+        <div>
+            <div class="k-tarjeta" style="margin-bottom:1.5rem;">
+                <span th:replace="~{fragmentos/componentes :: estado(${solicitud.estado})}"></span>
+                <p style="margin:0.9rem 0 0; color:var(--tinta-2);" th:text="${solicitud.descripcion}">Descripción</p>
+            </div>
+
+            <div class="k-tarjeta" th:if="${miOferta == null}">
+                <h2 class="k-tarjeta-titulo">Envía tu oferta</h2>
+                <form th:action="@{/solicitudes/{id}/ofertas(id=${solicitud.id})}" th:object="${ofertaForm}"
+                      method="post" novalidate>
+                    <div class="k-campos">
+                        <div class="k-campo">
+                            <label for="monto">Por cuánto lo haces</label>
+                            <div class="k-prefijo">
+                                <span>S/</span>
+                                <input type="number" id="monto" th:field="*{monto}" step="0.50" min="10"
+                                       th:placeholder="${#numbers.formatDecimal(solicitud.precioPropuesto, 1, 'COMMA', 2, 'POINT')}"
+                                       th:classappend="${#fields.hasErrors('monto')} ? 'k-mal'">
+                            </div>
+                            <span class="k-error" th:if="${#fields.hasErrors('monto')}" th:errors="*{monto}"></span>
+                            <span class="k-pista" th:unless="${#fields.hasErrors('monto')}">Pon el mismo monto del cliente para aceptar su precio.</span>
+                        </div>
+                        <div class="k-campo">
+                            <label for="mensaje">Mensaje <span class="k-opcional">(opcional)</span></label>
+                            <input type="text" id="mensaje" th:field="*{mensaje}"
+                                   placeholder="Puedo empezar este sábado."
+                                   th:classappend="${#fields.hasErrors('mensaje')} ? 'k-mal'">
+                            <span class="k-error" th:if="${#fields.hasErrors('mensaje')}" th:errors="*{mensaje}"></span>
+                        </div>
+                    </div>
+                    <div class="k-acciones">
+                        <button type="submit" class="k-btn k-btn-principal">Enviar oferta</button>
+                    </div>
+                </form>
+            </div>
+
+            <div class="k-tarjeta" th:if="${miOferta != null}">
+                <h2 class="k-tarjeta-titulo">Ya ofertaste aquí</h2>
+                <p class="k-vacio">Propusiste
+                    <b>S/ <span th:text="${#numbers.formatDecimal(miOferta.monto, 1, 'COMMA', 2, 'POINT')}">80.00</span></b>.
+                    Ahora le toca al cliente decidir. Si te escribe, te aparece en Mensajes.</p>
+                <a class="k-btn k-btn-linea k-btn-chico" th:href="@{/mis-ofertas}">Ver mis ofertas</a>
+            </div>
+
+            <h2 class="k-tarjeta-titulo" style="margin-top:1.75rem;">
+                Con quién compites (<span th:text="${#lists.size(solicitud.ofertas)}">3</span>)
+            </h2>
+            <div class="k-lista">
+                <div class="k-oferta" th:each="o, i : ${solicitud.ofertas}">
+                    <span th:replace="~{fragmentos/componentes :: cara(${o.persona}, '2.6rem')}"></span>
+                    <div class="k-oferta-datos">
+                        <div class="k-oferta-nombre" th:text="${o.persona.nombre}">Luis Mendoza</div>
+                        <div class="k-oferta-meta">
+                            <span th:replace="~{fragmentos/componentes :: nota(${o.calificacion})}"></span>
+                            · <span th:text="${o.servicios}">32</span> servicios
+                        </div>
+                    </div>
+                    <span th:replace="~{fragmentos/componentes :: precio(${o.monto}, 'k-precio-g')}"></span>
+                </div>
+            </div>
+        </div>
+
+        <div class="k-tarjeta">
+            <div class="k-etiqueta">Precio propuesto por el cliente</div>
+            <span th:replace="~{fragmentos/componentes :: precio(${solicitud.precioPropuesto}, 'k-precio-xl')}"></span>
+            <div class="k-solicitud-ofertas" style="margin-bottom:1.4rem;"
+                 th:text="'Publicada ' + ${solicitud.publicada}">Publicada hace 2 horas</div>
+
+            <dl class="k-datos">
+                <dt>Categoría</dt>
+                <dd th:text="${solicitud.categoria}">Música</dd>
+                <dt>Modalidad</dt>
+                <dd th:text="${solicitud.modalidad.etiqueta}">Presencial</dd>
+                <dt th:if="${solicitud.distrito}">Distrito</dt>
+                <dd th:if="${solicitud.distrito}" th:text="${solicitud.distrito}">Jesús María</dd>
+                <dt>Para el</dt>
+                <dd th:text="${#temporals.format(solicitud.fechaDeseada, 'dd/MM/yyyy')}">12/09/2026</dd>
+                <dt>Ofertas</dt>
+                <dd th:text="${#lists.size(solicitud.ofertas)}">3</dd>
+            </dl>
+        </div>
+    </div>
+</main>
+
+</body>
+</html>

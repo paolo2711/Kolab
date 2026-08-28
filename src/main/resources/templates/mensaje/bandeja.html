@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layout :: base(~{::title}, ~{::main})}">
+<head>
+    <title>Mensajes · KOLAB</title>
+</head>
+<body>
+
+<main>
+    <div class="k-encabezado">
+        <h1>Mensajes</h1>
+        <p>Cada conversación vive dentro de la solicitud a la que pertenece.</p>
+    </div>
+
+    <div class="k-bandeja">
+        <a class="k-charla" th:each="c : ${conversaciones}" th:href="@{${c.enlace}}"
+           th:classappend="${c.sinLeer} ? 'k-charla-nuevo' : ''">
+            <span th:replace="~{fragmentos/componentes :: cara(${c.con}, '2.9rem')}"></span>
+
+            <span class="k-charla-cuerpo">
+                <span class="k-charla-cima">
+                    <span class="k-charla-nombre" th:text="${c.con.nombre}">Luis Mendoza</span>
+                    <span class="k-charla-hora" th:text="${c.hace}">10:12</span>
+                </span>
+                <span class="k-charla-sobre" th:text="${c.titulo}">Clases de guitarra</span>
+                <span class="k-charla-ultimo" th:text="${c.ultimo}">Último mensaje</span>
+            </span>
+
+            <span class="k-charla-punto" th:if="${c.sinLeer}" title="Sin leer"></span>
+        </a>
+    </div>
+</main>
+
+</body>
+</html>

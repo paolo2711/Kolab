@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layout :: base(~{::title}, ~{::main})}">
+<head>
+    <title>Registro e inicio de sesión · KOLAB</title>
+</head>
+<body>
+
+<main>
+    <div class="k-encabezado">
+        <h1>Ingresa a KOLAB</h1>
+        <p>Publica lo que necesitas con el precio que tú propones, o gana ofreciendo lo que sabes hacer.</p>
+    </div>
+
+    <div class="k-dos-columnas">
+        <div class="k-tarjeta">
+
+            <div class="k-aviso" th:if="${aviso}" th:text="${aviso}"></div>
+            <div class="k-aviso" th:if="${param.cerrada}">Cerraste sesión.</div>
+            <div class="k-aviso k-aviso-error" th:if="${param.error}">
+                El correo o la contraseña no coinciden.
+            </div>
+
+            <form th:action="@{/login}" method="post">
+                <div class="k-campos k-campos-una">
+                    <div class="k-campo">
+                        <label for="email">Correo electrónico</label>
+                        <input type="email" id="email" name="email" placeholder="usuario@correo.com"
+                               autocomplete="username" required autofocus>
+                    </div>
+                    <div class="k-campo">
+                        <label for="password">Contraseña</label>
+                        <input type="password" id="password" name="password"
+                               autocomplete="current-password" required>
+                    </div>
+                </div>
+                <div class="k-acciones">
+                    <button type="submit" class="k-btn k-btn-principal">Ingresar</button>
+                </div>
+            </form>
+
+            <div class="k-separador">¿Todavía no tienes cuenta?</div>
+
+            <a class="k-btn k-btn-linea" th:href="@{/registro}">Crear cuenta</a>
+
+            <p class="k-prueba">
+                Datos de prueba:
+                <button type="submit" form="entrarCliente" class="k-enlace">cliente</button> ·
+                <button type="submit" form="entrarExperto" class="k-enlace">experto</button>
+            </p>
+
+            <form id="entrarCliente" th:action="@{/login}" method="post" hidden>
+                <input type="hidden" name="email" value="cliente@kolab.pe">
+                <input type="hidden" name="password" value="kolab1234">
+            </form>
+            <form id="entrarExperto" th:action="@{/login}" method="post" hidden>
+                <input type="hidden" name="email" value="experto@kolab.pe">
+                <input type="hidden" name="password" value="kolab1234">
+            </form>
+
+        </div>
+
+        <div class="k-lienzo">
+            <h2>Tú pones el precio.<br><em>Los expertos deciden</em> si lo toman.</h2>
+            <p>Nadie te impone una tarifa. Publicas cuánto estás dispuesto a pagar y quien sepa
+                hacerlo acepta ese monto o te propone otro.</p>
+
+            <ol class="k-pasos">
+                <li>Publicas tu solicitud con el precio que propones.</li>
+                <li>Los expertos ofertan y comparas montos y calificaciones.</li>
+                <li>Coordinan por mensajería interna y al cerrar se califican.</li>
+            </ol>
+
+            <div class="k-muestra" th:if="${muestra}">
+                <div class="k-muestra-cima">
+                    <div>
+                        <div class="k-muestra-titulo" th:text="${muestra.titulo}">Título de la solicitud</div>
+                        <div class="k-muestra-meta">
+                            <span th:text="${muestra.categoria}">Categoría</span> ·
+                            <span th:text="${muestra.ubicacion}">Presencial · Jesús María</span>
+                        </div>
+                    </div>
+                    <span th:replace="~{fragmentos/componentes :: precio(${muestra.precioPropuesto}, 'k-precio-g')}"></span>
+                </div>
+                <div class="k-muestra-pie">
+                    <span th:if="${muestra.tieneOfertas()}">
+                        <span th:text="${muestra.ofertas}">3</span>
+                        <span th:text="${muestra.ofertas == 1} ? 'experto ofertó' : 'expertos ofertaron'">expertos ofertaron</span>
+                    </span>
+                    <span th:unless="${muestra.tieneOfertas()}">Todavía sin ofertas</span>
+                    <span th:if="${muestra.mejorOferta != null}">desde S/
+                        <span th:text="${#numbers.formatDecimal(muestra.mejorOferta, 1, 'COMMA', 2, 'POINT')}">75.00</span></span>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+
+</body>
+</html>

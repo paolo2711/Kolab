@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<body>
+
+<span th:fragment="precio(monto, tamano)" class="k-precio" th:classappend="${tamano}">
+    <span class="k-moneda">S/</span><span
+        th:text="${#numbers.formatDecimal(monto, 1, 'COMMA', 2, 'POINT')}">0.00</span>
+</span>
+
+<span th:fragment="nota(puntaje)" class="k-nota">
+    <i class="bi bi-star-fill k-estrella"></i><span th:text="${puntaje}">4.8</span>
+</span>
+
+<span th:fragment="estado(estado)" class="k-estado" th:classappend="'k-estado-' + ${estado.tono}">
+    <i class="bi" th:classappend="${estado.icono}"></i><span th:text="${estado.etiqueta}">Abierta</span>
+</span>
+
+<div th:fragment="aviso">
+    <div class="k-aviso" th:if="${aviso}" th:text="${aviso}"></div>
+</div>
+
+<ol th:fragment="comoFunciona" class="k-flujo">
+    <li><span class="k-flujo-n">1</span> Publicas con tu precio</li>
+    <li><span class="k-flujo-n">2</span> Los expertos ofertan</li>
+    <li><span class="k-flujo-n">3</span> Aceptas una y coordinan</li>
+    <li><span class="k-flujo-n">4</span> Cierras y califican</li>
+</ol>
+
+<span th:fragment="cara(p, lado)" class="k-cara" th:style="'--lado:' + ${lado}"
+      th:classappend="${p.tieneFoto()} ? '' : 'k-cara-letras t' + ${p.tono}">
+    <img th:if="${p.tieneFoto()}" th:src="${p.retrato(120)}" th:alt="${p.nombre}" loading="lazy">
+    <span th:unless="${p.tieneFoto()}" th:text="${p.iniciales}">LM</span>
+</span>
+
+<div th:fragment="pila(solicitud)">
+    <div class="k-pila" th:if="${solicitud.tieneOfertas()}">
+        <span class="k-pila-caras">
+            <th:block th:each="p, i : ${solicitud.ofertantes}">
+                <span th:if="${i.index < 4}" th:replace="~{fragmentos/componentes :: cara(${p}, '1.9rem')}"></span>
+            </th:block>
+        </span>
+        <span class="k-pila-texto">
+            <span th:text="${solicitud.ofertas}">3</span> ofertaron ·
+            desde S/ <span th:text="${#numbers.formatDecimal(solicitud.mejorOferta, 1, 'COMMA', 2, 'POINT')}">0.00</span>
+        </span>
+    </div>
+    <div class="k-solicitud-ofertas" th:unless="${solicitud.tieneOfertas()}">Todavía sin ofertas</div>
+</div>
+
+<div th:fragment="categorias(lista)" class="k-categorias">
+    <a class="k-categoria" th:each="c : ${lista}"
+       th:href="@{/solicitudes(idCategoria=${c.id})}">
+        <i class="bi" th:classappend="${c.icono}"></i>
+        <span th:text="${c.nombre}">Categoría</span>
+    </a>
+</div>
+
+<ol th:fragment="hitos(lista)" class="k-hitos">
+    <li th:each="h : ${lista}" th:classappend="${h.hecho} ? 'hecho' : (${h.actual} ? 'aqui' : '')">
+        <span class="k-hito-punto"></span>
+        <div>
+            <b th:text="${h.titulo}">Publicada</b>
+            <span th:text="${h.detalle}">detalle</span>
+        </div>
+    </li>
+</ol>
+
+<div th:fragment="servicios(lista, titulo, vacio)">
+    <h2 class="k-bloque-titulo" style="margin-top:2.5rem;" th:text="${titulo}">Servicios</h2>
+    <p class="k-vacio" th:if="${#lists.isEmpty(lista)}" th:text="${vacio}">Todavía nada.</p>
+
+    <div class="k-tratos">
+        <a class="k-trato" th:each="v : ${lista}" th:href="@{/servicios/{id}(id=${v.id})}">
+            <span class="k-trato-cima">
+                <span class="k-trato-titulo" th:text="${v.titulo}">Clases de inglés conversacional</span>
+                <span th:replace="~{fragmentos/componentes :: estado(${v.estado})}"></span>
+            </span>
+
+            <span class="k-trato-persona">
+                <span th:replace="~{fragmentos/componentes :: cara(${v.contraparte}, '1.7rem')}"></span>
+                <span th:text="${v.loDoy} ? 'te contrató' : 'lo contrataste'">lo contrataste</span>
+                <b th:text="${v.contraparte.nombre}">Luis Mendoza</b>
+                · <span th:text="${v.fecha}">empezó hace 4 días</span>
+            </span>
+
+            <span class="k-trato-plata">
+                <span class="k-trato-dato">
+                    <span class="k-trato-etiqueta">Acordado</span>
+                    <span th:replace="~{fragmentos/componentes :: precio(${v.montoFinal}, 'k-precio-m')}"></span>
+                </span>
+                <span class="k-trato-dato k-trato-menor">
+                    <span class="k-trato-etiqueta">Comisión</span>
+                    <span th:replace="~{fragmentos/componentes :: precio(${v.comision}, 'k-precio-m')}"></span>
+                </span>
+                <span class="k-trato-dato k-trato-neto" th:if="${v.loDoy}">
+                    <span class="k-trato-etiqueta">Te queda</span>
+                    <span th:replace="~{fragmentos/componentes :: precio(${v.neto}, 'k-precio-m')}"></span>
+                </span>
+            </span>
+        </a>
+    </div>
+</div>
+
+<a th:fragment="fila(s, accion)" class="k-solicitud" th:href="@{/solicitudes/{id}(id=${s.id})}">
+    <img class="k-miniatura" th:src="${s.foto(160, 120)}" th:alt="${s.categoria}" loading="lazy">
+
+    <div class="k-solicitud-cuerpo">
+        <span class="k-solicitud-titulo" th:text="${s.titulo}">Título</span>
+        <div class="k-solicitud-meta">
+            <span th:text="${s.categoria}">Categoría</span> ·
+            <span th:text="${s.ubicacion}">Presencial</span>
+            <span th:if="${s.sabemosLaDistancia()}"> ·
+                <span class="k-cerca"><i class="bi bi-geo-alt-fill"></i>
+                    <span th:text="${s.distancia}">3.1 km</span></span></span>
+            · <span th:text="${s.publicada}">hace 2 horas</span>
+        </div>
+        <div th:replace="~{fragmentos/componentes :: pila(${s})}"></div>
+    </div>
+
+    <div class="k-solicitud-derecha">
+        <span th:replace="~{fragmentos/componentes :: precio(${s.precioPropuesto}, 'k-precio-g')}"></span>
+        <span class="k-btn k-btn-linea k-btn-chico" th:text="${accion}">Ofertar</span>
+    </div>
+</a>
+
+<div th:fragment="expertos(lista, idCategoria)" class="k-cartas">
+    <div class="k-carta k-carta-experto" th:each="e : ${lista}">
+        <div class="k-carta-cima">
+            <span th:replace="~{fragmentos/componentes :: cara(${e.persona}, '3.2rem')}"></span>
+            <span class="k-sello" th:if="${e.verificado}"><i class="bi bi-patch-check-fill"></i> Verificado</span>
+        </div>
+
+        <div class="k-carta-titulo" th:text="${e.persona.nombre}">Luis Mendoza</div>
+        <div class="k-carta-meta" th:text="${e.titular}">Profesor de guitarra</div>
+
+        <div class="k-oferta-meta" style="margin-top:0.55rem;">
+            <span th:replace="~{fragmentos/componentes :: nota(${e.calificacion})}"></span>
+            · <span th:text="${e.servicios}">32</span> servicios
+            · <span th:text="${e.distrito}">Pueblo Libre</span>
+        </div>
+
+        <p class="k-cita" th:text="'“' + ${e.ultimaResena} + '”'">Última reseña</p>
+
+        <div class="k-carta-pie">
+            <a class="k-btn k-btn-linea k-btn-chico"
+               th:href="@{/mis-solicitudes/nueva(experto=${e.persona.nombre}, idCategoria=${idCategoria})}">Pedirle un servicio</a>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

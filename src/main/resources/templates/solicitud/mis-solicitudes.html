@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layout :: base(~{::title}, ~{::main})}">
+<head>
+    <title>Mis solicitudes · KOLAB</title>
+</head>
+<body>
+
+<main>
+    <div th:replace="~{fragmentos/componentes :: aviso}"></div>
+
+    <div class="k-encabezado">
+        <h1>Mi actividad</h1>
+    </div>
+
+    <div th:replace="~{fragmentos/menu :: pestanasActividad('pedi')}"></div>
+
+    <p class="k-pestana-nota">Publicaste y estás esperando ofertas. Aquí decides tú con quién cerrar.</p>
+
+    <div class="k-lista">
+        <a class="k-solicitud" th:each="s : ${solicitudes}" th:href="@{/mis-solicitudes/{id}(id=${s.id})}">
+            <img class="k-miniatura" th:src="${s.foto(160, 120)}" th:alt="${s.categoria}" loading="lazy">
+            <div class="k-solicitud-cuerpo">
+                <span class="k-solicitud-titulo" th:text="${s.titulo}">Título</span>
+                <div class="k-solicitud-meta">
+                    <span th:text="${s.categoria}">Categoría</span> ·
+                    <span th:text="${s.modalidad.etiqueta}">Presencial</span> ·
+                    publicada <span th:text="${s.publicada}">hace 2 horas</span>
+                </div>
+                <div class="k-solicitud-ofertas">
+                    <span th:text="${s.resumenOfertas}">3 ofertas recibidas</span>
+                    <span th:if="${s.tieneOfertas() and s.mejorOferta != null}">
+                        · desde S/ <span th:text="${#numbers.formatDecimal(s.mejorOferta, 1, 'COMMA', 2, 'POINT')}">0.00</span>
+                    </span>
+                    <span class="k-senal" th:if="${s.tieneMensajes()}">
+                        <i class="bi bi-chat-dots"></i>
+                        <span th:text="${s.mensajesSinLeer}">2</span> sin leer</span>
+                </div>
+            </div>
+            <div class="k-solicitud-derecha">
+                <span th:replace="~{fragmentos/componentes :: precio(${s.precioPropuesto}, 'k-precio-g')}"></span>
+                <span th:replace="~{fragmentos/componentes :: estado(${s.estado})}"></span>
+            </div>
+        </a>
+    </div>
+
+    <div th:replace="~{fragmentos/componentes :: servicios(${servicios}, 'Servicios que contraté', 'Todavía no has cerrado trato con nadie.')}"></div>
+</main>
+
+</body>
+</html>

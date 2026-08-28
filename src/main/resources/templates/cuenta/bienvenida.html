@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layout :: base(~{::title}, ~{::main})}">
+<head>
+    <title>¿Qué sabes hacer? · KOLAB</title>
+</head>
+<body>
+
+<main>
+    <div class="k-encabezado">
+        <h1>¿Qué sabes hacer, <span th:text="${usuario.nombre}">Nombre</span>?</h1>
+        <p>Marca lo que podrías ofrecer. Te van a aparecer las solicitudes de esas categorías y
+            vas a poder ofertar. Si ahora solo quieres contratar, salta este paso.</p>
+    </div>
+
+    <form th:action="@{/bienvenida}" method="post">
+        <div class="k-rejilla">
+            <label class="k-tarjeta k-ficha" th:each="c : ${categorias}">
+                <input type="checkbox" name="categoria" th:value="${c.id}"
+                       th:checked="${elegidas.contains(c.id)}">
+                <i class="bi" th:classappend="${c.icono}"></i>
+                <div>
+                    <div class="k-categoria-nombre" th:text="${c.nombre}">Categoría</div>
+                    <div class="k-categoria-rango" th:text="'Se paga ' + ${c.rango}">Se paga S/ 50 a S/ 120</div>
+                </div>
+            </label>
+        </div>
+
+        <div class="k-acciones">
+            <button type="submit" class="k-btn k-btn-principal">Guardar y continuar</button>
+            <button type="submit" class="k-enlace-suave" th:formaction="@{/bienvenida/despues}">
+                Ahora no, solo quiero contratar</button>
+        </div>
+    </form>
+</main>
+
+</body>
+</html>

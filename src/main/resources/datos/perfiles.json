@@ -1,0 +1,80 @@
+{
+  "cliente": {
+    "descripcion": "Vivo en Jesús María y suelo contratar clases y arreglos para la casa. Pago apenas termina el servicio y respondo rápido por el chat.",
+    "ubicacion": "Jesús María, Lima",
+    "miembroDesde": "agosto de 2026",
+    "calificacion": 4.9,
+    "calificaciones": 7,
+    "serviciosCerrados": 7,
+    "solicitudesPublicadas": 12,
+    "tasaRespuesta": 96,
+    "resenas": [
+      {
+        "autor": "Luis Mendoza",
+        "iniciales": "LM",
+        "puntaje": 5,
+        "comentario": "Puntual y clarísimo con lo que necesitaba. Volvería a trabajar con él.",
+        "servicio": "Clases de guitarra para principiante",
+        "fecha": "hace 3 días"
+      },
+      {
+        "autor": "Ana Ramírez",
+        "iniciales": "AR",
+        "puntaje": 5,
+        "comentario": "Pagó el mismo día y me dejó trabajar tranquila.",
+        "servicio": "Reparación de caño de cocina",
+        "fecha": "hace 2 semanas"
+      },
+      {
+        "autor": "Carlos Talavera",
+        "iniciales": "CT",
+        "puntaje": 4,
+        "comentario": "Todo bien, solo que cambió la hora sobre la marcha.",
+        "servicio": "Diseño de logo para emprendimiento",
+        "fecha": "el mes pasado"
+      }
+    ],
+    "distrito": "Jesús María",
+    "latitud": -12.0742,
+    "longitud": -77.0489
+  },
+  "experto": {
+    "descripcion": "Profesor de guitarra hace ocho años. Trabajo con principiantes que nunca agarraron un instrumento y voy al ritmo de cada uno. Llevo mi propio material.",
+    "ubicacion": "Pueblo Libre, Lima",
+    "miembroDesde": "marzo de 2026",
+    "calificacion": 4.8,
+    "calificaciones": 32,
+    "serviciosCerrados": 33,
+    "solicitudesPublicadas": 0,
+    "tasaRespuesta": 98,
+    "resenas": [
+      {
+        "autor": "Paolo Rodríguez",
+        "iniciales": "PR",
+        "puntaje": 5,
+        "comentario": "Muy paciente. En cuatro clases ya sacaba canciones completas.",
+        "servicio": "Clases de guitarra para principiante",
+        "fecha": "hace 3 días"
+      },
+      {
+        "autor": "Rosa Aliaga",
+        "iniciales": "RA",
+        "puntaje": 5,
+        "comentario": "Llegó con su material y armó un plan para mi hijo de doce años.",
+        "servicio": "Clases de guitarra para niños",
+        "fecha": "hace 1 semana"
+      },
+      {
+        "autor": "Diego Ynga",
+        "iniciales": "DY",
+        "puntaje": 4,
+        "comentario": "Buen profesor. Tuvimos que mover dos clases por su horario.",
+        "servicio": "Clases de guitarra intermedio",
+        "fecha": "hace 3 semanas"
+      }
+    ],
+    "distrito": "Pueblo Libre",
+    "latitud": -12.074,
+    "longitud": -77.0631
+  }
+}

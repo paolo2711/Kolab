@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<body>
+
+<nav th:fragment="menu" class="k-barra">
+    <div class="k-ancho k-barra-caja">
+        <a class="k-marca" th:href="@{/}">KOLAB</a>
+
+        <ul class="k-nav" sec:authorize="isAuthenticated()">
+            <li><a th:href="@{/}" th:classappend="${seccion == 'inicio'} ? 'activo'">Inicio</a></li>
+            <li><a th:href="@{/solicitudes}" th:classappend="${seccion == 'explorar'} ? 'activo'">Explorar</a></li>
+            <li><a th:href="@{/mis-solicitudes}" th:classappend="${seccion == 'actividad'} ? 'activo'">Mi actividad</a></li>
+            <li>
+                <a th:href="@{/mensajes}" th:classappend="${seccion == 'mensajes'} ? 'activo'">
+                    Mensajes
+                    <span class="k-globo" th:if="${mensajesSinLeer > 0}" th:text="${mensajesSinLeer}">2</span>
+                </a>
+            </li>
+        </ul>
+
+        <ul class="k-nav" sec:authorize="!isAuthenticated()">
+            <li><a th:href="@{/}">Cómo funciona</a></li>
+            <li><a th:href="@{/}">Categorías</a></li>
+        </ul>
+
+        <div class="k-sesion" sec:authorize="!isAuthenticated()">
+            <a class="k-btn k-btn-linea k-btn-chico" th:href="@{/login}">Ingresar</a>
+            <a class="k-btn k-btn-principal k-btn-chico" th:href="@{/registro}">Crear cuenta</a>
+        </div>
+
+        <a class="k-btn k-btn-principal k-btn-chico" sec:authorize="isAuthenticated()"
+           th:href="@{/mis-solicitudes/nueva}">Publicar</a>
+
+        <details class="k-cuenta" sec:authorize="isAuthenticated()">
+            <summary>
+                <span class="k-inicial t0" style="width:2rem; height:2rem; font-size:0.72rem;"
+                      sec:authentication="principal.iniciales">PR</span>
+                <i class="bi bi-chevron-down"></i>
+            </summary>
+
+            <div class="k-cuenta-menu">
+                <div class="k-cuenta-cab">
+                    <div class="n" sec:authentication="principal.nombreCompleto">Nombre completo</div>
+                    <div class="c" sec:authentication="principal.username">correo@ejemplo.com</div>
+                </div>
+
+                <a th:href="@{/perfil}"><i class="bi bi-person"></i> Ver mi perfil</a>
+                <a th:href="@{/bienvenida}"><i class="bi bi-stars"></i> Lo que sé hacer</a>
+                <a class="apagado"><i class="bi bi-gear"></i> Configuración</a>
+
+                <div class="k-cuenta-sep"></div>
+
+                <form th:action="@{/salir}" method="post">
+                    <button type="submit"><i class="bi bi-box-arrow-right"></i> Cerrar sesión</button>
+                </form>
+            </div>
+        </details>
+    </div>
+</nav>
+
+<ul th:fragment="pestanasActividad(activa)" class="k-pestanas">
+    <li>
+        <a th:href="@{/mis-solicitudes}" th:classappend="${activa == 'pedi'} ? 'activa'">
+            Lo que pedí <span class="k-pestana-n" th:text="${cuantasPedidas}">4</span>
+        </a>
+    </li>
+    <li>
+        <a th:href="@{/mis-ofertas}" th:classappend="${activa == 'ofrezco'} ? 'activa'">
+            Lo que ofrezco <span class="k-pestana-n" th:text="${cuantasOfrecidas}">3</span>
+        </a>
+    </li>
+</ul>
+
+</body>
+</html>

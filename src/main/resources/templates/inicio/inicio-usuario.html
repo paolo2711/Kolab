@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layout :: base(~{::title}, ~{::main})}">
+<head>
+    <title>Inicio · KOLAB</title>
+</head>
+<body>
+
+<main>
+    <div th:replace="~{fragmentos/componentes :: aviso}"></div>
+
+    <div class="k-invita" th:if="${#lists.isEmpty(misCategorias)}">
+        <div>
+            <b>¿Sabes hacer algo?</b>
+            Dinos qué y empiezan a llegarte solicitudes de esas categorías para ofertar.
+        </div>
+        <a class="k-btn k-btn-linea k-btn-chico" th:href="@{/bienvenida}">Decir qué sé hacer</a>
+    </div>
+
+    <section class="k-bloque">
+        <div class="k-titulo-fila">
+            <h2 class="k-bloque-titulo" style="margin:0;">Explora por categoría</h2>
+            <span class="k-vacio" style="margin:0;">Con lo que se está pagando en cada una</span>
+        </div>
+
+        <div class="k-mosaico">
+            <a class="k-tesela" th:each="c : ${categorias}"
+               th:href="@{/categorias/{id}(id=${c.id})}">
+                <img th:src="${c.foto(420, 315)}" th:alt="${c.nombre}" loading="lazy">
+                <span class="k-tesela-texto">
+                    <span class="k-tesela-nombre" th:text="${c.nombre}">Categoría</span>
+                    <span class="k-tesela-dato" th:if="${c.tieneDemanda()}">
+                        <span th:text="${c.abiertas}">3</span>
+                        <span th:text="${c.abiertas == 1} ? 'abierta' : 'abiertas'">abiertas</span>
+                        · desde S/ <span th:text="${c.precioMinimo}">50</span>
+                    </span>
+                    <span class="k-tesela-dato" th:unless="${c.tieneDemanda()}"
+                          th:text="'desde S/ ' + ${c.precioMinimo}">desde S/ 50</span>
+                </span>
+            </a>
+        </div>
+    </section>
+
+    <section class="k-bloque" th:if="${!#lists.isEmpty(cercanas)}">
+        <div class="k-titulo-fila">
+            <h2 class="k-bloque-titulo" style="margin:0;">Cerca de ti</h2>
+            <a th:href="@{/solicitudes(modalidad='PRESENCIAL')}">Ver todas las presenciales</a>
+        </div>
+        <p class="k-vacio">Presenciales, desde <span th:text="${miDistrito}">Jesús María</span>.</p>
+
+        <div class="k-tira">
+            <a class="k-pieza" th:each="s : ${cercanas}"
+               th:href="@{/solicitudes/{id}(id=${s.id})}">
+                <span class="k-pieza-foto">
+                    <img th:src="${s.foto(560, 315)}" th:alt="${s.categoria}" loading="lazy">
+                    <span class="k-pieza-distancia">
+                        <i class="bi bi-geo-alt-fill"></i>
+                        <span th:text="${s.distancia}">3.1 km</span>
+                    </span>
+                </span>
+
+                <span class="k-pieza-cuerpo">
+                    <span class="k-pieza-titulo" th:text="${s.titulo}">Título</span>
+                    <span class="k-carta-meta">
+                        <span th:text="${s.distrito}">San Miguel</span> ·
+                        <span th:text="${s.publicada}">hace 2 días</span>
+                    </span>
+
+                    <span class="k-pieza-pie">
+                        <span th:replace="~{fragmentos/componentes :: precio(${s.precioPropuesto}, 'k-precio-g')}"></span>
+                        <span class="k-carta-meta" th:if="${s.tieneOfertas()}">
+                            <span th:text="${s.ofertas}">1</span> ofertó</span>
+                        <span class="k-carta-meta" th:unless="${s.tieneOfertas()}">sin ofertas</span>
+                    </span>
+                </span>
+            </a>
+        </div>
+    </section>
+
+    <section class="k-bloque">
+        <div class="k-titulo-fila">
+            <h2 class="k-bloque-titulo" style="margin:0;">Los mejor calificados</h2>
+            <span class="k-vacio" style="margin:0;">Puedes pedirles un servicio directo</span>
+        </div>
+        <div th:replace="~{fragmentos/componentes :: expertos(${expertos}, null)}"></div>
+    </section>
+
+    <section class="k-bloque">
+        <div class="k-titulo-fila">
+            <h2 class="k-bloque-titulo" style="margin:0;"
+                th:text="${filtradas} ? 'Abiertas en lo que sabes hacer' : 'Lo que se está pidiendo ahora'">Lo que se está pidiendo ahora</h2>
+            <a th:href="@{/solicitudes}">Ver todas</a>
+        </div>
+
+        <div class="k-lista">
+            <th:block th:each="s : ${oportunidades}">
+                <div th:replace="~{fragmentos/componentes :: fila(${s}, 'Ofertar')}"></div>
+            </th:block>
+        </div>
+    </section>
+</main>
+
+</body>
+</html>

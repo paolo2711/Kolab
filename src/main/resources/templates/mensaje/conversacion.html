@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layout :: base(~{::title}, ~{::main})}">
+<head>
+    <title>Conversación · KOLAB</title>
+</head>
+<body>
+
+<main>
+    <p class="k-migas"><a th:href="@{/mensajes}">&larr; Mensajes</a></p>
+
+    <div class="k-encabezado">
+        <h1>Conversación con <span th:text="${conversacion.con.nombre}">Luis Mendoza</span></h1>
+        <p>
+            Sobre <span th:text="${conversacion.solicitud}">la solicitud</span> ·
+            <a th:href="@{${conversacion.enlace}}" th:text="${conversacion.etiquetaEnlace}">Ver la solicitud</a>
+        </p>
+    </div>
+
+    <div class="k-chat k-chat-solo">
+        <div class="k-chat-cabecera">
+            <span th:replace="~{fragmentos/componentes :: cara(${conversacion.con}, '2rem')}"></span>
+            <span th:text="${conversacion.con.nombre}">Luis Mendoza</span>
+        </div>
+        <div class="k-chat-hilo">
+            <div th:each="m : ${conversacion.mensajes}" class="k-burbuja"
+                 th:classappend="${m.mio} ? 'k-burbuja-mio' : 'k-burbuja-otro'">
+                <span th:text="${m.contenido}">Mensaje</span>
+                <span class="k-burbuja-hora" th:text="${m.hora}">10:12</span>
+            </div>
+        </div>
+        <form class="k-chat-envio" th:action="@{/mensajes/{id}(id=${conversacion.idOferta})}" method="get">
+            <input type="text" name="contenido" placeholder="Escribe un mensaje" autocomplete="off">
+            <button type="submit" class="k-btn k-btn-oscuro">Enviar</button>
+        </form>
+    </div>
+</main>
+
+</body>
+</html>

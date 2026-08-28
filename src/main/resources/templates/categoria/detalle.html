@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layout :: base(~{::title}, ~{::main})}">
+<head>
+    <title>Categoría · KOLAB</title>
+</head>
+<body>
+
+<main>
+    <p class="k-migas"><a th:href="@{/solicitudes}">&larr; Explorar</a></p>
+
+    <img class="k-banner" th:src="${categoria.foto(1600, 450)}" th:alt="${categoria.nombre}">
+
+    <div class="k-cabecera-categoria k-cabecera-bajo-banner">
+        <div>
+            <h1 th:text="${categoria.nombre}">Categoría</h1>
+            <p th:if="${categoria.tieneDemanda()}">
+                <b th:text="${categoria.abiertas}">3</b>
+                <span th:text="${categoria.abiertas == 1} ? 'solicitud abierta ahora' : 'solicitudes abiertas ahora'">solicitudes abiertas ahora</span>
+                · <span th:text="${#lists.size(expertos)}">4</span> expertos disponibles
+            </p>
+            <p th:unless="${categoria.tieneDemanda()}">
+                Todavía no hay solicitudes abiertas. Publica la primera y los expertos te ofertan.
+            </p>
+        </div>
+        <a class="k-btn k-btn-principal" th:href="@{/mis-solicitudes/nueva(idCategoria=${categoria.id})}">
+            Publicar en <span th:text="${categoria.nombre}">esta categoría</span></a>
+    </div>
+
+    <section class="k-bloque">
+        <h2 class="k-bloque-titulo">Cuánto se está pagando</h2>
+        <div class="k-precios">
+            <div class="k-precios-barra">
+                <span class="k-precios-marca" th:style="'left:' + ${precios.posicionDelTipico()} + '%'"></span>
+            </div>
+            <div class="k-precios-pie">
+                <div>
+                    <div class="k-precios-etiqueta">Más bajo</div>
+                    <span th:replace="~{fragmentos/componentes :: precio(${precios.bajo}, 'k-precio-m')}"></span>
+                </div>
+                <div style="text-align:center;">
+                    <div class="k-precios-etiqueta">Lo típico</div>
+                    <span th:replace="~{fragmentos/componentes :: precio(${precios.tipico}, 'k-precio-g')}"></span>
+                </div>
+                <div style="text-align:right;">
+                    <div class="k-precios-etiqueta">Más alto</div>
+                    <span th:replace="~{fragmentos/componentes :: precio(${precios.alto}, 'k-precio-m')}"></span>
+                </div>
+            </div>
+        </div>
+        <p class="k-vacio" style="margin-top:0.9rem;">Sale de lo que la gente publicó en esta categoría.
+            Tú puedes proponer el monto que quieras.</p>
+    </section>
+
+    <section class="k-bloque">
+        <h2 class="k-bloque-titulo">Mejor calificados en <span th:text="${categoria.nombre}">la categoría</span></h2>
+
+        <div th:replace="~{fragmentos/componentes :: expertos(${expertos}, ${categoria.id})}"></div>
+    </section>
+
+    <section class="k-bloque" th:if="${!#lists.isEmpty(solicitudes)}">
+        <div class="k-titulo-fila">
+            <h2 class="k-bloque-titulo" style="margin:0;">Solicitudes abiertas aquí</h2>
+            <a th:href="@{/solicitudes(idCategoria=${categoria.id})}">Ver en Explorar</a>
+        </div>
+
+        <div class="k-lista">
+            <th:block th:each="s : ${solicitudes}">
+                <div th:replace="~{fragmentos/componentes :: fila(${s}, 'Ofertar')}"></div>
+            </th:block>
+        </div>
+    </section>
+</main>
+
+</body>
+</html>

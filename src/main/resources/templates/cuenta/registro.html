@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layout :: base(~{::title}, ~{::main})}">
+<head>
+    <title>Registro e inicio de sesión · KOLAB</title>
+</head>
+<body>
+
+<main>
+    <div class="k-encabezado">
+        <h1>Crea tu cuenta</h1>
+        <p>Una sola cuenta para las dos cosas: pedir lo que necesitas y ofrecer lo que sabes hacer.</p>
+    </div>
+
+    <div class="k-dos-columnas k-principal-ancha">
+        <div class="k-tarjeta">
+            <form th:action="@{/registro}" th:object="${registroForm}" method="post" novalidate>
+
+                <div class="k-campos">
+                    <div class="k-campo">
+                        <label for="nombre">Nombre</label>
+                        <input type="text" id="nombre" th:field="*{nombre}"
+                               th:classappend="${#fields.hasErrors('nombre')} ? 'k-mal'">
+                        <span class="k-error" th:if="${#fields.hasErrors('nombre')}" th:errors="*{nombre}"></span>
+                    </div>
+
+                    <div class="k-campo">
+                        <label for="apellidos">Apellidos</label>
+                        <input type="text" id="apellidos" th:field="*{apellidos}"
+                               th:classappend="${#fields.hasErrors('apellidos')} ? 'k-mal'">
+                        <span class="k-error" th:if="${#fields.hasErrors('apellidos')}" th:errors="*{apellidos}"></span>
+                    </div>
+
+                    <div class="k-campo">
+                        <label for="correo">Correo electrónico</label>
+                        <input type="email" id="correo" th:field="*{email}" placeholder="usuario@correo.com"
+                               th:classappend="${#fields.hasErrors('email')} ? 'k-mal'">
+                        <span class="k-error" th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></span>
+                    </div>
+
+                    <div class="k-campo">
+                        <label for="telefono">Celular <span class="k-opcional">(opcional)</span></label>
+                        <input type="text" id="telefono" th:field="*{telefono}" placeholder="999888777"
+                               th:classappend="${#fields.hasErrors('telefono')} ? 'k-mal'">
+                        <span class="k-error" th:if="${#fields.hasErrors('telefono')}" th:errors="*{telefono}"></span>
+                    </div>
+
+                    <div class="k-campo">
+                        <label for="clave">Contraseña</label>
+                        <input type="password" id="clave" th:field="*{password}" autocomplete="new-password"
+                               th:classappend="${#fields.hasErrors('password')} ? 'k-mal'">
+                        <span class="k-error" th:if="${#fields.hasErrors('password')}" th:errors="*{password}"></span>
+                        <span class="k-pista" th:unless="${#fields.hasErrors('password')}">Mínimo 8 caracteres.</span>
+                    </div>
+
+                    <div class="k-campo">
+                        <label for="confirmacion">Repite la contraseña</label>
+                        <input type="password" id="confirmacion" th:field="*{confirmacion}" autocomplete="new-password"
+                               th:classappend="${#fields.hasErrors('confirmacion')} ? 'k-mal'">
+                        <span class="k-error" th:if="${#fields.hasErrors('confirmacion')}" th:errors="*{confirmacion}"></span>
+                    </div>
+
+                    <div class="k-campo k-campo-ancho">
+                        <span class="k-etiqueta">¿Cómo quieres empezar?</span>
+                        <div class="k-opciones">
+                            <label class="k-opcion">
+                                <input type="radio" th:field="*{tipoPerfil}" value="CLIENTE">
+                                <span class="k-opcion-nombre">Cliente</span>
+                                <span class="k-opcion-detalle">Necesito contratar algo. Podrás ofrecer después si quieres</span>
+                            </label>
+                            <label class="k-opcion">
+                                <input type="radio" th:field="*{tipoPerfil}" value="EXPERTO">
+                                <span class="k-opcion-nombre">Experto</span>
+                                <span class="k-opcion-detalle">Quiero ofrecer lo que sé hacer. También podrás contratar</span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="k-acciones">
+                    <button type="submit" class="k-btn k-btn-principal">Crear cuenta</button>
+                    <a th:href="@{/login}">Ya tengo cuenta</a>
+                </div>
+
+            </form>
+        </div>
+
+        <div class="k-lienzo">
+            <h2>Una cuenta,<br><em>dos formas</em> de usarla.</h2>
+            <p>No eliges bando. Lo que marques arriba solo decide con qué pantalla entras la primera vez.</p>
+
+            <ol class="k-pasos">
+                <li>Publicas una solicitud, fijas tu precio y eliges entre las ofertas que llegan.</li>
+                <li>Y con la misma cuenta ves las solicitudes abiertas y ofertas por el monto publicado o por otro.</li>
+                <li>Al cerrar el servicio ambos se califican y esa nota queda en el perfil.</li>
+            </ol>
+
+            <div class="k-muestra">
+                <div class="k-muestra-titulo">Comisión de la plataforma</div>
+                <div class="k-muestra-meta">Se calcula sobre el monto acordado y solo cuando el
+                    servicio se concreta. Si no cierras trato, no pagas nada.</div>
+            </div>
+        </div>
+    </div>
+</main>
+
+</body>
+</html>

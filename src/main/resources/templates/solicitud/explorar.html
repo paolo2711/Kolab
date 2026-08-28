@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layout :: base(~{::title}, ~{::main})}">
+<head>
+    <title>Buscar solicitudes · KOLAB</title>
+</head>
+<body>
+
+<main>
+    <div th:replace="~{fragmentos/componentes :: aviso}"></div>
+
+    <div class="k-encabezado">
+        <h1>Solicitudes abiertas</h1>
+        <p>Cada una lleva el precio que propuso el cliente. Puedes aceptarlo o proponer el tuyo.</p>
+    </div>
+
+    <div class="k-dos-columnas k-lateral-izquierda">
+        <form class="k-tarjeta k-tarjeta-apretada k-filtros" th:object="${filtro}" method="get" th:action="@{/solicitudes}">
+            <h2 class="k-tarjeta-titulo">Filtros</h2>
+
+            <div class="k-campo">
+                <label for="fCategoria">Categoría</label>
+                <select id="fCategoria" th:field="*{idCategoria}">
+                    <option value="">Todas</option>
+                    <option th:each="c : ${categorias}" th:value="${c.id}" th:text="${c.nombre}">Categoría</option>
+                </select>
+            </div>
+
+            <div class="k-campo">
+                <label for="fMin">Precio desde</label>
+                <div class="k-prefijo">
+                    <span>S/</span>
+                    <input type="number" id="fMin" th:field="*{precioMinimo}" min="0" step="10" placeholder="0">
+                </div>
+            </div>
+
+            <div class="k-campo">
+                <label for="fMax">Precio hasta</label>
+                <div class="k-prefijo">
+                    <span>S/</span>
+                    <input type="number" id="fMax" th:field="*{precioMaximo}" min="0" step="10" placeholder="500">
+                </div>
+            </div>
+
+            <div class="k-campo">
+                <label for="fModalidad">Modalidad</label>
+                <select id="fModalidad" th:field="*{modalidad}">
+                    <option value="">Cualquiera</option>
+                    <option th:each="m : ${modalidades}" th:value="${m}" th:text="${m.etiqueta}">Modalidad</option>
+                </select>
+            </div>
+
+            <div class="k-campo">
+                <label for="fDistrito">Distrito</label>
+                <select id="fDistrito" th:field="*{distrito}">
+                    <option value="">Todos</option>
+                    <option th:each="d : ${distritos}" th:value="${d}" th:text="${d}">Distrito</option>
+                </select>
+                <span class="k-pista">Solo aplica a las presenciales.</span>
+            </div>
+
+            <label class="k-opcion" style="margin-bottom:1rem;" th:if="${puedeFiltrarPorLoQueSe}">
+                <input type="checkbox" th:field="*{soloLoQueSe}">
+                <span class="k-opcion-nombre">Solo lo que sé hacer</span>
+            </label>
+
+            <button type="submit" class="k-btn k-btn-principal">Aplicar filtros</button>
+        </form>
+
+        <div>
+            <p class="k-conteo">
+                <span th:text="${#lists.size(solicitudes)}">6</span> solicitudes encontradas
+                <a th:if="${!filtro.vacio()}" th:href="@{/solicitudes}" style="margin-left:0.75rem;">Quitar filtros</a>
+            </p>
+
+            <p class="k-vacio" th:if="${#lists.isEmpty(solicitudes)}">
+                No hay solicitudes abiertas con esos filtros. Prueba quitando alguno.</p>
+
+            <div class="k-lista">
+                <th:block th:each="s : ${solicitudes}">
+                <div th:replace="~{fragmentos/componentes :: fila(${s}, 'Ofertar')}"></div>
+            </th:block>
+            </div>
+        </div>
+    </div>
+</main>
+
+</body>
+</html>

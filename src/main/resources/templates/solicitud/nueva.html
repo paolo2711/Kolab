@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layout :: base(~{::title}, ~{::main})}">
+<head>
+    <title>Publicar una solicitud · KOLAB</title>
+</head>
+<body>
+
+<main>
+    <p class="k-migas"><a th:href="@{/mis-solicitudes}">&larr; Mis solicitudes</a></p>
+
+    <div class="k-invita" th:if="${experto != null}">
+        <div>
+            <b th:text="'Dirigida a ' + ${experto}">Dirigida a Luis Mendoza</b>
+            Le va a llegar primero, pero otros expertos también van a poder ofertar.
+        </div>
+    </div>
+
+    <div class="k-encabezado">
+        <h1>Publica lo que necesitas</h1>
+        <p>El precio lo pones tú. Los expertos deciden si lo aceptan o te proponen otro monto.</p>
+    </div>
+
+    <div class="k-dos-columnas k-principal-ancha">
+        <div class="k-tarjeta">
+            <form th:action="@{/mis-solicitudes}" th:object="${solicitudForm}" method="post" novalidate id="formSolicitud">
+
+                <div class="k-campos">
+                    <div class="k-campo k-campo-ancho">
+                        <label for="titulo">Título de la solicitud</label>
+                        <input type="text" id="titulo" th:field="*{titulo}"
+                               placeholder="Clases de guitarra para principiante"
+                               th:classappend="${#fields.hasErrors('titulo')} ? 'k-mal'">
+                        <span class="k-error" th:if="${#fields.hasErrors('titulo')}" th:errors="*{titulo}"></span>
+                    </div>
+
+                    <div class="k-campo">
+                        <label for="idCategoria">Categoría</label>
+                        <select id="idCategoria" th:field="*{idCategoria}"
+                                th:classappend="${#fields.hasErrors('idCategoria')} ? 'k-mal'">
+                            <option value="">Elige una</option>
+                            <option th:each="c : ${categorias}" th:value="${c.id}" th:text="${c.nombre}">Categoría</option>
+                        </select>
+                        <span class="k-error" th:if="${#fields.hasErrors('idCategoria')}" th:errors="*{idCategoria}"></span>
+                    </div>
+
+                    <div class="k-campo">
+                        <label for="modalidad">Modalidad</label>
+                        <select id="modalidad" th:field="*{modalidad}">
+                            <option th:each="m : ${modalidades}" th:value="${m}" th:text="${m.etiqueta}">Modalidad</option>
+                        </select>
+                    </div>
+
+                    <div class="k-campo k-campo-ancho">
+                        <label for="distrito">Distrito <span class="k-opcional">(si es presencial)</span></label>
+                        <input type="text" id="distrito" th:field="*{distrito}" placeholder="Jesús María">
+                    </div>
+
+                    <div class="k-campo k-campo-ancho">
+                        <label for="descripcion">Descripción</label>
+                        <textarea id="descripcion" th:field="*{descripcion}"
+                                  placeholder="Cuenta con detalle qué necesitas, cada cuánto y cualquier cosa que el experto deba saber."
+                                  th:classappend="${#fields.hasErrors('descripcion')} ? 'k-mal'"></textarea>
+                        <span class="k-error" th:if="${#fields.hasErrors('descripcion')}" th:errors="*{descripcion}"></span>
+                    </div>
+
+                    <div class="k-campo">
+                        <label for="fechaDeseada">Fecha deseada</label>
+                        <input type="date" id="fechaDeseada" th:field="*{fechaDeseada}"
+                               th:classappend="${#fields.hasErrors('fechaDeseada')} ? 'k-mal'">
+                        <span class="k-error" th:if="${#fields.hasErrors('fechaDeseada')}" th:errors="*{fechaDeseada}"></span>
+                    </div>
+
+                    <div class="k-campo">
+                        <label for="precioPropuesto">Precio que propongo</label>
+                        <div class="k-prefijo">
+                            <span>S/</span>
+                            <input type="number" id="precioPropuesto" th:field="*{precioPropuesto}"
+                                   step="0.50" min="10" placeholder="80.00"
+                                   th:classappend="${#fields.hasErrors('precioPropuesto')} ? 'k-mal'">
+                        </div>
+                        <span class="k-error" th:if="${#fields.hasErrors('precioPropuesto')}" th:errors="*{precioPropuesto}"></span>
+                        <span class="k-pista" th:unless="${#fields.hasErrors('precioPropuesto')}">Los expertos pueden aceptarlo o proponerte otro.</span>
+                    </div>
+                </div>
+
+                <div class="k-acciones">
+                    <button type="submit" class="k-btn k-btn-principal">Publicar solicitud</button>
+                    <a th:href="@{/mis-solicitudes}">Cancelar</a>
+                </div>
+
+            </form>
+        </div>
+
+        <div class="k-tarjeta">
+            <h2 class="k-tarjeta-titulo">Vista previa</h2>
+            <p class="k-vacio">Así van a ver tu solicitud los expertos.</p>
+
+            <div class="k-solicitud" style="align-items:flex-start;">
+                <div>
+                    <span class="k-solicitud-titulo k-vp-vacio" id="vpTitulo">Tu título va aquí</span>
+                    <div class="k-solicitud-meta">
+                        <span id="vpCategoria">Categoría</span> · <span id="vpModalidad">Modalidad</span>
+                    </div>
+                    <div class="k-solicitud-ofertas">Publicada recién · sin ofertas</div>
+                </div>
+                <span class="k-precio k-precio-g"><span class="k-moneda">S/</span><span id="vpPrecio">0.00</span></span>
+            </div>
+        </div>
+    </div>
+
+    <script th:inline="none">
+        (function () {
+            var f = document.getElementById('formSolicitud');
+            if (!f) return;
+            var titulo = f.querySelector('#titulo');
+            var categoria = f.querySelector('#idCategoria');
+            var modalidad = f.querySelector('#modalidad');
+            var precio = f.querySelector('#precioPropuesto');
+
+            function pintar() {
+                var vpTitulo = document.getElementById('vpTitulo');
+                vpTitulo.textContent = titulo.value.trim() || 'Tu título va aquí';
+                vpTitulo.classList.toggle('k-vp-vacio', !titulo.value.trim());
+                document.getElementById('vpCategoria').textContent =
+                    categoria.selectedIndex > 0 ? categoria.options[categoria.selectedIndex].text : 'Categoría';
+                document.getElementById('vpModalidad').textContent =
+                    modalidad.options[modalidad.selectedIndex].text;
+                document.getElementById('vpPrecio').textContent =
+                    precio.value ? Number(precio.value).toFixed(2) : '0.00';
+            }
+
+            [titulo, categoria, modalidad, precio].forEach(function (campo) {
+                campo.addEventListener('input', pintar);
+                campo.addEventListener('change', pintar);
+            });
+            pintar();
+        })();
+    </script>
+</main>
+
+</body>
+</html>

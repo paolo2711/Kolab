@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org" th:fragment="base(titulo, contenido)">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title th:replace="${titulo}">KOLAB</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700&display=swap">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <link rel="stylesheet" th:href="@{/css/kolab.css}">
+</head>
+<body>
+
+<div th:replace="~{fragmentos/menu :: menu}"></div>
+
+<div class="k-cuerpo">
+    <div class="k-ancho">
+        <main th:replace="${contenido}"></main>
+    </div>
+</div>
+
+<footer class="k-pie">
+    <div class="k-ancho k-pie-caja">
+        <span>KOLAB · Lima, Perú</span>
+        <span>
+            <a th:href="@{/}">Cómo funciona</a>
+            <a th:href="@{/solicitudes}">Solicitudes abiertas</a>
+        </span>
+    </div>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/htmx.org@2.0.4/dist/htmx.min.js"></script>
+</body>
+</html>
