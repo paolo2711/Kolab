@@ -19,6 +19,8 @@
 
     <properties>
         <java.version>21</java.version>
+        <!-- la que trae Spring Boot 3.5 no reconoce PostgreSQL 18 -->
+        <flyway.version>11.20.3</flyway.version>
     </properties>
 
     <dependencies>
@@ -54,6 +56,10 @@
         <dependency>
             <groupId>org.flywaydb</groupId>
             <artifactId>flyway-core</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.flywaydb</groupId>
+            <artifactId>flyway-database-postgresql</artifactId>
         </dependency>
         <dependency>
             <groupId>org.postgresql</groupId>
