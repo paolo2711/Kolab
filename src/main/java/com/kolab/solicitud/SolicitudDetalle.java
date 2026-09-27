@@ -49,6 +49,7 @@ public record SolicitudDetalle(Long id,
     public int pasoDelCliente() {
         return switch (estado) {
             case CERRADA -> 4;
+            case CANCELADA -> 0;
             case EN_CURSO -> 3;
             case ABIERTA -> ofertas.isEmpty() ? 2 : 3;
         };
@@ -57,6 +58,7 @@ public record SolicitudDetalle(Long id,
     public int pasoDelExperto() {
         return switch (estado) {
             case CERRADA -> 4;
+            case CANCELADA -> 0;
             case EN_CURSO -> 3;
             case ABIERTA -> 2;
         };

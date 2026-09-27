@@ -41,8 +41,7 @@ public class UsuarioAutenticado extends User {
         return iniciales;
     }
 
-    // ya no hay cuentas de cliente y de experto: cualquiera puede pedir, y ofrece quien
-    // haya dicho que sabe hacer algo
+    // ofrece quien haya declarado alguna categoria
     public boolean ofreceServicios() {
         return ofreceServicios;
     }

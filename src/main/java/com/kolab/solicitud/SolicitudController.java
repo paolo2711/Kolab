@@ -64,7 +64,6 @@ public class SolicitudController {
         return "solicitud/explorar";
     }
 
-    // el filtro se aplica de verdad; antes la pantalla ignoraba lo que eligieras
     private List<SolicitudResumen> aplicar(FiltroSolicitudes filtro, List<Long> misCategorias) {
         return solicitudes.catalogo().stream()
                 .filter(s -> filtro.getIdCategoria() == null || filtro.getIdCategoria().equals(s.idCategoria()))

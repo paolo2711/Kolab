@@ -32,6 +32,7 @@ public record MiSolicitud(Long id,
     public int getPaso() {
         return switch (estado) {
             case CERRADA -> 4;
+            case CANCELADA -> 0;
             case EN_CURSO -> 3;
             case ABIERTA -> ofertas == 0 ? 2 : 3;
         };

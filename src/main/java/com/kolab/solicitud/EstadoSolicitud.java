@@ -6,7 +6,8 @@ public enum EstadoSolicitud {
 
     ABIERTA("Abierta", "espera", "bi-circle"),
     EN_CURSO("En curso", "espera", "bi-circle-half"),
-    CERRADA("Cerrada", "bien", "bi-check-circle-fill");
+    CERRADA("Cerrada", "bien", "bi-check-circle-fill"),
+    CANCELADA("Cancelada", "gris", "bi-dash-circle");
 
     private final String etiqueta;
     private final String tono;

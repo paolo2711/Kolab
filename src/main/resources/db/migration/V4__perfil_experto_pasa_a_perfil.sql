@@ -1,5 +1,4 @@
--- el nombre que manda es el del APF1: la tabla se llama perfil, porque no hay perfil de experto
--- aparte del perfil de la persona
+-- no hay un perfil de experto aparte del perfil de la persona: es uno solo por cuenta
 alter table perfil_experto rename to perfil;
 
 alter table perfil rename constraint uk_perfil_experto_usuario to uk_perfil_usuario;

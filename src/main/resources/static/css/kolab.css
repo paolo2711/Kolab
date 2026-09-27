@@ -532,14 +532,6 @@ textarea.k-mal:focus {
     margin-top: 1.5rem;
 }
 
-/* opciones tipo tarjeta (radios) */
-
-.k-opciones {
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 0.75rem;
-}
-
 .k-opcion {
     display: block;
     border: 1px solid var(--linea-fuerte);
@@ -566,14 +558,6 @@ textarea.k-mal:focus {
 .k-opcion-nombre {
     font-weight: 600;
     font-size: 0.93rem;
-}
-
-.k-opcion-detalle {
-    display: block;
-    margin-left: 1.35rem;
-    font-size: 0.82rem;
-    color: var(--tinta-2);
-    line-height: 1.45;
 }
 
 /* precios */
@@ -1651,18 +1635,6 @@ a.k-solicitud {
     max-width: 34rem;
 }
 
-.k-hueco {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    min-height: 13rem;
-    border: 1px dashed var(--linea-fuerte);
-    border-radius: var(--r);
-    background: var(--panel);
-    color: var(--tinta-3);
-    font-size: 0.9rem;
-}
-
 .k-cifras {
     display: flex;
     flex-wrap: wrap;
@@ -1734,62 +1706,6 @@ a.k-solicitud {
     margin: 0;
     color: var(--tinta-2);
     font-size: 0.93rem;
-}
-
-/* franja de pendientes */
-
-.k-franja {
-    display: flex;
-    align-items: center;
-    flex-wrap: wrap;
-    gap: 0.6rem 1.5rem;
-    background: var(--panel);
-    border: 1px solid var(--linea);
-    border-radius: var(--r);
-    padding: 0.8rem 1.2rem;
-    margin-bottom: 1.75rem;
-    font-size: 0.9rem;
-}
-
-.k-franja-titulo {
-    font-size: 0.72rem;
-    font-weight: 700;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    color: var(--tinta-3);
-}
-
-.k-franja a {
-    color: var(--tinta-2);
-    text-decoration: none;
-}
-
-.k-franja a:hover {
-    color: var(--acento);
-}
-
-.k-franja b {
-    color: var(--tinta);
-    font-variant-numeric: tabular-nums;
-}
-
-/* caja de necesidad */
-
-.k-caja-necesidad {
-    background: var(--panel);
-    border: 1px solid var(--linea);
-    border-radius: var(--r);
-    padding: 2rem;
-}
-
-.k-caja-necesidad h1 {
-    font-size: 1.5rem;
-    font-weight: 700;
-}
-
-.k-caja-necesidad p {
-    color: var(--tinta-2);
-    margin: 0.3rem 0 1.25rem;
 }
 
 .k-buscador {
@@ -1917,61 +1833,6 @@ a.k-solicitud {
     color: var(--tinta);
 }
 
-/* las dos puertas del inicio */
-
-.k-puertas {
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: 1.25rem;
-    margin-bottom: 2.5rem;
-}
-
-@media (min-width: 58rem) {
-    .k-puertas {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-    }
-}
-
-.k-puerta {
-    display: flex;
-    flex-direction: column;
-    background: var(--panel);
-    border: 1px solid var(--linea);
-    border-radius: var(--r);
-    padding: 1.75rem;
-}
-
-.k-puerta-rotulo {
-    font-size: 0.72rem;
-    font-weight: 700;
-    letter-spacing: 0.09em;
-    text-transform: uppercase;
-    color: var(--acento);
-    margin-bottom: 0.7rem;
-}
-
-.k-puerta h2 {
-    font-size: 1.2rem;
-    font-weight: 700;
-    line-height: 1.3;
-    margin-bottom: 0.45rem;
-}
-
-.k-puerta p {
-    color: var(--tinta-2);
-    font-size: 0.94rem;
-    margin: 0;
-}
-
-.k-puerta .k-buscador {
-    margin-top: 1.25rem;
-}
-
-.k-puerta-pie {
-    margin-top: auto;
-    padding-top: 1.4rem;
-}
-
 .k-chip-mas {
     border-style: dashed;
 }
@@ -2010,46 +1871,6 @@ a.k-solicitud {
     flex-basis: 100%;
     font-size: 0.9rem;
     color: var(--tinta-2);
-}
-
-/* tarjetas de lo que te toca */
-
-.k-pendiente {
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-    background: var(--panel);
-    border: 1px solid var(--linea);
-    border-radius: var(--r);
-    padding: 1rem 1.25rem;
-    text-decoration: none;
-    color: inherit;
-}
-
-.k-pendiente:hover {
-    border-color: var(--acento);
-}
-
-.k-pendiente > i {
-    font-size: 1.15rem;
-    color: var(--acento);
-    flex-shrink: 0;
-}
-
-.k-pendiente-texto {
-    flex: 1;
-    min-width: 0;
-}
-
-.k-pendiente-titulo {
-    font-weight: 600;
-    font-size: 0.97rem;
-}
-
-.k-pendiente-detalle {
-    font-size: 0.87rem;
-    color: var(--tinta-2);
-    margin-top: 0.15rem;
 }
 
 /* hilo desplegable dentro de una oferta */
@@ -2111,10 +1932,6 @@ button.k-chat-boton {
     color: var(--acento);
     font-weight: 600;
     margin-top: 0.2rem;
-}
-
-.k-franja b {
-    font-weight: 600;
 }
 
 .k-entrada h1 b {
@@ -2205,18 +2022,6 @@ button.k-chat-boton {
     margin-bottom: 0.9rem;
 }
 
-.k-icono {
-    width: 2.3rem;
-    height: 2.3rem;
-    flex-shrink: 0;
-    border-radius: var(--r-chico);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 1.1rem;
-    color: #fff;
-}
-
 .k-carta-titulo {
     font-size: 0.98rem;
     font-weight: 600;
@@ -2237,10 +2042,6 @@ button.k-chat-boton {
     margin-top: auto;
     padding-top: 1rem;
 }
-
-
-
-
 
 /* pagina de categoria */
 
@@ -2274,13 +2075,6 @@ button.k-chat-boton {
 
 .k-cabecera-categoria p b {
     color: var(--tinta);
-}
-
-.k-icono-g {
-    width: 3.4rem;
-    height: 3.4rem;
-    font-size: 1.6rem;
-    border-radius: var(--r);
 }
 
 /* barra de precios de la categoria */
@@ -2348,11 +2142,6 @@ button.k-chat-boton {
     min-width: 0;
 }
 
-.k-solicitud .k-icono {
-    align-self: flex-start;
-    margin-top: 0.15rem;
-}
-
 .k-cerca {
     display: inline-flex;
     align-items: center;
@@ -2375,15 +2164,6 @@ img {
     flex-shrink: 0;
     border-radius: var(--r-chico);
     object-fit: cover;
-    background: var(--hueso);
-}
-
-.k-retrato {
-    width: 3.2rem;
-    height: 3.2rem;
-    border-radius: 50%;
-    object-fit: cover;
-    flex-shrink: 0;
     background: var(--hueso);
 }
 

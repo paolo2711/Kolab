@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
 // el perfil que ve el resto. desde aqui se le propone un servicio directo, sin pasar por el
-// catalogo (RF-10 y RF-11)
+// catalogo
 @Controller
 public class PersonaController {
 

@@ -1,5 +1,6 @@
 package com.kolab.perfil;
 
+import com.kolab.categoria.Categoria;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -10,8 +11,10 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 
-// lo que el usuario dice que sabe hacer. es la versión simplificada de HABILIDAD_EXPERTO:
-// por ahora se guarda la categoría, las habilidades finas entran con el catálogo real.
+/**
+ * Una categoría que la persona declaró saber hacer. Es la tabla intermedia entre {@link Perfil} y
+ * {@link Categoria}, y de ella sale lo que a cada quien le aparece para ofertar.
+ */
 @Entity
 @Table(name = "perfil_categoria")
 public class PerfilCategoria {
@@ -23,28 +26,36 @@ public class PerfilCategoria {
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "id_perfil", nullable = false)
-    private PerfilExperto perfil;
+    private Perfil perfil;
 
-    @Column(name = "id_categoria", nullable = false)
-    private Long idCategoria;
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "id_categoria", nullable = false)
+    private Categoria categoria;
 
     protected PerfilCategoria() {
     }
 
-    public PerfilCategoria(PerfilExperto perfil, Long idCategoria) {
+    public PerfilCategoria(Perfil perfil, Categoria categoria) {
         this.perfil = perfil;
-        this.idCategoria = idCategoria;
+        this.categoria = categoria;
     }
 
     public Long getId() {
         return id;
     }
 
-    public PerfilExperto getPerfil() {
+    public Perfil getPerfil() {
         return perfil;
     }
 
+    public Categoria getCategoria() {
+        return categoria;
+    }
+
+    /**
+     * El id de la categoría sin cargarla: sobre un proxy perezoso no dispara consulta.
+     */
     public Long getIdCategoria() {
-        return idCategoria;
+        return categoria.getId();
     }
 }

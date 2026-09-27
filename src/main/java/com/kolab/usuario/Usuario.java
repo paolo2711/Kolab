@@ -8,8 +8,13 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
+/**
+ * La cuenta de la persona. La misma cuenta pide y ofrece: no hay cuentas de cliente y de experto
+ * por separado. Quien ofrece es quien declaró categorías en su {@link com.kolab.perfil.Perfil}.
+ */
 @Entity
 @Table(name = "usuario")
 public class Usuario {
@@ -34,6 +39,15 @@ public class Usuario {
     @Column(length = 20)
     private String telefono;
 
+    @Column(length = 60)
+    private String distrito;
+
+    @Column(precision = 9, scale = 6)
+    private BigDecimal latitud;
+
+    @Column(precision = 9, scale = 6)
+    private BigDecimal longitud;
+
     @Column(name = "fecha_registro", nullable = false)
     private LocalDateTime fechaRegistro;
 
@@ -41,8 +55,42 @@ public class Usuario {
     @Column(nullable = false, length = 20)
     private EstadoUsuario estado;
 
+    /**
+     * Nombre y apellidos juntos, que es como se muestra en toda la aplicación.
+     */
     public String getNombreCompleto() {
         return nombre + " " + apellidos;
+    }
+
+    /**
+     * Si la cuenta puede operar. Una cuenta suspendida no ingresa ni publica.
+     */
+    public boolean estaActivo() {
+        return estado == EstadoUsuario.ACTIVO;
+    }
+
+    public String getDistrito() {
+        return distrito;
+    }
+
+    public void setDistrito(String distrito) {
+        this.distrito = distrito;
+    }
+
+    public BigDecimal getLatitud() {
+        return latitud;
+    }
+
+    public void setLatitud(BigDecimal latitud) {
+        this.latitud = latitud;
+    }
+
+    public BigDecimal getLongitud() {
+        return longitud;
+    }
+
+    public void setLongitud(BigDecimal longitud) {
+        this.longitud = longitud;
     }
 
     public Long getId() {

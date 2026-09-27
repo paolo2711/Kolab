@@ -6,9 +6,17 @@ Una misma cuenta sirve para pedir y para ofrecer.
 
 ## Requisitos
 
-JDK 21 o superior (https://adoptium.net). Maven no hace falta, el wrapper va incluido.
+JDK 21 o superior (https://adoptium.net) y PostgreSQL 16 o superior. Maven no hace falta, el
+wrapper va incluido.
 
 ## Ejecutar
+
+Primero hay que crear la base kolab, sus roles y las variables de entorno. Lo hace un script, que
+pide las claves al correr:
+
+    powershell -ExecutionPolicy Bypass -File scripts\crear-base-local.ps1
+
+Después, en una terminal nueva:
 
     git clone https://github.com/paolo2711/Kolab.git
     cd Kolab
@@ -26,7 +34,8 @@ Desde IntelliJ o Eclipse: abrir como proyecto Maven y ejecutar KolabApplication.
 
 ## Stack
 
-Spring Boot 3.5, Thymeleaf, Spring Security, Spring Data JPA, H2, Flyway, Maven. CSS propio.
+Java 21, Spring Boot 3.5, Thymeleaf, Spring Security, Spring Data JPA, PostgreSQL, Flyway y Maven.
+CSS propio. H2 solo en las pruebas, así que para compilar no hace falta PostgreSQL.
 
 El registro y el ingreso trabajan contra la base de datos. Las demás pantallas leen los datos de
 ejemplo de src/main/resources/datos.

@@ -27,7 +27,7 @@ public class DirectorioDePersonas {
         return persona(s.mia() ? o.persona() : s.persona());
     }
 
-    // los mejor calificados de la categoría, que es lo que pide el RF-09 del informe
+    // ordenados por calificacion y luego por servicios hechos
     public List<ExpertoResumen> expertosDe(Long idCategoria) {
         return ordenados(archivos.personas().stream()
                 .filter(p -> p.categorias().contains(idCategoria)));
