@@ -2,7 +2,6 @@ package com.kolab.usuario;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 
@@ -30,9 +29,6 @@ public class RegistroForm {
 
     @NotBlank(message = "Repite la contraseña")
     private String confirmacion;
-
-    @NotNull(message = "Elige cómo vas a usar KOLAB")
-    private TipoPerfil tipoPerfil = TipoPerfil.CLIENTE;
 
     public boolean contrasenasCoinciden() {
         return password != null && password.equals(confirmacion);
@@ -84,13 +80,5 @@ public class RegistroForm {
 
     public void setConfirmacion(String confirmacion) {
         this.confirmacion = confirmacion;
-    }
-
-    public TipoPerfil getTipoPerfil() {
-        return tipoPerfil;
-    }
-
-    public void setTipoPerfil(TipoPerfil tipoPerfil) {
-        this.tipoPerfil = tipoPerfil;
     }
 }

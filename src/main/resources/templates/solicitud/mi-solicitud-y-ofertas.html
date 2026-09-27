@@ -24,7 +24,11 @@
     <div class="k-dos-columnas k-principal-ancha">
         <div>
             <div class="k-tarjeta" style="margin-bottom:1.5rem;">
-                <span th:replace="~{fragmentos/componentes :: estado(${solicitud.estado})}"></span>
+                <div class="k-titulo-fila">
+                    <span th:replace="~{fragmentos/componentes :: estado(${solicitud.estado})}"></span>
+                    <a th:if="${solicitud.admiteOfertas()}"
+                       th:href="@{/mis-solicitudes/{id}/editar(id=${solicitud.id})}">Editar o cancelar</a>
+                </div>
                 <p style="margin:0.9rem 0 0; color:var(--tinta-2);" th:text="${solicitud.descripcion}">Descripción</p>
             </div>
 

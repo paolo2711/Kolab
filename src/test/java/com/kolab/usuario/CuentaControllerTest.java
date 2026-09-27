@@ -48,11 +48,11 @@ class CuentaControllerTest {
     }
 
     @Test
-    void elBotonDeExpertoLlegaAlFormularioConEsePerfilMarcado() throws Exception {
-        mockMvc.perform(get("/registro").param("perfil", "EXPERTO"))
+    void elRegistroSeAbreSinPedirTipoDeCuenta() throws Exception {
+        mockMvc.perform(get("/registro"))
                 .andExpect(status().isOk())
-                .andExpect(model().attribute("registroForm",
-                        org.hamcrest.Matchers.hasProperty("tipoPerfil", org.hamcrest.Matchers.is(TipoPerfil.EXPERTO))));
+                .andExpect(view().name("cuenta/registro"))
+                .andExpect(model().attributeExists("registroForm"));
     }
 
     @Test
@@ -64,7 +64,7 @@ class CuentaControllerTest {
                         .param("telefono", "987654321")
                         .param("password", "secreto123")
                         .param("confirmacion", "secreto123")
-                        .param("tipoPerfil", "CLIENTE"))
+                        )
                 .andExpect(redirectedUrl("/login"));
     }
 
@@ -76,7 +76,7 @@ class CuentaControllerTest {
                         .param("email", "marco@kolab.pe")
                         .param("password", "secreto123")
                         .param("confirmacion", "otracosa456")
-                        .param("tipoPerfil", "CLIENTE"))
+                        )
                 .andExpect(status().isOk())
                 .andExpect(view().name("cuenta/registro"))
                 .andExpect(model().attributeHasFieldErrors("registroForm", "confirmacion"));
@@ -95,7 +95,7 @@ class CuentaControllerTest {
                         .param("email", "marco@kolab.pe")
                         .param("password", "secreto123")
                         .param("confirmacion", "secreto123")
-                        .param("tipoPerfil", "CLIENTE"))
+                        )
                 .andExpect(status().isOk())
                 .andExpect(model().attributeHasFieldErrors("registroForm", "email"));
     }

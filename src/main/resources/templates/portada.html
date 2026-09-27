@@ -13,8 +13,8 @@
             <p>Una línea explicando que el precio lo pone quien contrata y que los expertos
                 aceptan o proponen otro. Texto provisional.</p>
             <div class="k-acciones" style="margin-top:1.5rem;">
-                <a class="k-btn k-btn-principal" th:href="@{/registro(perfil='CLIENTE')}">Publicar lo que necesito</a>
-                <a class="k-btn k-btn-linea" th:href="@{/registro(perfil='EXPERTO')}">Ganar ofreciendo lo que sé</a>
+                <a class="k-btn k-btn-principal" th:href="@{/registro}">Publicar lo que necesito</a>
+                <a class="k-btn k-btn-linea" th:href="@{/registro}">Ganar ofreciendo lo que sé</a>
             </div>
             <div class="k-cifras">
                 <span><b th:text="${#numbers.formatInteger(plataforma.serviciosConcretados, 1, 'WHITESPACE')}">1 240</b> servicios concretados</span>

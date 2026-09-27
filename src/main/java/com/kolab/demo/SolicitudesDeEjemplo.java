@@ -45,7 +45,8 @@ public class SolicitudesDeEjemplo {
 
     public SolicitudDetalle solicitud(Long id) {
         SolicitudJson s = archivos.solicitud(id);
-        return new SolicitudDetalle(s.id(), s.titulo(), s.descripcion(), categorias.nombreDe(s.categoria()),
+        return new SolicitudDetalle(s.id(), s.titulo(), s.descripcion(), s.categoria(),
+                categorias.nombreDe(s.categoria()),
                 s.modalidad(), s.distrito(), s.fechaDeseada(), s.precio(), s.publicada(), s.estado(),
                 ofertas.ofertasDe(s.id()));
     }

@@ -37,13 +37,25 @@ public class DirectorioDePersonas {
         return ordenados(archivos.personas().stream()).stream().limit(cuantos).toList();
     }
 
+    public ExpertoResumen experto(Long id) {
+        return aExperto(archivos.persona(id));
+    }
+
+    public List<Long> categoriasDe(Long id) {
+        return archivos.persona(id).categorias();
+    }
+
     private List<ExpertoResumen> ordenados(Stream<PersonaJson> flujo) {
         return flujo
                 .sorted(Comparator.comparing(PersonaJson::calificacion).reversed()
                         .thenComparing(Comparator.comparingInt(PersonaJson::servicios).reversed()))
-                .map(p -> new ExpertoResumen(aPersona(p), p.distrito(), p.calificacion(),
-                        p.servicios(), p.titular(), p.ultimaResena(), p.verificado()))
+                .map(this::aExperto)
                 .toList();
+    }
+
+    private ExpertoResumen aExperto(PersonaJson p) {
+        return new ExpertoResumen(aPersona(p), p.distrito(), p.calificacion(),
+                p.servicios(), p.titular(), p.ultimaResena(), p.verificado());
     }
 
     private Persona aPersona(PersonaJson p) {

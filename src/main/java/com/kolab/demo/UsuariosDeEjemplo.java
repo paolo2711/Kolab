@@ -1,7 +1,6 @@
 package com.kolab.demo;
 
 import com.kolab.usuario.RegistroForm;
-import com.kolab.usuario.TipoPerfil;
 import com.kolab.perfil.PerfilService;
 import com.kolab.usuario.UsuarioService;
 import org.springframework.boot.ApplicationArguments;
@@ -26,14 +25,14 @@ public class UsuariosDeEjemplo implements ApplicationRunner {
 
     @Override
     public void run(ApplicationArguments args) {
-        crear("Paolo", "Rodríguez Paredes", "cliente@kolab.pe", "987654321", TipoPerfil.CLIENTE);
-        crear("Luis", "Mendoza Quispe", "experto@kolab.pe", "912345678", TipoPerfil.EXPERTO);
+        crear("Paolo", "Rodríguez Paredes", "cliente@kolab.pe", "987654321");
+        crear("Luis", "Mendoza Quispe", "experto@kolab.pe", "912345678");
 
         usuarioService.buscarPorEmail("experto@kolab.pe")
                 .ifPresent(luis -> perfilService.guardarCategorias(luis.getId(), List.of(1L, 3L)));
     }
 
-    private void crear(String nombre, String apellidos, String email, String telefono, TipoPerfil tipoPerfil) {
+    private void crear(String nombre, String apellidos, String email, String telefono) {
         if (!usuarioService.emailDisponible(email)) {
             return;
         }
@@ -44,7 +43,6 @@ public class UsuariosDeEjemplo implements ApplicationRunner {
         form.setTelefono(telefono);
         form.setPassword(CLAVE);
         form.setConfirmacion(CLAVE);
-        form.setTipoPerfil(tipoPerfil);
         usuarioService.registrar(form);
     }
 }

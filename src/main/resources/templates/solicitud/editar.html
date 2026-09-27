@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layout :: base(~{::title}, ~{::main})}">
+<head>
+    <title>Editar solicitud · KOLAB</title>
+</head>
+<body>
+
+<main>
+    <p class="k-migas">
+        <a th:href="@{/mis-solicitudes/{id}(id=${idSolicitud})}">&larr; Volver a la solicitud</a>
+    </p>
+
+    <div class="k-encabezado">
+        <h1>Editar tu solicitud</h1>
+        <p>Puedes cambiarla mientras no hayas aceptado ninguna oferta. Quien ya ofertó verá la
+            versión nueva.</p>
+    </div>
+
+    <div class="k-dos-columnas k-principal-ancha">
+        <div class="k-tarjeta">
+            <form th:action="@{/mis-solicitudes/{id}/editar(id=${idSolicitud})}"
+                  th:object="${solicitudForm}" method="post">
+                <div class="k-campos">
+                    <div class="k-campo k-campo-ancho">
+                        <label for="titulo">Qué necesitas</label>
+                        <input type="text" id="titulo" th:field="*{titulo}"
+                               th:classappend="${#fields.hasErrors('titulo')} ? 'k-mal'">
+                        <span class="k-error" th:if="${#fields.hasErrors('titulo')}" th:errors="*{titulo}"></span>
+                    </div>
+
+                    <div class="k-campo">
+                        <label for="idCategoria">Categoría</label>
+                        <select id="idCategoria" th:field="*{idCategoria}"
+                                th:classappend="${#fields.hasErrors('idCategoria')} ? 'k-mal'">
+                            <option value="">Elige una</option>
+                            <option th:each="c : ${categorias}" th:value="${c.id}" th:text="${c.nombre}">Categoría</option>
+                        </select>
+                        <span class="k-error" th:if="${#fields.hasErrors('idCategoria')}" th:errors="*{idCategoria}"></span>
+                    </div>
+
+                    <div class="k-campo">
+                        <label for="modalidad">Modalidad</label>
+                        <select id="modalidad" th:field="*{modalidad}">
+                            <option th:each="m : ${modalidades}" th:value="${m}" th:text="${m.etiqueta}">Presencial</option>
+                        </select>
+                    </div>
+
+                    <div class="k-campo">
+                        <label for="distrito">Distrito</label>
+                        <input type="text" id="distrito" th:field="*{distrito}" placeholder="San Miguel"
+                               th:classappend="${#fields.hasErrors('distrito')} ? 'k-mal'">
+                        <span class="k-error" th:if="${#fields.hasErrors('distrito')}" th:errors="*{distrito}"></span>
+                    </div>
+
+                    <div class="k-campo">
+                        <label for="precioPropuesto">Tu precio</label>
+                        <div class="k-prefijo">
+                            <span>S/</span>
+                            <input type="number" id="precioPropuesto" step="0.01" th:field="*{precioPropuesto}"
+                                   th:classappend="${#fields.hasErrors('precioPropuesto')} ? 'k-mal'">
+                        </div>
+                        <span class="k-error" th:if="${#fields.hasErrors('precioPropuesto')}" th:errors="*{precioPropuesto}"></span>
+                    </div>
+
+                    <div class="k-campo">
+                        <label for="fechaDeseada">Para cuándo</label>
+                        <input type="date" id="fechaDeseada" th:field="*{fechaDeseada}"
+                               th:classappend="${#fields.hasErrors('fechaDeseada')} ? 'k-mal'">
+                        <span class="k-error" th:if="${#fields.hasErrors('fechaDeseada')}" th:errors="*{fechaDeseada}"></span>
+                    </div>
+
+                    <div class="k-campo k-campo-ancho">
+                        <label for="descripcion">Detalle</label>
+                        <textarea id="descripcion" rows="6" th:field="*{descripcion}"
+                                  th:classappend="${#fields.hasErrors('descripcion')} ? 'k-mal'"></textarea>
+                        <span class="k-error" th:if="${#fields.hasErrors('descripcion')}" th:errors="*{descripcion}"></span>
+                    </div>
+                </div>
+
+                <div class="k-acciones">
+                    <button type="submit" class="k-btn k-btn-principal">Guardar cambios</button>
+                    <a th:href="@{/mis-solicitudes/{id}(id=${idSolicitud})}">Cancelar</a>
+                </div>
+            </form>
+        </div>
+
+        <div>
+            <div class="k-tarjeta k-peligro">
+                <h2 class="k-tarjeta-titulo">Cancelar la solicitud</h2>
+                <p style="margin:0 0 1.2rem; color:var(--tinta-2);">Deja de aparecer en Explorar y
+                    quien ofertó recibe el aviso. No se puede deshacer.</p>
+
+                <form th:action="@{/mis-solicitudes/{id}/cancelar(id=${idSolicitud})}" method="post">
+                    <button type="submit" class="k-btn k-btn-linea k-btn-peligro">Cancelar esta solicitud</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</main>
+
+</body>
+</html>

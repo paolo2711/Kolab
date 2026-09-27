@@ -1,8 +1,6 @@
 package com.kolab.usuario;
 
 import com.kolab.common.EmailYaRegistradoException;
-import com.kolab.perfil.PerfilExperto;
-import com.kolab.perfil.PerfilExpertoRepository;
 import java.time.LocalDateTime;
 import java.util.Locale;
 import java.util.Optional;
@@ -18,14 +16,10 @@ public class UsuarioServiceImpl implements UsuarioService {
     private static final Logger log = LoggerFactory.getLogger(UsuarioServiceImpl.class);
 
     private final UsuarioRepository usuarioRepository;
-    private final PerfilExpertoRepository perfilExpertoRepository;
     private final PasswordEncoder passwordEncoder;
 
-    public UsuarioServiceImpl(UsuarioRepository usuarioRepository,
-                              PerfilExpertoRepository perfilExpertoRepository,
-                              PasswordEncoder passwordEncoder) {
+    public UsuarioServiceImpl(UsuarioRepository usuarioRepository, PasswordEncoder passwordEncoder) {
         this.usuarioRepository = usuarioRepository;
-        this.perfilExpertoRepository = perfilExpertoRepository;
         this.passwordEncoder = passwordEncoder;
     }
 
@@ -43,16 +37,11 @@ public class UsuarioServiceImpl implements UsuarioService {
         usuario.setEmail(email);
         usuario.setPasswordHash(passwordEncoder.encode(form.getPassword()));
         usuario.setTelefono(vacioComoNulo(form.getTelefono()));
-        usuario.setTipoPerfil(form.getTipoPerfil());
         usuario.setFechaRegistro(LocalDateTime.now());
         usuario.setEstado(EstadoUsuario.ACTIVO);
         usuarioRepository.save(usuario);
 
-        if (usuario.esExperto()) {
-            perfilExpertoRepository.save(new PerfilExperto(usuario));
-        }
-
-        log.info("usuario registrado id={} tipo={}", usuario.getId(), usuario.getTipoPerfil());
+        log.info("usuario registrado id={}", usuario.getId());
         return usuario;
     }
 

@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layout :: base(~{::title}, ~{::main})}">
+<head>
+    <title>Editar mi perfil · KOLAB</title>
+</head>
+<body>
+
+<main>
+    <p class="k-migas"><a th:href="@{/perfil}">&larr; Mi perfil</a></p>
+
+    <div class="k-encabezado">
+        <h1>Editar mi perfil</h1>
+        <p>Esto es lo que ve quien entra a tu perfil antes de ofertarte o de contratarte.</p>
+    </div>
+
+    <div class="k-dos-columnas k-principal-ancha">
+        <div class="k-tarjeta">
+            <form th:action="@{/perfil/editar}" th:object="${perfilForm}" method="post">
+                <div class="k-campos">
+                    <div class="k-campo">
+                        <label for="nombre">Nombre</label>
+                        <input type="text" id="nombre" th:field="*{nombre}"
+                               th:classappend="${#fields.hasErrors('nombre')} ? 'k-mal'">
+                        <span class="k-error" th:if="${#fields.hasErrors('nombre')}" th:errors="*{nombre}"></span>
+                    </div>
+
+                    <div class="k-campo">
+                        <label for="apellidos">Apellidos</label>
+                        <input type="text" id="apellidos" th:field="*{apellidos}"
+                               th:classappend="${#fields.hasErrors('apellidos')} ? 'k-mal'">
+                        <span class="k-error" th:if="${#fields.hasErrors('apellidos')}" th:errors="*{apellidos}"></span>
+                    </div>
+
+                    <div class="k-campo">
+                        <label for="telefono">Celular</label>
+                        <input type="tel" id="telefono" th:field="*{telefono}" placeholder="987654321"
+                               th:classappend="${#fields.hasErrors('telefono')} ? 'k-mal'">
+                        <span class="k-error" th:if="${#fields.hasErrors('telefono')}" th:errors="*{telefono}"></span>
+                    </div>
+
+                    <div class="k-campo">
+                        <label for="ubicacion">Dónde estás</label>
+                        <input type="text" id="ubicacion" th:field="*{ubicacion}" placeholder="Jesús María, Lima"
+                               th:classappend="${#fields.hasErrors('ubicacion')} ? 'k-mal'">
+                        <span class="k-error" th:if="${#fields.hasErrors('ubicacion')}" th:errors="*{ubicacion}"></span>
+                        <span class="k-pista" th:unless="${#fields.hasErrors('ubicacion')}">
+                            Sirve para ordenar por cercanía las solicitudes presenciales.</span>
+                    </div>
+
+                    <div class="k-campo k-campo-ancho">
+                        <label for="descripcion">Sobre mí</label>
+                        <textarea id="descripcion" rows="5" th:field="*{descripcion}"
+                                  placeholder="Qué haces, hace cuánto y cómo trabajas."
+                                  th:classappend="${#fields.hasErrors('descripcion')} ? 'k-mal'"></textarea>
+                        <span class="k-error" th:if="${#fields.hasErrors('descripcion')}" th:errors="*{descripcion}"></span>
+                    </div>
+                </div>
+
+                <div class="k-acciones">
+                    <button type="submit" class="k-btn k-btn-principal">Guardar cambios</button>
+                    <a th:href="@{/perfil}">Cancelar</a>
+                </div>
+            </form>
+        </div>
+
+        <div>
+            <div class="k-tarjeta" style="margin-bottom:1.5rem;">
+                <h2 class="k-tarjeta-titulo">Lo que sé hacer</h2>
+                <p style="margin:0 0 1.2rem; color:var(--tinta-2);">Las categorías en las que trabajas se
+                    cambian aparte, porque de ahí sale lo que te aparece para ofertar.</p>
+                <a class="k-btn k-btn-linea k-btn-chico" th:href="@{/bienvenida}">Cambiar mis categorías</a>
+            </div>
+
+            <div class="k-tarjeta">
+                <h2 class="k-tarjeta-titulo">Correo y contraseña</h2>
+                <dl class="k-datos">
+                    <dt>Correo</dt>
+                    <dd th:text="${usuario.username}">correo@ejemplo.com</dd>
+                </dl>
+                <p class="k-vacio" style="margin:0.9rem 0 0;">El correo no se cambia desde aquí porque es
+                    con lo que ingresas.</p>
+            </div>
+        </div>
+    </div>
+</main>
+
+</body>
+</html>

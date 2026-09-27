@@ -34,10 +34,6 @@ public class Usuario {
     @Column(length = 20)
     private String telefono;
 
-    @Enumerated(EnumType.STRING)
-    @Column(name = "tipo_perfil", nullable = false, length = 20)
-    private TipoPerfil tipoPerfil;
-
     @Column(name = "fecha_registro", nullable = false)
     private LocalDateTime fechaRegistro;
 
@@ -47,10 +43,6 @@ public class Usuario {
 
     public String getNombreCompleto() {
         return nombre + " " + apellidos;
-    }
-
-    public boolean esExperto() {
-        return tipoPerfil == TipoPerfil.EXPERTO;
     }
 
     public Long getId() {
@@ -99,14 +91,6 @@ public class Usuario {
 
     public void setTelefono(String telefono) {
         this.telefono = telefono;
-    }
-
-    public TipoPerfil getTipoPerfil() {
-        return tipoPerfil;
-    }
-
-    public void setTipoPerfil(TipoPerfil tipoPerfil) {
-        this.tipoPerfil = tipoPerfil;
     }
 
     public LocalDateTime getFechaRegistro() {

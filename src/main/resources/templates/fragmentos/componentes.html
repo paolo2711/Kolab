@@ -130,7 +130,8 @@
             <span class="k-sello" th:if="${e.verificado}"><i class="bi bi-patch-check-fill"></i> Verificado</span>
         </div>
 
-        <div class="k-carta-titulo" th:text="${e.persona.nombre}">Luis Mendoza</div>
+        <a class="k-carta-titulo k-enlace-limpio" th:href="@{/personas/{id}(id=${e.persona.id})}"
+           th:text="${e.persona.nombre}">Luis Mendoza</a>
         <div class="k-carta-meta" th:text="${e.titular}">Profesor de guitarra</div>
 
         <div class="k-oferta-meta" style="margin-top:0.55rem;">
@@ -143,7 +144,7 @@
 
         <div class="k-carta-pie">
             <a class="k-btn k-btn-linea k-btn-chico"
-               th:href="@{/mis-solicitudes/nueva(experto=${e.persona.nombre}, idCategoria=${idCategoria})}">Pedirle un servicio</a>
+               th:href="@{/mis-solicitudes/nueva(idPersona=${e.persona.id}, idCategoria=${idCategoria})}">Pedirle un servicio</a>
         </div>
     </div>
 </div>

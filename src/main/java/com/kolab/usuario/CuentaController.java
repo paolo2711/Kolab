@@ -9,7 +9,6 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
@@ -30,11 +29,27 @@ public class CuentaController {
         return "cuenta/login";
     }
 
+    @GetMapping("/recuperar")
+    public String formularioRecuperar(Model model) {
+        model.addAttribute("recuperarForm", new RecuperarForm());
+        return "cuenta/recuperar";
+    }
+
+    // no se dice si el correo existe: eso deja averiguar quien tiene cuenta
+    @PostMapping("/recuperar")
+    public String recuperar(@Valid @ModelAttribute RecuperarForm recuperarForm, BindingResult errores,
+                            Model model) {
+        if (errores.hasErrors()) {
+            return "cuenta/recuperar";
+        }
+        model.addAttribute("enviado", true);
+        model.addAttribute("correo", recuperarForm.getEmail().trim());
+        return "cuenta/recuperar";
+    }
+
     @GetMapping("/registro")
-    public String formularioRegistro(@RequestParam(required = false) String perfil, Model model) {
-        RegistroForm form = new RegistroForm();
-        form.setTipoPerfil(perfilElegido(perfil));
-        model.addAttribute("registroForm", form);
+    public String formularioRegistro(Model model) {
+        model.addAttribute("registroForm", new RegistroForm());
         return "cuenta/registro";
     }
 
@@ -59,13 +74,5 @@ public class CuentaController {
 
         flash.addFlashAttribute("aviso", "Tu cuenta está lista. Ingresa con tu correo y contraseña.");
         return "redirect:/login";
-    }
-
-    // el tipo llega en la url desde los dos botones de la portada, cualquier otra cosa es cliente
-    private TipoPerfil perfilElegido(String perfil) {
-        if (perfil == null) {
-            return TipoPerfil.CLIENTE;
-        }
-        return "EXPERTO".equalsIgnoreCase(perfil) ? TipoPerfil.EXPERTO : TipoPerfil.CLIENTE;
     }
 }

@@ -9,11 +9,13 @@
 <main>
     <p class="k-migas"><a th:href="@{/mis-solicitudes}">&larr; Mis solicitudes</a></p>
 
-    <div class="k-invita" th:if="${experto != null}">
+    <div class="k-invita" th:if="${destinatario != null}">
+        <span th:replace="~{fragmentos/componentes :: cara(${destinatario}, '2.4rem')}"></span>
         <div>
-            <b th:text="'Dirigida a ' + ${experto}">Dirigida a Luis Mendoza</b>
-            Le va a llegar primero, pero otros expertos también van a poder ofertar.
+            <b th:text="'Dirigida a ' + ${destinatario.nombre}">Dirigida a Luis Mendoza</b>
+            Le llega primero, pero otros también van a poder ofertar.
         </div>
+        <a class="k-enlace-suave" th:href="@{/personas/{id}(id=${destinatario.id})}">Ver su perfil</a>
     </div>
 
     <div class="k-encabezado">

@@ -7,6 +7,8 @@
 <body>
 
 <main>
+    <div th:replace="~{fragmentos/componentes :: aviso}"></div>
+
     <div class="k-perfil-cabecera">
         <span class="k-avatar" th:text="${usuario.iniciales}">PR</span>
 
@@ -33,7 +35,7 @@
             </div>
         </div>
 
-        <button type="button" class="k-btn k-btn-linea k-btn-chico" disabled>Editar perfil</button>
+        <a class="k-btn k-btn-linea k-btn-chico" th:href="@{/perfil/editar}">Editar perfil</a>
     </div>
 
     <div class="k-dos-columnas k-principal-ancha">

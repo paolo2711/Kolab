@@ -60,21 +60,6 @@
                         <span class="k-error" th:if="${#fields.hasErrors('confirmacion')}" th:errors="*{confirmacion}"></span>
                     </div>
 
-                    <div class="k-campo k-campo-ancho">
-                        <span class="k-etiqueta">¿Cómo quieres empezar?</span>
-                        <div class="k-opciones">
-                            <label class="k-opcion">
-                                <input type="radio" th:field="*{tipoPerfil}" value="CLIENTE">
-                                <span class="k-opcion-nombre">Cliente</span>
-                                <span class="k-opcion-detalle">Necesito contratar algo. Podrás ofrecer después si quieres</span>
-                            </label>
-                            <label class="k-opcion">
-                                <input type="radio" th:field="*{tipoPerfil}" value="EXPERTO">
-                                <span class="k-opcion-nombre">Experto</span>
-                                <span class="k-opcion-detalle">Quiero ofrecer lo que sé hacer. También podrás contratar</span>
-                            </label>
-                        </div>
-                    </div>
                 </div>
 
                 <div class="k-acciones">

@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layout :: base(~{::title}, ~{::main})}">
+<head>
+    <title>Perfil · KOLAB</title>
+</head>
+<body>
+
+<main>
+    <p class="k-migas"><a th:href="@{/solicitudes}">&larr; Explorar</a></p>
+
+    <div class="k-perfil-cabecera">
+        <span th:replace="~{fragmentos/componentes :: cara(${experto.persona}, '5rem')}"></span>
+
+        <div class="k-perfil-datos">
+            <div class="k-perfil-nombre" th:text="${experto.persona.nombre}">Luis Mendoza</div>
+            <div class="k-perfil-meta" th:text="${experto.titular}">Profesor de guitarra</div>
+
+            <div class="k-perfil-nota">
+                <span th:replace="~{fragmentos/componentes :: nota(${experto.calificacion})}"></span>
+                <span>de 5 · <span th:text="${experto.servicios}">32</span> servicios concretados ·
+                    <span th:text="${experto.distrito}">Pueblo Libre</span></span>
+            </div>
+
+            <div class="k-sellos">
+                <span class="k-sello" th:if="${experto.verificado}">
+                    <i class="bi bi-patch-check-fill"></i> Identidad verificada</span>
+                <span class="k-sello"><i class="bi bi-chat-dots"></i> Responde por la mensajería de KOLAB</span>
+            </div>
+        </div>
+
+        <a class="k-btn k-btn-principal"
+           th:href="@{/mis-solicitudes/nueva(idPersona=${experto.persona.id})}">Proponerle un servicio</a>
+    </div>
+
+    <div class="k-dos-columnas k-principal-ancha">
+        <div>
+            <div class="k-tarjeta" style="margin-bottom:1.5rem;">
+                <h2 class="k-tarjeta-titulo">En qué trabaja</h2>
+
+                <div class="k-chips" th:if="${!#lists.isEmpty(categorias)}">
+                    <a class="k-chip" th:each="c : ${categorias}"
+                       th:href="@{/categorias/{id}(id=${c.id})}" th:text="${c.nombre}">Categoría</a>
+                </div>
+                <p class="k-vacio" style="margin:0;" th:if="${#lists.isEmpty(categorias)}">
+                    Todavía no declaró categorías. Igual le puedes proponer un servicio.</p>
+            </div>
+
+            <div class="k-tarjeta">
+                <h2 class="k-tarjeta-titulo">Lo último que dijeron</h2>
+                <p class="k-cita" th:text="'“' + ${experto.ultimaResena} + '”'">Reseña</p>
+            </div>
+        </div>
+
+        <div>
+            <div class="k-metricas">
+                <div class="k-metrica">
+                    <div class="k-metrica-valor" th:text="${experto.calificacion}">4.8</div>
+                    <div class="k-metrica-nombre">Calificación promedio</div>
+                </div>
+                <div class="k-metrica">
+                    <div class="k-metrica-valor" th:text="${experto.servicios}">32</div>
+                    <div class="k-metrica-nombre">Servicios concretados</div>
+                </div>
+                <div class="k-metrica" th:if="${!#lists.isEmpty(categorias)}">
+                    <div class="k-metrica-valor" th:text="${#lists.size(categorias)}">2</div>
+                    <div class="k-metrica-nombre">Categorías en las que trabaja</div>
+                </div>
+            </div>
+
+            <div class="k-tarjeta">
+                <h2 class="k-tarjeta-titulo">Cómo funciona pedirle algo</h2>
+                <p style="margin:0; color:var(--tinta-2);">Publicas la solicitud con tu precio y le llega
+                    a <span th:text="${experto.persona.nombre}">esta persona</span> primero. Si no la
+                    toma, otros pueden ofertar.</p>
+            </div>
+        </div>
+    </div>
+</main>
+
+</body>
+</html>

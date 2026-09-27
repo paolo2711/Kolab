@@ -10,8 +10,6 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import com.kolab.common.EmailYaRegistradoException;
-import com.kolab.perfil.PerfilExperto;
-import com.kolab.perfil.PerfilExpertoRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -27,21 +25,18 @@ class UsuarioServiceImplTest {
     private UsuarioRepository usuarioRepository;
 
     @Mock
-    private PerfilExpertoRepository perfilExpertoRepository;
-
-    @Mock
     private PasswordEncoder passwordEncoder;
 
     private UsuarioServiceImpl usuarioService;
 
     @BeforeEach
     void prepararServicio() {
-        usuarioService = new UsuarioServiceImpl(usuarioRepository, perfilExpertoRepository, passwordEncoder);
+        usuarioService = new UsuarioServiceImpl(usuarioRepository, passwordEncoder);
     }
 
     @Test
     void guardaElCorreoEnMinusculasYSinEspacios() {
-        RegistroForm form = formularioValido("  Paolo.Rodriguez@Gmail.com  ", TipoPerfil.CLIENTE);
+        RegistroForm form = formularioValido("  Paolo.Rodriguez@Gmail.com  ");
         when(usuarioRepository.existsByEmail("paolo.rodriguez@gmail.com")).thenReturn(false);
         when(passwordEncoder.encode(anyString())).thenReturn("hash");
 
@@ -52,7 +47,7 @@ class UsuarioServiceImplTest {
 
     @Test
     void nuncaGuardaLaContrasenaEnClaro() {
-        RegistroForm form = formularioValido("cliente@kolab.pe", TipoPerfil.CLIENTE);
+        RegistroForm form = formularioValido("cliente@kolab.pe");
         when(usuarioRepository.existsByEmail(anyString())).thenReturn(false);
         when(passwordEncoder.encode("secreto123")).thenReturn("$2a$10$hashfalso");
 
@@ -63,30 +58,8 @@ class UsuarioServiceImplTest {
     }
 
     @Test
-    void alRegistrarUnExpertoLeCreaSuPerfil() {
-        RegistroForm form = formularioValido("experto@kolab.pe", TipoPerfil.EXPERTO);
-        when(usuarioRepository.existsByEmail(anyString())).thenReturn(false);
-        when(passwordEncoder.encode(anyString())).thenReturn("hash");
-
-        usuarioService.registrar(form);
-
-        verify(perfilExpertoRepository, times(1)).save(any(PerfilExperto.class));
-    }
-
-    @Test
-    void alRegistrarUnClienteNoCreaPerfilDeExperto() {
-        RegistroForm form = formularioValido("cliente@kolab.pe", TipoPerfil.CLIENTE);
-        when(usuarioRepository.existsByEmail(anyString())).thenReturn(false);
-        when(passwordEncoder.encode(anyString())).thenReturn("hash");
-
-        usuarioService.registrar(form);
-
-        verify(perfilExpertoRepository, never()).save(any());
-    }
-
-    @Test
     void rechazaUnCorreoQueYaTieneCuenta() {
-        RegistroForm form = formularioValido("repetido@kolab.pe", TipoPerfil.CLIENTE);
+        RegistroForm form = formularioValido("repetido@kolab.pe");
         when(usuarioRepository.existsByEmail("repetido@kolab.pe")).thenReturn(true);
 
         assertThatThrownBy(() -> usuarioService.registrar(form))
@@ -97,7 +70,7 @@ class UsuarioServiceImplTest {
 
     @Test
     void elTelefonoVacioSeGuardaComoNulo() {
-        RegistroForm form = formularioValido("cliente@kolab.pe", TipoPerfil.CLIENTE);
+        RegistroForm form = formularioValido("cliente@kolab.pe");
         form.setTelefono("   ");
         when(usuarioRepository.existsByEmail(anyString())).thenReturn(false);
         when(passwordEncoder.encode(anyString())).thenReturn("hash");
@@ -113,7 +86,7 @@ class UsuarioServiceImplTest {
         return captor.getValue();
     }
 
-    private RegistroForm formularioValido(String email, TipoPerfil tipoPerfil) {
+    private RegistroForm formularioValido(String email) {
         RegistroForm form = new RegistroForm();
         form.setNombre("Paolo");
         form.setApellidos("Rodriguez Paredes");
@@ -121,7 +94,6 @@ class UsuarioServiceImplTest {
         form.setTelefono("987654321");
         form.setPassword("secreto123");
         form.setConfirmacion("secreto123");
-        form.setTipoPerfil(tipoPerfil);
         return form;
     }
 }

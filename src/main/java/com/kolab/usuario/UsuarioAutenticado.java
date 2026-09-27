@@ -10,7 +10,6 @@ public class UsuarioAutenticado extends User {
     private final String nombre;
     private final String nombreCompleto;
     private final String iniciales;
-    private final TipoPerfil tipoPerfil;
     private final boolean ofreceServicios;
 
     public UsuarioAutenticado(Usuario usuario, boolean ofreceServicios) {
@@ -24,7 +23,6 @@ public class UsuarioAutenticado extends User {
         this.nombre = usuario.getNombre();
         this.nombreCompleto = usuario.getNombreCompleto();
         this.iniciales = inicialesDe(usuario);
-        this.tipoPerfil = usuario.getTipoPerfil();
     }
 
     public Long getIdUsuario() {
@@ -41,10 +39,6 @@ public class UsuarioAutenticado extends User {
 
     public String getIniciales() {
         return iniciales;
-    }
-
-    public TipoPerfil getTipoPerfil() {
-        return tipoPerfil;
     }
 
     // ya no hay cuentas de cliente y de experto: cualquiera puede pedir, y ofrece quien

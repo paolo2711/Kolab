@@ -15,7 +15,6 @@ import com.kolab.demo.OfertasDeEjemplo;
 import com.kolab.demo.SolicitudesDeEjemplo;
 import com.kolab.perfil.PerfilService;
 import com.kolab.usuario.EstadoUsuario;
-import com.kolab.usuario.TipoPerfil;
 import com.kolab.usuario.Usuario;
 import com.kolab.usuario.UsuarioAutenticado;
 import java.util.List;
@@ -70,7 +69,6 @@ class InicioControllerTest {
         usuario.setApellidos("Rodriguez Paredes");
         usuario.setEmail("paolo@kolab.pe");
         usuario.setPasswordHash("$2a$10$hashfalso");
-        usuario.setTipoPerfil(TipoPerfil.CLIENTE);
         usuario.setEstado(EstadoUsuario.ACTIVO);
         return get("/").with(user(new UsuarioAutenticado(usuario, ofreceServicios)));
     }

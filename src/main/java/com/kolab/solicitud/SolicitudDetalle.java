@@ -3,7 +3,6 @@ package com.kolab.solicitud;
 import com.kolab.common.Hito;
 import com.kolab.oferta.OfertaResumen;
 import java.math.BigDecimal;
-import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -11,6 +10,7 @@ import java.util.List;
 public record SolicitudDetalle(Long id,
                                String titulo,
                                String descripcion,
+                               Long idCategoria,
                                String categoria,
                                Modalidad modalidad,
                                String distrito,
