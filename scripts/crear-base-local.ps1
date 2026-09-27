@@ -1,6 +1,11 @@
 <#
     Crea la base kolab, sus dos roles y las variables de entorno de la aplicacion.
-    Las contrasenas se piden al ejecutarlo y no quedan escritas en ningun archivo.
+
+    Solo pide la clave del usuario postgres. Las de kolab_migracion y kolab_app se generan al azar
+    y se guardan unicamente en las variables de entorno: nadie las escribe ni las necesita a mano.
+
+    Se puede volver a correr. Si los roles ya existen, les cambia la clave por una nueva y
+    actualiza las variables.
 
     Uso:
         powershell -ExecutionPolicy Bypass -File scripts\crear-base-local.ps1
@@ -15,31 +20,33 @@ param(
 
 $ErrorActionPreference = "Stop"
 
-function Leer-Clave {
-    param([string] $Rotulo, [switch] $ConConfirmacion)
-
-    while ($true) {
-        $primera = Read-Host -Prompt $Rotulo -AsSecureString
-        $texto = [Runtime.InteropServices.Marshal]::PtrToStringBSTR(
-            [Runtime.InteropServices.Marshal]::SecureStringToBSTR($primera))
-
-        if ([string]::IsNullOrWhiteSpace($texto)) {
-            Write-Host "  Esa clave esta vacia. Otra vez." -ForegroundColor Yellow
-            continue
+function Nueva-Clave {
+    # solo letras y digitos: asi entra sin escapes en la URL de JDBC, en setx y en psql
+    $alfabeto = 'abcdefghijkmnpqrstuvwxyzABCDEFGHJKLMNPQRSTUVWXYZ23456789'
+    $tope = [Math]::Floor(256 / $alfabeto.Length) * $alfabeto.Length
+    $rng = [System.Security.Cryptography.RandomNumberGenerator]::Create()
+    try {
+        $clave = ""
+        $uno = [byte[]]::new(1)
+        while ($clave.Length -lt 32) {
+            $rng.GetBytes($uno)
+            # los bytes del final se descartan para que ninguna letra salga mas seguido que otra
+            if ($uno[0] -lt $tope) {
+                $clave += $alfabeto[$uno[0] % $alfabeto.Length]
+            }
         }
-        if (-not $ConConfirmacion) {
-            return $texto
-        }
-
-        $segunda = Read-Host -Prompt "  Repitela" -AsSecureString
-        $repetida = [Runtime.InteropServices.Marshal]::PtrToStringBSTR(
-            [Runtime.InteropServices.Marshal]::SecureStringToBSTR($segunda))
-
-        if ($texto -ceq $repetida) {
-            return $texto
-        }
-        Write-Host "  No coinciden. Otra vez." -ForegroundColor Yellow
+        return $clave
     }
+    finally {
+        $rng.Dispose()
+    }
+}
+
+function Existe-Rol {
+    param([string] $Rol)
+    $r = & $Psql -h $Servidor -p $Puerto -U postgres -d postgres -t -A -q `
+                 -c "select 1 from pg_roles where rolname = '$Rol'"
+    return $r -eq "1"
 }
 
 try {
@@ -53,15 +60,16 @@ try {
     }
 
     Write-Host "Base $Base en ${Servidor}:$Puerto" -ForegroundColor Cyan
-    Write-Host "Las claves no se muestran ni se guardan en ningun archivo."
+    Write-Host "Las claves de los roles se generan solas. No se muestran ni se guardan en archivos."
     Write-Host ""
 
-    $clavePostgres  = Leer-Clave "Clave del usuario postgres"
-    $claveMigracion = Leer-Clave "Clave NUEVA para kolab_migracion" -ConConfirmacion
-    $claveApp       = Leer-Clave "Clave NUEVA para kolab_app" -ConConfirmacion
+    $clave = Read-Host -Prompt "Clave del usuario postgres" -AsSecureString
+    $env:PGPASSWORD = [Runtime.InteropServices.Marshal]::PtrToStringBSTR(
+        [Runtime.InteropServices.Marshal]::SecureStringToBSTR($clave))
+    if ([string]::IsNullOrWhiteSpace($env:PGPASSWORD)) {
+        throw "no escribiste ninguna clave."
+    }
 
-    # psql lee la clave de PGPASSWORD, asi no aparece en la linea de comandos
-    $env:PGPASSWORD = $clavePostgres
     $comunes = @("-h", $Servidor, "-p", $Puerto, "-U", "postgres", "-v", "ON_ERROR_STOP=1", "-q")
 
     Write-Host ""
@@ -71,8 +79,8 @@ try {
     Write-Host " listo"
 
     Write-Host "Creando la base..." -NoNewline
-    $existe = & $Psql @comunes -d postgres -t -A -c "select 1 from pg_database where datname = '$Base'"
-    if ($existe -eq "1") {
+    $hay = & $Psql @comunes -d postgres -t -A -c "select 1 from pg_database where datname = '$Base'"
+    if ($hay -eq "1") {
         Write-Host " ya existia"
     } else {
         & $Psql @comunes -d postgres -c "create database $Base"
@@ -80,10 +88,22 @@ try {
         Write-Host " creada"
     }
 
-    Write-Host "Creando los roles..." -NoNewline
-    & $Psql @comunes -d $Base -v "clave_migracion=$claveMigracion" -v "clave_app=$claveApp" -f $rolesSql
-    if ($LASTEXITCODE -ne 0) { throw "kolab-roles.sql fallo. Si los roles ya existian, borralos y vuelve a correrlo." }
-    Write-Host " listos"
+    $claveMigracion = Nueva-Clave
+    $claveApp = Nueva-Clave
+
+    if ((Existe-Rol "kolab_migracion") -and (Existe-Rol "kolab_app")) {
+        Write-Host "Renovando la clave de los roles..." -NoNewline
+        & $Psql @comunes -d $Base -c "alter role kolab_migracion password '$claveMigracion'"
+        if ($LASTEXITCODE -ne 0) { throw "no pude cambiar la clave de kolab_migracion." }
+        & $Psql @comunes -d $Base -c "alter role kolab_app password '$claveApp'"
+        if ($LASTEXITCODE -ne 0) { throw "no pude cambiar la clave de kolab_app." }
+        Write-Host " listas"
+    } else {
+        Write-Host "Creando los roles..." -NoNewline
+        & $Psql @comunes -d $Base -v "clave_migracion=$claveMigracion" -v "clave_app=$claveApp" -f $rolesSql
+        if ($LASTEXITCODE -ne 0) { throw "kolab-roles.sql fallo. Si solo uno de los dos roles existia, borralo y vuelve a correr." }
+        Write-Host " listos"
+    }
 
     Write-Host "Guardando las variables..." -NoNewline
     setx KOLAB_DB_URL "jdbc:postgresql://${Servidor}:$Puerto/$Base" | Out-Null
@@ -103,7 +123,6 @@ catch {
 }
 finally {
     $env:PGPASSWORD = $null
-    $clavePostgres = $null
     $claveMigracion = $null
     $claveApp = $null
     [GC]::Collect()

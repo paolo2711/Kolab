@@ -89,7 +89,10 @@ no se tocan. Por eso están partidos así y no en una sola clase.
 La conexión sale de variables de entorno. No hay contraseñas en el repositorio ni en los scripts.
 
 `scripts\crear-base-local.ps1` crea la base, ejecuta `kolab-roles.sql` y deja las cinco variables
-con `setx`. Pide las tres claves al correr y no las escribe en ningún lado:
+con `setx`. **Solo pide la clave de `postgres`**: las de los dos roles las genera al azar, 32
+caracteres, y quedan únicamente en las variables de entorno. Nadie las escribe ni las necesita a
+mano. Se puede volver a correr: si los roles ya existen les cambia la clave y actualiza las
+variables.
 
     powershell -ExecutionPolicy Bypass -File scripts\crear-base-local.ps1
 
