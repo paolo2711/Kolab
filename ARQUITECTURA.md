@@ -48,8 +48,12 @@ Nueve tablas: `usuario`, `perfil`, `categoria`, `perfil_categoria`, `solicitud`,
 `servicio`, `mensaje` y `calificacion`. Más la vista `v_precios_categoria`, que calcula al
 consultar lo que se está pagando en cada rubro.
 
-El esquema está versionado con Flyway en `src/main/resources/db/migration`. Cada archivo se aplica
-una vez y no se reescribe nunca: para cambiar algo se agrega el siguiente número.
+El esquema está versionado con Flyway. Cada archivo se aplica una vez y no se reescribe nunca:
+para cambiar algo se agrega el siguiente número. Van en dos carpetas:
+
+- `db/migration/comun` corre en cualquier motor. Ahí está el esquema.
+- `db/migration/postgresql` corre solo contra PostgreSQL. Ahí van los permisos, que no tienen
+  equivalente en H2 y romperían las pruebas.
 
 `spring.jpa.hibernate.ddl-auto=validate` está puesto a propósito. Hibernate no crea ni modifica
 tablas, solo comprueba al arrancar que las entidades y el esquema coincidan. Si alguien cambia una
@@ -58,7 +62,8 @@ callada.
 
 Dos roles: `kolab_migracion` es dueño del esquema y lo usa Flyway para crear y cambiar tablas;
 `kolab_app` es con el que se conecta la aplicación y solo puede leer, insertar y actualizar. No
-puede borrar filas: una solicitud se cancela cambiando su estado.
+puede borrar filas: una solicitud se cancela cambiando su estado. La única excepción es
+`perfil_categoria`, donde sí borra, porque quitar una categoría declarada es quitar una relación.
 
 Las pruebas corren contra H2 en memoria con las mismas migraciones, así que no hace falta un
 PostgreSQL levantado para compilar.
