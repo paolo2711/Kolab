@@ -6,7 +6,7 @@
 </head>
 <body>
 
-<main>
+<main class="k-acceso">
     <div class="k-encabezado">
         <h1>Ingresa a KOLAB</h1>
         <p>Publica lo que necesitas con el precio que tú propones, o gana ofreciendo lo que sabes hacer.</p>
@@ -62,6 +62,8 @@
         </div>
 
         <div class="k-lienzo">
+            <img class="k-acceso-foto" th:src="@{/img/categoria/teaching-workshop.jpg}"
+                 alt="Alguien enseñando a otra persona">
             <h2>Tú pones el precio.<br><em>Los expertos deciden</em> si lo toman.</h2>
             <p>Nadie te impone una tarifa. Publicas cuánto estás dispuesto a pagar y quien sepa
                 hacerlo acepta ese monto o te propone otro.</p>
@@ -72,27 +74,6 @@
                 <li>Coordinan por mensajería interna y al cerrar se califican.</li>
             </ol>
 
-            <div class="k-muestra" th:if="${muestra}">
-                <div class="k-muestra-cima">
-                    <div>
-                        <div class="k-muestra-titulo" th:text="${muestra.titulo}">Título de la solicitud</div>
-                        <div class="k-muestra-meta">
-                            <span th:text="${muestra.categoria}">Categoría</span> ·
-                            <span th:text="${muestra.ubicacion}">Presencial · Jesús María</span>
-                        </div>
-                    </div>
-                    <span th:replace="~{fragmentos/componentes :: precio(${muestra.precioPropuesto}, 'k-precio-g')}"></span>
-                </div>
-                <div class="k-muestra-pie">
-                    <span th:if="${muestra.tieneOfertas()}">
-                        <span th:text="${muestra.ofertas}">3</span>
-                        <span th:text="${muestra.ofertas == 1} ? 'experto ofertó' : 'expertos ofertaron'">expertos ofertaron</span>
-                    </span>
-                    <span th:unless="${muestra.tieneOfertas()}">Todavía sin ofertas</span>
-                    <span th:if="${muestra.mejorOferta != null}">desde S/
-                        <span th:text="${#numbers.formatDecimal(muestra.mejorOferta, 1, 'COMMA', 2, 'POINT')}">75.00</span></span>
-                </div>
-            </div>
         </div>
     </div>
 </main>

@@ -1,7 +1,6 @@
 package com.kolab.usuario;
 
 import com.kolab.common.EmailYaRegistradoException;
-import com.kolab.demo.SolicitudesDeEjemplo;
 import jakarta.validation.Valid;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -15,17 +14,13 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 public class CuentaController {
 
     private final UsuarioService usuarioService;
-    private final SolicitudesDeEjemplo solicitudes;
 
-    public CuentaController(UsuarioService usuarioService, SolicitudesDeEjemplo solicitudes) {
+    public CuentaController(UsuarioService usuarioService) {
         this.usuarioService = usuarioService;
-        this.solicitudes = solicitudes;
     }
 
     @GetMapping("/login")
-    public String login(Model model) {
-        solicitudes.catalogo().stream().findFirst()
-                .ifPresent(muestra -> model.addAttribute("muestra", muestra));
+    public String login() {
         return "cuenta/login";
     }
 

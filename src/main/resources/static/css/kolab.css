@@ -2766,3 +2766,118 @@ button:focus-visible,
     padding-right: 0 !important;
     font-variant-numeric: tabular-nums;
 }
+
+/* acceso: ingresar, crear cuenta y recuperar la clave. solo alcanza a esas tres pantallas */
+
+.k-acceso .k-encabezado h1 {
+    font-size: 1.85rem;
+    font-weight: 700;
+    letter-spacing: -0.03em;
+}
+
+.k-acceso .k-encabezado p {
+    color: var(--tinta-2);
+}
+
+.k-acceso .k-tarjeta {
+    border-color: var(--linea-fuerte);
+    box-shadow: var(--sombra);
+    padding: 2rem;
+}
+
+.k-acceso .k-campo label {
+    font-weight: 600;
+    color: var(--tinta);
+    letter-spacing: -0.01em;
+}
+
+.k-acceso .k-opcional {
+    font-weight: 400;
+    color: var(--tinta-3);
+}
+
+.k-acceso input,
+.k-acceso select {
+    border-color: var(--linea-fuerte);
+    background: var(--panel);
+}
+
+.k-acceso input:focus,
+.k-acceso select:focus {
+    border-color: var(--acento);
+    box-shadow: 0 0 0 3px var(--acento-suave);
+}
+
+.k-acceso input::placeholder {
+    color: var(--tinta-3);
+}
+
+.k-acceso .k-error {
+    font-weight: 600;
+    color: var(--rojo);
+}
+
+.k-acceso .k-btn-principal {
+    box-shadow: 0 2px 6px rgba(26, 86, 168, 0.22);
+}
+
+.k-acceso .k-separador {
+    color: var(--tinta-3);
+    font-weight: 500;
+}
+
+.k-acceso .k-aviso {
+    border-color: #cfdff1;
+    font-weight: 500;
+}
+
+.k-acceso .k-prueba {
+    color: var(--tinta-3);
+}
+
+.k-acceso .k-lienzo h2 {
+    letter-spacing: -0.03em;
+}
+
+.k-acceso .k-lienzo em {
+    color: var(--acento-oscuro);
+    font-style: normal;
+    font-weight: 700;
+}
+
+.k-acceso .k-pasos li {
+    color: var(--tinta-2);
+}
+
+.k-acceso .k-muestra {
+    border-color: var(--linea-fuerte);
+    box-shadow: var(--sombra);
+    padding: 1.15rem 1.25rem;
+}
+
+.k-acceso .k-muestra-titulo {
+    font-weight: 600;
+    letter-spacing: -0.01em;
+}
+
+.k-acceso .k-muestra-meta,
+.k-acceso .k-muestra-pie {
+    color: var(--tinta-2);
+}
+
+.k-acceso .k-tarjeta-titulo {
+    letter-spacing: -0.02em;
+}
+
+.k-acceso-foto {
+    width: calc(100% + 3.8rem);
+    aspect-ratio: 21 / 8;
+    object-fit: cover;
+    margin: -1.9rem -1.9rem 1.5rem;
+    border-radius: var(--r) var(--r) 0 0;
+    background: var(--hueso);
+}
+
+.k-acceso .k-lienzo {
+    overflow: hidden;
+}
