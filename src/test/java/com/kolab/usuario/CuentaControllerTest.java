@@ -6,18 +6,22 @@ import static org.mockito.Mockito.verify;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrl;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
 import com.kolab.common.EmailYaRegistradoException;
+import com.kolab.common.Fotos;
 import com.kolab.config.SecurityConfig;
-import com.kolab.demo.ArchivosDeDatos;
-import com.kolab.demo.CatalogoDeCategorias;
-import com.kolab.demo.DirectorioDePersonas;
-import com.kolab.demo.OfertasDeEjemplo;
-import com.kolab.demo.SolicitudesDeEjemplo;
+import com.kolab.mensaje.MensajeService;
+import com.kolab.oferta.OfertaService;
+import com.kolab.reporte.IndicadoresDePlataforma;
+import com.kolab.reporte.ReporteService;
+import com.kolab.solicitud.SolicitudService;
+import java.math.BigDecimal;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,8 +31,7 @@ import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 
 @WebMvcTest(CuentaController.class)
-@Import({SecurityConfig.class, ArchivosDeDatos.class, CatalogoDeCategorias.class,
-        DirectorioDePersonas.class, OfertasDeEjemplo.class, SolicitudesDeEjemplo.class})
+@Import(SecurityConfig.class)
 class CuentaControllerTest {
 
     @Autowired
@@ -40,11 +43,39 @@ class CuentaControllerTest {
     @MockitoBean
     private DetallesUsuarioService detallesUsuarioService;
 
+    @MockitoBean
+    private ReporteService reporteService;
+
+    @MockitoBean
+    private Fotos fotos;
+
+    @MockitoBean
+    private MensajeService mensajeService;
+
+    @MockitoBean
+    private SolicitudService solicitudService;
+
+    @MockitoBean
+    private OfertaService ofertaService;
+
+    @BeforeEach
+    void plataformaSinActividad() {
+        Mockito.when(reporteService.plataforma())
+                .thenReturn(new IndicadoresDePlataforma(0, BigDecimal.ZERO, 0, 0));
+    }
+
     @Test
     void laPantallaDeLoginEsPublica() throws Exception {
         mockMvc.perform(get("/login"))
                 .andExpect(status().isOk())
                 .andExpect(view().name("cuenta/login"));
+    }
+
+    @Test
+    void fueraDeDesarrolloElLoginNoMuestraLasHerramientas() throws Exception {
+        mockMvc.perform(get("/login"))
+                .andExpect(content().string(org.hamcrest.Matchers.not(
+                        org.hamcrest.Matchers.containsString("reiniciar datos"))));
     }
 
     @Test

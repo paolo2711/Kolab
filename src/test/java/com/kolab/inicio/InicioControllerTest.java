@@ -7,13 +7,17 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
+import com.kolab.categoria.CategoriaService;
+import com.kolab.common.Fotos;
 import com.kolab.config.SecurityConfig;
-import com.kolab.demo.ArchivosDeDatos;
-import com.kolab.demo.CatalogoDeCategorias;
-import com.kolab.demo.DirectorioDePersonas;
-import com.kolab.demo.OfertasDeEjemplo;
-import com.kolab.demo.SolicitudesDeEjemplo;
-import com.kolab.perfil.PerfilService;
+import com.kolab.mensaje.MensajeService;
+import com.kolab.oferta.OfertaService;
+import com.kolab.perfil.DirectorioService;
+import com.kolab.reporte.IndicadoresDePlataforma;
+import com.kolab.reporte.ReporteService;
+import com.kolab.solicitud.CatalogoService;
+import com.kolab.solicitud.SolicitudService;
+import java.math.BigDecimal;
 import com.kolab.usuario.EstadoUsuario;
 import com.kolab.usuario.Usuario;
 import com.kolab.usuario.UsuarioAutenticado;
@@ -28,18 +32,41 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 
 @WebMvcTest(InicioController.class)
-@Import({SecurityConfig.class, ArchivosDeDatos.class, CatalogoDeCategorias.class,
-        DirectorioDePersonas.class, OfertasDeEjemplo.class, SolicitudesDeEjemplo.class})
+@Import(SecurityConfig.class)
 class InicioControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
 
     @MockitoBean
-    private PerfilService perfilService;
+    private CatalogoService catalogoService;
+
+    @MockitoBean
+    private CategoriaService categoriaService;
+
+    @MockitoBean
+    private DirectorioService directorioService;
+
+    @MockitoBean
+    private ReporteService reporteService;
+
+    @MockitoBean
+    private Fotos fotos;
+
+    @MockitoBean
+    private MensajeService mensajeService;
+
+    @MockitoBean
+    private SolicitudService solicitudService;
+
+    @MockitoBean
+    private OfertaService ofertaService;
 
     @Test
     void alVisitanteSinCuentaLeMuestraLaPortada() throws Exception {
+        Mockito.when(reporteService.plataforma())
+                .thenReturn(new IndicadoresDePlataforma(3, new BigDecimal("4.8"), 5, 2));
+
         mockMvc.perform(get("/"))
                 .andExpect(status().isOk())
                 .andExpect(view().name("portada"));
@@ -47,12 +74,12 @@ class InicioControllerTest {
 
     @Test
     void aQuienYaDijoQueSabeHacerAlgoLeAbreSuInicio() throws Exception {
-        Mockito.when(perfilService.categoriasDe(1L)).thenReturn(List.of(1L));
+        Mockito.when(catalogoService.enMisCategorias(Mockito.eq(1L), Mockito.anyInt())).thenReturn(List.of());
 
         mockMvc.perform(inicioComo(true))
                 .andExpect(status().isOk())
                 .andExpect(view().name("inicio/inicio-usuario"))
-                .andExpect(content().string(org.hamcrest.Matchers.containsString("Abiertas en lo que sabes hacer")));
+                .andExpect(content().string(org.hamcrest.Matchers.containsString("Lo que se está pidiendo ahora")));
     }
 
     @Test
@@ -70,6 +97,6 @@ class InicioControllerTest {
         usuario.setEmail("paolo@kolab.pe");
         usuario.setPasswordHash("$2a$10$hashfalso");
         usuario.setEstado(EstadoUsuario.ACTIVO);
-        return get("/").with(user(new UsuarioAutenticado(usuario, ofreceServicios)));
+        return get("/").with(user(new UsuarioAutenticado(usuario, ofreceServicios, null)));
     }
 }
