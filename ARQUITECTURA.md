@@ -19,8 +19,9 @@ y su controlador, así que para entender una funcionalidad se abre una sola carp
     ├── mensaje         la conversación de cada oferta
     ├── calificacion    la nota de cada parte al terminar
     ├── inicio          portada e inicio del usuario
-    ├── demo            lectura de los datos de ejemplo en JSON (temporal)
-    └── common          utilidades y excepciones propias
+    ├── reporte         indicadores de la plataforma y el resumen de cada persona
+    ├── desarrollo      datos de ejemplo y herramientas; solo con KOLAB_DESARROLLO=true
+    └── common          utilidades, fotos y excepciones propias
 
 Un paquete puede tener dos controladores cuando la misma entidad se usa desde dos lados. Pasa en
 `solicitud`: `SolicitudController` es el catálogo donde se explora y se oferta, y
@@ -70,12 +71,26 @@ PostgreSQL levantado para compilar.
 
 ## Los datos de ejemplo
 
-Las pantallas todavía leen de `src/main/resources/datos/*.json` a través del paquete `demo`, que
-tiene un cargador (`ArchivosDeDatos`) y seis lectores, uno por dominio. Conectarlas a la base es el
-siguiente paso.
+Todas las pantallas leen y escriben en la base. Los JSON de `src/main/resources/ejemplos` no los
+lee ninguna pantalla: son la semilla con la que se llena una base vacía en una máquina de desarrollo.
 
-Cuando toque, cada lector cambia su fuente por el repositorio correspondiente y los controladores
-no se tocan. Por eso están partidos así y no en una sola clase.
+La carga está en el paquete `desarrollo` y pasa por los mismos servicios que usa la aplicación
+(registrar, publicar, ofertar, aceptar, cerrar y calificar), así los ejemplos cumplen las mismas
+reglas que los datos reales. Los archivos se apuntan entre sí por correo, por nombre de categoría o
+por una clave propia, nunca por id.
+
+Solo carga si la tabla `solicitud` está vacía: arrancar dos veces no duplica nada. Para que entre un
+cambio en los JSON se usa «reiniciar datos», que borra el esquema con el rol de migraciones, vuelve
+a migrar y carga de nuevo.
+
+Todo el paquete depende de `kolab.desarrollo`. Fuera de desarrollo sus rutas no existen.
+
+## Fotos
+
+Las fotos se encuentran por nombre, sin columna en la base. La de una categoría se llama como la
+categoría (`img/categoria/hogar-y-reparaciones.jpg`), la de una persona como su correo antes de la
+arroba (`img/persona/luis.mendoza.jpg`) y la de las pantallas de acceso es `img/acceso.jpg`. Si
+falta el archivo se muestra el ícono de la categoría o las iniciales.
 
 ## Agregar una pantalla
 
@@ -93,37 +108,21 @@ no se tocan. Por eso están partidos así y no en una sola clase.
 
 La conexión sale de variables de entorno. No hay contraseñas en el repositorio ni en los scripts.
 
-`scripts\crear-base-local.ps1` crea la base, ejecuta `kolab-roles.sql` y deja las cinco variables
-con `setx`. **Solo pide la clave de `postgres`**: las de los dos roles las genera al azar, 32
-caracteres, y quedan únicamente en las variables de entorno. Nadie las escribe ni las necesita a
-mano. Se puede volver a correr: si los roles ya existen les cambia la clave y actualiza las
-variables.
+`instalar-base.cmd` llama a `scripts\crear-base-local.ps1`, que busca psql en `C:` o `D:`, pregunta el
+puerto, crea la base, ejecuta `kolab-roles.sql` y deja las variables con `setx`. Solo pide la clave
+de `postgres`: las de los dos roles las genera al azar y quedan únicamente en las variables. Se
+puede volver a correr: si los roles ya existen les cambia la clave.
 
-    powershell -ExecutionPolicy Bypass -File scripts\crear-base-local.ps1
+Las variables que deja:
 
-Espera psql en `D:\Program Files\PostgreSQL\18\bin` y el puerto 5433. Si están en otro sitio:
+- `KOLAB_DB_URL`: la conexión, con el puerto.
+- `KOLAB_DB_USER` y `KOLAB_DB_PASSWORD`: `kolab_app`, con el que corre la aplicación.
+- `KOLAB_MIGRACION_USER` y `KOLAB_MIGRACION_PASSWORD`: `kolab_migracion`, con el que migra Flyway.
+- `KOLAB_DESARROLLO=true`: carga los ejemplos y muestra las herramientas de desarrollo.
 
-    powershell -ExecutionPolicy Bypass -File scripts\crear-base-local.ps1 -Psql "C:\ruta\psql.exe" -Puerto 5432
+Otras que se pueden definir: `KOLAB_COMISION` (porcentaje, 5 si no se define) y
+`KOLAB_CLAVE_ENLACES`, que firma los enlaces para recuperar la contraseña. Sin ella se genera una al
+arrancar y los enlaces vencen al reiniciar.
 
-Las cinco variables que deja:
-
-| Variable | Para qué |
-|---|---|
-| `KOLAB_DB_URL` | la conexión, con el puerto |
-| `KOLAB_DB_USER`, `KOLAB_DB_PASSWORD` | `kolab_app`, con el que corre la aplicación |
-| `KOLAB_MIGRACION_USER`, `KOLAB_MIGRACION_PASSWORD` | `kolab_migracion`, con el que migra Flyway |
-
-Con `setx` hay que abrir una terminal nueva para que tomen efecto. Después:
-
-    mvnw.cmd -B clean package
-    java -jar target/kolab.jar
-
-Las pruebas no necesitan ninguna de estas variables.
-
-## Correrlo sin PostgreSQL
-
-    java -jar target\kolab.jar --spring.profiles.active=demo
-
-El perfil `demo` usa H2 en memoria con las mismas migraciones de `db/migration/comun`. Sirve para
-mostrar la aplicacion en una maquina donde no hay nada instalado, o para repartir el `.jar` al
-resto del grupo. La base se crea al arrancar y se borra al cerrar.
+Con `setx` hay que cerrar y volver a abrir el editor o la terminal. Las pruebas no necesitan
+ninguna de estas variables.

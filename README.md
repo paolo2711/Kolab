@@ -6,47 +6,54 @@ Una misma cuenta sirve para pedir y para ofrecer.
 
 ## Requisitos
 
-JDK 21 o superior (https://adoptium.net) y PostgreSQL 16 o superior. Maven no hace falta, el
-wrapper va incluido.
+- JDK 21 o superior (https://adoptium.net).
+- PostgreSQL 16 o superior, con el instalador de Windows (https://www.postgresql.org/download/windows/).
+  Durante la instalación te pide una clave para el usuario `postgres`: anótala.
+
+Maven no hace falta, el wrapper va incluido.
+
+## Instalar, una sola vez
+
+1. Doble clic en `instalar-base.cmd`, en la raíz del proyecto. Te pregunta el puerto de PostgreSQL
+   (Enter si no lo cambiaste al instalar) y la clave de `postgres`. Crea la base `kolab` y deja
+   guardado lo que la aplicación necesita para conectarse.
+2. Cierra VS Code y vuelve a abrirlo. Sin esto no ve lo que dejó el paso anterior.
 
 ## Ejecutar
 
-Primero hay que crear la base kolab, sus roles y las variables de entorno. Lo hace un script, que
-pide las claves al correr:
+En VS Code, con la extensión Extension Pack for Java, abre la carpeta del proyecto y dale Run a
+`src/main/java/com/kolab/KolabApplication.java`. Después abre http://localhost:8080.
 
-    powershell -ExecutionPolicy Bypass -File scripts\crear-base-local.ps1
+La primera vez la base se llena sola con datos de ejemplo.
 
-Después, en una terminal nueva:
-
-    git clone https://github.com/paolo2711/Kolab.git
-    cd Kolab
-    mvnw.cmd -B clean package
-    java -jar target/kolab.jar
-
-Abrir http://localhost:8080
-
-Desde IntelliJ o Eclipse: abrir como proyecto Maven y ejecutar KolabApplication.
-
-## Solo probarlo, sin instalar PostgreSQL
-
-    java -jar target\kolab.jar --spring.profiles.active=demo
-
-El perfil demo levanta con la base en memoria: no hace falta PostgreSQL ni variables de entorno.
-Se pierde todo al cerrar.
-
-## Usuarios de prueba
+## Cuentas de ejemplo
 
     cliente@kolab.pe / kolab1234
     experto@kolab.pe / kolab1234
 
-## Stack
+Todas las personas de `src/main/resources/ejemplos/personas.json` entran con `kolab1234`.
 
-Java 21, Spring Boot 3.5, Thymeleaf, Spring Security, Spring Data JPA, PostgreSQL, Flyway y Maven.
-CSS propio. H2 solo en las pruebas, así que para compilar no hace falta PostgreSQL.
+## Mientras se desarrolla
 
-El registro y el ingreso trabajan contra la base de datos. Las demás pantallas leen los datos de
-ejemplo de src/main/resources/datos.
+Al pie de la pantalla de ingreso hay dos enlaces:
+
+- reiniciar datos: borra todo y vuelve a cargar los ejemplos. Sirve cuando cambias un JSON de
+  `ejemplos` o cuando la base quedó desordenada.
+- cargar ejemplos: los carga solo si la base está vacía.
+
+Para recuperar una contraseña todavía no hay correo: después de poner tu correo, la misma pantalla
+muestra el enlace para cambiarla.
+
+Nada de esto existe en el servidor. Depende de `KOLAB_DESARROLLO`, que solo deja puesto
+`instalar-base.cmd`.
 
 ## Pruebas
 
     mvnw.cmd -B test
+
+Corren contra H2 en memoria con las mismas migraciones, así que no necesitan PostgreSQL.
+
+## Stack
+
+Java 21, Spring Boot 3.5, Thymeleaf, Spring Security, Spring Data JPA, PostgreSQL, Flyway y Maven.
+CSS propio.
