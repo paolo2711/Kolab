@@ -48,6 +48,10 @@ public record MiResumen(Pendientes pendientes, LoQuePido pido, LoQueOfrezco ofre
             return diferenciaConLoPropuesto != null && diferenciaConLoPropuesto.signum() < 0;
         }
 
+        public boolean cerrasteIgual() {
+            return diferenciaConLoPropuesto != null && diferenciaConLoPropuesto.signum() == 0;
+        }
+
         public BigDecimal getDiferenciaSinSigno() {
             return diferenciaConLoPropuesto == null ? BigDecimal.ZERO : diferenciaConLoPropuesto.abs();
         }

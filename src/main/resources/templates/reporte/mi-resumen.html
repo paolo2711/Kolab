@@ -120,10 +120,11 @@
                     <div class="k-metrica-nombre">Pagado en servicios cerrados</div>
                 </div>
                 <div class="k-metrica">
-                    <div class="k-metrica-valor"
+                    <div class="k-metrica-valor" th:if="${p.cerrasteIgual()}">Igual</div>
+                    <div class="k-metrica-valor" th:unless="${p.cerrasteIgual()}"
                          th:text="${p.diferenciaConLoPropuesto == null} ? '—' : ((${p.negociasteAbajo()} ? '− S/ ' : '+ S/ ') + ${#numbers.formatDecimal(p.diferenciaSinSigno, 1, 2, 'POINT')})">− S/ 5.00</div>
                     <div class="k-metrica-nombre"
-                         th:text="${p.negociasteAbajo()} ? 'Cerraste en promedio por debajo de tu precio' : 'Frente al precio que propusiste, en promedio'">
+                         th:text="${p.cerrasteIgual()} ? 'Cerraste justo al precio que propusiste' : (${p.negociasteAbajo()} ? 'Cerraste en promedio por debajo de tu precio' : 'Frente al precio que propusiste, en promedio')">
                         Frente a tu precio</div>
                 </div>
                 <div class="k-metrica">

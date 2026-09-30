@@ -4,6 +4,28 @@ Plataforma para intercambiar habilidades y servicios en la que quien pide pone e
 lo que necesitas con el monto que quieres pagar, y quien sabe hacerlo lo acepta o te propone otro.
 Una misma cuenta sirve para pedir y para ofrecer.
 
+## Capturas
+
+Portada, para quien todavía no tiene cuenta:
+
+![Portada](docs/capturas/portada.jpg)
+
+Inicio con sesión:
+
+![Inicio con sesión](docs/capturas/inicio.jpg)
+
+Una solicitud con las ofertas que recibió:
+
+![Solicitud y ofertas](docs/capturas/solicitud-y-ofertas.jpg)
+
+Perfil público de quien ofrece:
+
+![Perfil público](docs/capturas/perfil.jpg)
+
+Mi resumen, de alguien que pide y también ofrece:
+
+![Mi resumen](docs/capturas/mi-resumen.jpg)
+
 ## Requisitos
 
 - JDK 21 o superior (https://adoptium.net).
