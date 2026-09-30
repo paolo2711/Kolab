@@ -10,8 +10,8 @@ public record Persona(Long id, String nombre, String iniciales, int cara) {
         return cara > 0;
     }
 
-    public String retrato(int lado) {
-        return Foto.retrato(cara, lado);
+    public String retrato() {
+        return Foto.retrato(cara);
     }
 
     // sin esto una lista de gente sin foto es una fila de círculos idénticos

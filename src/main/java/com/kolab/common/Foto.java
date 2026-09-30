@@ -1,25 +1,33 @@
 package com.kolab.common;
 
-// las fotos son de relleno hasta que haya material propio. se piden por tema y en el tamaño exacto
-// en que se van a ver, porque la misma imagen sirve de miniatura, de mosaico y de banner
+/**
+ * Arma la direccion de las fotos de ejemplo.
+ *
+ * <p>Los archivos viven en {@code static/img}, dentro del proyecto. Antes se pedian a un servicio
+ * de imagenes de relleno y la aplicacion quedaba sin fotos cuando ese servicio fallaba o no habia
+ * internet. Cuando haya material propio se reemplazan los archivos y no se toca codigo.
+ */
 public final class Foto {
 
-    private static final String CATALOGO = "https://loremflickr.com/%d/%d/%s?lock=%d";
-    private static final String RETRATO = "https://i.pravatar.cc/%d?img=%d";
+    private static final String CATEGORIA = "/img/categoria/%s.jpg";
+    private static final String PERSONA = "/img/persona/%d.jpg";
 
     private Foto() {
     }
 
-    public static String de(String tema, int ancho, int alto) {
-        return String.format(CATALOGO, ancho, alto, tema, cerrojo(tema));
+    /**
+     * La foto de una categoria. El tamano lo resuelve el CSS con {@code object-fit}, asi que un
+     * mismo archivo sirve de miniatura, de mosaico y de banner.
+     */
+    public static String de(String tema) {
+        return String.format(CATEGORIA, tema);
     }
 
-    public static String retrato(int cara, int lado) {
-        return String.format(RETRATO, lado, cara);
-    }
-
-    // sin el cerrojo el servicio devuelve una foto distinta en cada recarga
-    private static int cerrojo(String tema) {
-        return Math.abs(tema.hashCode() % 1000);
+    /**
+     * El retrato de una persona. Quien no subio ninguno se muestra con sus iniciales, asi que
+     * conviene preguntar antes por {@code tieneFoto()}.
+     */
+    public static String retrato(int cara) {
+        return String.format(PERSONA, cara);
     }
 }

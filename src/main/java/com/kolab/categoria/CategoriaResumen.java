@@ -7,8 +7,8 @@ public record CategoriaResumen(Long id, String nombre, String icono, String tema
                                BigDecimal precioMinimo, BigDecimal precioMaximo,
                                long abiertas) {
 
-    public String foto(int ancho, int alto) {
-        return Foto.de(tema, ancho, alto);
+    public String foto() {
+        return Foto.de(tema);
     }
 
     public String getRango() {

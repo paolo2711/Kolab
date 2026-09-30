@@ -5,7 +5,7 @@
     "icono": "bi-music-note-beamed",
     "precioMinimo": 50,
     "precioMaximo": 120,
-    "tema": "guitar,music"
+    "tema": "guitar-music"
   },
   {
     "id": 2,
@@ -13,7 +13,7 @@
     "icono": "bi-tools",
     "precioMinimo": 60,
     "precioMaximo": 450,
-    "tema": "home,repair,tools"
+    "tema": "home-repair"
   },
   {
     "id": 3,
@@ -21,7 +21,7 @@
     "icono": "bi-translate",
     "precioMinimo": 40,
     "precioMaximo": 90,
-    "tema": "language,class"
+    "tema": "language-class"
   },
   {
     "id": 4,
@@ -29,7 +29,7 @@
     "icono": "bi-palette",
     "precioMinimo": 80,
     "precioMaximo": 400,
-    "tema": "graphic,design"
+    "tema": "graphic-design"
   },
   {
     "id": 5,
@@ -37,7 +37,7 @@
     "icono": "bi-cpu",
     "precioMinimo": 70,
     "precioMaximo": 350,
-    "tema": "computer,setup"
+    "tema": "computer-setup"
   },
   {
     "id": 6,
@@ -45,7 +45,7 @@
     "icono": "bi-book",
     "precioMinimo": 30,
     "precioMaximo": 80,
-    "tema": "study,desk"
+    "tema": "study-desk"
   },
   {
     "id": 7,
@@ -61,6 +61,6 @@
     "icono": "bi-heart",
     "precioMinimo": 20,
     "precioMaximo": 100,
-    "tema": "dog,grooming"
+    "tema": "dog-grooming"
   }
 ]

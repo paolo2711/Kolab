@@ -26,7 +26,7 @@
         <div class="k-mosaico">
             <a class="k-tesela" th:each="c : ${categorias}"
                th:href="@{/categorias/{id}(id=${c.id})}">
-                <img th:src="${c.foto(420, 315)}" th:alt="${c.nombre}" loading="lazy">
+                <img th:src="${c.foto()}" th:alt="${c.nombre}" loading="lazy">
                 <span class="k-tesela-texto">
                     <span class="k-tesela-nombre" th:text="${c.nombre}">Categoría</span>
                     <span class="k-tesela-dato" th:if="${c.tieneDemanda()}">
@@ -52,7 +52,7 @@
             <a class="k-pieza" th:each="s : ${cercanas}"
                th:href="@{/solicitudes/{id}(id=${s.id})}">
                 <span class="k-pieza-foto">
-                    <img th:src="${s.foto(560, 315)}" th:alt="${s.categoria}" loading="lazy">
+                    <img th:src="${s.foto()}" th:alt="${s.categoria}" loading="lazy">
                     <span class="k-pieza-distancia">
                         <i class="bi bi-geo-alt-fill"></i>
                         <span th:text="${s.distancia}">3.1 km</span>

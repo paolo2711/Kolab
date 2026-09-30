@@ -15,8 +15,8 @@ public record OfertaEnviada(Long idSolicitud,
                             int cuantasOfertas,
                             String enviada) {
 
-    public String foto(int ancho, int alto) {
-        return Foto.de(tema, ancho, alto);
+    public String foto() {
+        return Foto.de(tema);
     }
 
     public boolean aceptaste() {

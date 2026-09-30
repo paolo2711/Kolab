@@ -19,7 +19,7 @@
 
     <div class="k-lista">
         <a class="k-solicitud" th:each="s : ${solicitudes}" th:href="@{/mis-solicitudes/{id}(id=${s.id})}">
-            <img class="k-miniatura" th:src="${s.foto(160, 120)}" th:alt="${s.categoria}" loading="lazy">
+            <img class="k-miniatura" th:src="${s.foto()}" th:alt="${s.categoria}" loading="lazy">
             <div class="k-solicitud-cuerpo">
                 <span class="k-solicitud-titulo" th:text="${s.titulo}">Título</span>
                 <div class="k-solicitud-meta">

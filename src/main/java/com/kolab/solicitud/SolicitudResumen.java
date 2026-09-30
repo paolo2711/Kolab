@@ -28,8 +28,8 @@ public record SolicitudResumen(Long id,
                 kilometros);
     }
 
-    public String foto(int ancho, int alto) {
-        return Foto.de(tema, ancho, alto);
+    public String foto() {
+        return Foto.de(tema);
     }
 
     public boolean tieneOfertas() {

@@ -28,7 +28,7 @@
 
 <span th:fragment="cara(p, lado)" class="k-cara" th:style="'--lado:' + ${lado}"
       th:classappend="${p.tieneFoto()} ? '' : 'k-cara-letras t' + ${p.tono}">
-    <img th:if="${p.tieneFoto()}" th:src="${p.retrato(120)}" th:alt="${p.nombre}" loading="lazy">
+    <img th:if="${p.tieneFoto()}" th:src="${p.retrato()}" th:alt="${p.nombre}" loading="lazy">
     <span th:unless="${p.tieneFoto()}" th:text="${p.iniciales}">LM</span>
 </span>
 
@@ -102,7 +102,7 @@
 </div>
 
 <a th:fragment="fila(s, accion)" class="k-solicitud" th:href="@{/solicitudes/{id}(id=${s.id})}">
-    <img class="k-miniatura" th:src="${s.foto(160, 120)}" th:alt="${s.categoria}" loading="lazy">
+    <img class="k-miniatura" th:src="${s.foto()}" th:alt="${s.categoria}" loading="lazy">
 
     <div class="k-solicitud-cuerpo">
         <span class="k-solicitud-titulo" th:text="${s.titulo}">Título</span>
