@@ -57,6 +57,19 @@ function Buscar-Psql {
     return ""
 }
 
+# el puerto del servidor de esa misma version: lo dice el registro de Windows o su postgresql.conf
+function Buscar-Puerto {
+    $version = $Psql -replace '.*PostgreSQL\\(\d+)\\.*', '$1'
+    $servicio = Get-ItemProperty -Path "HKLM:\SOFTWARE\PostgreSQL\Services\postgresql-x64-$version" `
+                                 -ErrorAction SilentlyContinue
+    if ($servicio -and $servicio.Port) { return [int]$servicio.Port }
+    $conf = Join-Path (Split-Path (Split-Path $Psql)) "data\postgresql.conf"
+    $linea = Select-String -Path $conf -Pattern '^\s*port\s*=\s*(\d+)' -ErrorAction SilentlyContinue |
+        Select-Object -First 1
+    if ($linea) { return [int]$linea.Matches[0].Groups[1].Value }
+    return 5432
+}
+
 try {
     if ([string]::IsNullOrWhiteSpace($Psql)) {
         $Psql = Buscar-Psql
@@ -65,8 +78,11 @@ try {
         throw "No encuentro PostgreSQL instalado. Instalalo desde https://www.postgresql.org/download/windows/ y vuelve a correr esto."
     }
     if ($Puerto -eq 0) {
-        $respuesta = Read-Host -Prompt "Puerto de PostgreSQL (Enter para 5432)"
-        $Puerto = if ([string]::IsNullOrWhiteSpace($respuesta)) { 5432 } else { [int]$respuesta }
+        $version = $Psql -replace '.*PostgreSQL\\(\d+)\\.*', '$1'
+        $detectado = Buscar-Puerto
+        Write-Host "PostgreSQL $version encontrado, escucha en el puerto $detectado."
+        $respuesta = Read-Host -Prompt "Enter para usar el $detectado, o escribe otro puerto"
+        $Puerto = if ([string]::IsNullOrWhiteSpace($respuesta)) { $detectado } else { [int]$respuesta }
     }
 
     $rolesSql = Join-Path $PSScriptRoot "kolab-roles.sql"
@@ -90,7 +106,9 @@ try {
     Write-Host ""
     Write-Host "Conectando..." -NoNewline
     & $Psql @comunes -d postgres -t -A -c "select 1" | Out-Null
-    if ($LASTEXITCODE -ne 0) { throw "no pude conectar como postgres. Revisa la clave o el puerto." }
+    if ($LASTEXITCODE -ne 0) {
+        throw "no pude conectar como postgres en el puerto $Puerto. Revisa la clave; si tienes mas de un PostgreSQL instalado, cada uno usa su propio puerto y su propia clave."
+    }
     Write-Host " listo"
 
     Write-Host "Creando la base..." -NoNewline

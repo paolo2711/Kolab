@@ -63,10 +63,10 @@ public class Fotos {
                 .replaceAll("(^-|-$)", "");
     }
 
-    // se leen una sola vez al arrancar: las fotos vienen dentro del jar y no cambian en marcha
+    // se leen una vez al arrancar; con classpath* una carpeta que falta es solo una carpeta sin fotos
     private static Set<String> nombresEn(ResourcePatternResolver recursos, String carpeta) {
         try {
-            Resource[] encontrados = recursos.getResources("classpath:static" + carpeta + "*.jpg");
+            Resource[] encontrados = recursos.getResources("classpath*:static" + carpeta + "*.jpg");
             return Arrays.stream(encontrados)
                     .map(Resource::getFilename)
                     .collect(Collectors.toUnmodifiableSet());
