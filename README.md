@@ -27,6 +27,13 @@ Abrir http://localhost:8080
 
 Desde IntelliJ o Eclipse: abrir como proyecto Maven y ejecutar KolabApplication.
 
+## Solo probarlo, sin instalar PostgreSQL
+
+    java -jar target\kolab.jar --spring.profiles.active=demo
+
+El perfil demo levanta con la base en memoria: no hace falta PostgreSQL ni variables de entorno.
+Se pierde todo al cerrar.
+
 ## Usuarios de prueba
 
     cliente@kolab.pe / kolab1234

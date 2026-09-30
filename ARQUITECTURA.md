@@ -119,3 +119,11 @@ Con `setx` hay que abrir una terminal nueva para que tomen efecto. Después:
     java -jar target/kolab.jar
 
 Las pruebas no necesitan ninguna de estas variables.
+
+## Correrlo sin PostgreSQL
+
+    java -jar target\kolab.jar --spring.profiles.active=demo
+
+El perfil `demo` usa H2 en memoria con las mismas migraciones de `db/migration/comun`. Sirve para
+mostrar la aplicacion en una maquina donde no hay nada instalado, o para repartir el `.jar` al
+resto del grupo. La base se crea al arrancar y se borra al cerrar.
