@@ -13,11 +13,8 @@ import com.kolab.config.SecurityConfig;
 import com.kolab.mensaje.MensajeService;
 import com.kolab.oferta.OfertaService;
 import com.kolab.perfil.DirectorioService;
-import com.kolab.reporte.IndicadoresDePlataforma;
-import com.kolab.reporte.ReporteService;
 import com.kolab.solicitud.CatalogoService;
 import com.kolab.solicitud.SolicitudService;
-import java.math.BigDecimal;
 import com.kolab.usuario.EstadoUsuario;
 import com.kolab.usuario.Usuario;
 import com.kolab.usuario.UsuarioAutenticado;
@@ -48,9 +45,6 @@ class InicioControllerTest {
     private DirectorioService directorioService;
 
     @MockitoBean
-    private ReporteService reporteService;
-
-    @MockitoBean
     private Fotos fotos;
 
     @MockitoBean
@@ -64,9 +58,6 @@ class InicioControllerTest {
 
     @Test
     void alVisitanteSinCuentaLeMuestraLaPortada() throws Exception {
-        Mockito.when(reporteService.plataforma())
-                .thenReturn(new IndicadoresDePlataforma(3, new BigDecimal("4.8"), 5, 2));
-
         mockMvc.perform(get("/"))
                 .andExpect(status().isOk())
                 .andExpect(view().name("portada"));

@@ -38,7 +38,6 @@ public interface ServicioRepository extends JpaRepository<Servicio, Long> {
     @Query("select s.oferta.id, s.id from Servicio s where s.oferta.id in :ids")
     List<Object[]> idsPorOferta(@Param("ids") Collection<Long> idsOferta);
 
-    long countByEstado(EstadoServicio estado);
 
     long countByOfertaSolicitudAutorIdAndEstado(Long idAutor, EstadoServicio estado);
 

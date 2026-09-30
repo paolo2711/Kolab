@@ -17,11 +17,7 @@ import com.kolab.common.Fotos;
 import com.kolab.config.SecurityConfig;
 import com.kolab.mensaje.MensajeService;
 import com.kolab.oferta.OfertaService;
-import com.kolab.reporte.IndicadoresDePlataforma;
-import com.kolab.reporte.ReporteService;
 import com.kolab.solicitud.SolicitudService;
-import java.math.BigDecimal;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,9 +40,6 @@ class CuentaControllerTest {
     private DetallesUsuarioService detallesUsuarioService;
 
     @MockitoBean
-    private ReporteService reporteService;
-
-    @MockitoBean
     private Fotos fotos;
 
     @MockitoBean
@@ -57,12 +50,6 @@ class CuentaControllerTest {
 
     @MockitoBean
     private OfertaService ofertaService;
-
-    @BeforeEach
-    void plataformaSinActividad() {
-        Mockito.when(reporteService.plataforma())
-                .thenReturn(new IndicadoresDePlataforma(0, BigDecimal.ZERO, 0, 0));
-    }
 
     @Test
     void laPantallaDeLoginEsPublica() throws Exception {

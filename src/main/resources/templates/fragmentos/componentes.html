@@ -34,11 +34,40 @@
        th:href="@{${ruta}} + '?' + ${consulta} + 'pagina=' + ${pagina.number + 1}">Siguientes &rarr;</a>
 </nav>
 
-<ol th:fragment="comoFunciona" class="k-flujo">
-    <li><span class="k-flujo-n">1</span> Publicas con tu precio</li>
-    <li><span class="k-flujo-n">2</span> Te llegan ofertas</li>
-    <li><span class="k-flujo-n">3</span> Aceptas una y coordinan</li>
-    <li><span class="k-flujo-n">4</span> Cierras y califican</li>
+<section th:fragment="cabeceraDeSolicitud(solicitud)" class="k-bloque k-hero k-hero-bajo">
+    <img class="k-hero-foto" th:if="${solicitud.foto != null}" th:src="@{${solicitud.foto}}" th:alt="${solicitud.categoria}">
+    <div class="k-hero-texto">
+        <h1 th:text="${solicitud.titulo}">Título de la solicitud</h1>
+        <p>
+            <span th:text="${solicitud.categoria}">Música</span> ·
+            <span th:text="${solicitud.modalidad.etiqueta}">Presencial</span>
+            <span th:if="${solicitud.distrito}"> · <span th:text="${solicitud.distrito}">Jesús María</span></span>
+            · para el <span th:text="${#temporals.format(solicitud.fechaDeseada, 'dd/MM/yyyy')}">12/09/2026</span>
+        </p>
+    </div>
+</section>
+
+<ol th:fragment="comoFunciona" class="k-pasos-foto">
+    <li>
+        <img th:src="@{/img/portada/paso-1.jpg}" alt="Alguien publicando desde su celular" loading="lazy">
+        <b><span class="k-flujo-n">1</span> Publicas con tu precio</b>
+        <span>Cuentas qué necesitas y cuánto puedes pagar.</span>
+    </li>
+    <li>
+        <img th:src="@{/img/portada/paso-2.jpg}" alt="Alguien revisando ofertas en su celular" loading="lazy">
+        <b><span class="k-flujo-n">2</span> Te llegan ofertas</b>
+        <span>Comparas montos, calificaciones y reseñas.</span>
+    </li>
+    <li>
+        <img th:src="@{/img/portada/paso-3.jpg}" alt="Dos personas cerrando un trato" loading="lazy">
+        <b><span class="k-flujo-n">3</span> Aceptas una y coordinan</b>
+        <span>Se ponen de acuerdo por mensajes dentro de KOLAB.</span>
+    </li>
+    <li>
+        <img th:src="@{/img/portada/paso-4.jpg}" alt="Alguien contento con el trabajo terminado" loading="lazy">
+        <b><span class="k-flujo-n">4</span> Cierras y califican</b>
+        <span>Las dos partes se califican y eso queda en su perfil.</span>
+    </li>
 </ol>
 
 <span th:fragment="cara(p, lado)" class="k-cara" th:style="'--lado:' + ${lado}"

@@ -4,8 +4,8 @@
     Solo pide la clave del usuario postgres. Las de kolab_migracion y kolab_app se generan al azar
     y se guardan unicamente en las variables de entorno: nadie las escribe ni las necesita a mano.
 
-    Se puede volver a correr. Si los roles ya existen, les cambia la clave por una nueva y
-    actualiza las variables.
+    Se puede volver a correr: borra la base kolab y sus dos roles, y los crea de cero. Al arrancar,
+    la aplicacion crea las tablas y carga los ejemplos.
 
     Uso: doble clic en instalar-base.cmd, en la raiz del proyecto. Ese archivo llama a este.
 #>
@@ -39,13 +39,6 @@ function Nueva-Clave {
     finally {
         $rng.Dispose()
     }
-}
-
-function Existe-Rol {
-    param([string] $Rol)
-    $r = & $Psql -h $Servidor -p $Puerto -U postgres -d postgres -t -A -q `
-                 -c "select 1 from pg_roles where rolname = '$Rol'"
-    return $r -eq "1"
 }
 
 # el psql de la version mas nueva instalada, en C: o en D:
@@ -111,32 +104,34 @@ try {
     }
     Write-Host " listo"
 
-    Write-Host "Creando la base..." -NoNewline
     $hay = & $Psql @comunes -d postgres -t -A -c "select 1 from pg_database where datname = '$Base'"
     if ($hay -eq "1") {
-        Write-Host " ya existia"
-    } else {
-        & $Psql @comunes -d postgres -c "create database $Base"
-        if ($LASTEXITCODE -ne 0) { throw "no pude crear la base $Base." }
-        Write-Host " creada"
+        Write-Host ""
+        Write-Host "La base $Base ya existe. Se borra con todo lo que tenga y se crea de cero." -ForegroundColor Yellow
+        $seguir = Read-Host -Prompt "Escribe s para seguir"
+        if ($seguir -ne "s") { throw "no se toco nada." }
+        Write-Host "Borrando la base anterior..." -NoNewline
+        & $Psql @comunes -d postgres -c "drop database $Base with (force)"
+        if ($LASTEXITCODE -ne 0) { throw "no pude borrar la base $Base." }
+        Write-Host " listo"
     }
+
+    # los permisos de los roles viven dentro de la base: se crean de nuevo junto con ella
+    & $Psql @comunes -d postgres -c "drop role if exists kolab_app" -c "drop role if exists kolab_migracion"
+    if ($LASTEXITCODE -ne 0) { throw "no pude borrar los roles anteriores." }
+
+    Write-Host "Creando la base..." -NoNewline
+    & $Psql @comunes -d postgres -c "create database $Base"
+    if ($LASTEXITCODE -ne 0) { throw "no pude crear la base $Base." }
+    Write-Host " creada"
 
     $claveMigracion = Nueva-Clave
     $claveApp = Nueva-Clave
 
-    if ((Existe-Rol "kolab_migracion") -and (Existe-Rol "kolab_app")) {
-        Write-Host "Renovando la clave de los roles..." -NoNewline
-        & $Psql @comunes -d $Base -c "alter role kolab_migracion password '$claveMigracion'"
-        if ($LASTEXITCODE -ne 0) { throw "no pude cambiar la clave de kolab_migracion." }
-        & $Psql @comunes -d $Base -c "alter role kolab_app password '$claveApp'"
-        if ($LASTEXITCODE -ne 0) { throw "no pude cambiar la clave de kolab_app." }
-        Write-Host " listas"
-    } else {
-        Write-Host "Creando los roles..." -NoNewline
-        & $Psql @comunes -d $Base -v "clave_migracion=$claveMigracion" -v "clave_app=$claveApp" -f $rolesSql
-        if ($LASTEXITCODE -ne 0) { throw "kolab-roles.sql fallo. Si solo uno de los dos roles existia, borralo y vuelve a correr." }
-        Write-Host " listos"
-    }
+    Write-Host "Creando los roles..." -NoNewline
+    & $Psql @comunes -d $Base -v "clave_migracion=$claveMigracion" -v "clave_app=$claveApp" -f $rolesSql
+    if ($LASTEXITCODE -ne 0) { throw "kolab-roles.sql fallo." }
+    Write-Host " listos"
 
     Write-Host "Guardando las variables..." -NoNewline
     setx KOLAB_DB_URL "jdbc:postgresql://${Servidor}:$Puerto/$Base" | Out-Null
@@ -150,7 +145,7 @@ try {
     Write-Host ""
     Write-Host "Listo." -ForegroundColor Green
     Write-Host "Cierra VS Code (o IntelliJ) y vuelve a abrirlo para que vea las variables nuevas."
-    Write-Host "Despues dale Run a KolabApplication. La primera vez la base se llena sola con los ejemplos."
+    Write-Host "Despues dale Run a KolabApplication: crea las tablas y carga los ejemplos."
 }
 catch {
     Write-Host ""

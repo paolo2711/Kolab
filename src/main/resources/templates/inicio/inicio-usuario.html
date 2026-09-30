@@ -9,6 +9,18 @@
 <main>
     <div th:replace="~{fragmentos/componentes :: aviso}"></div>
 
+    <section class="k-bloque k-hero k-hero-bajo">
+        <img class="k-hero-foto" th:src="@{/img/portada/paso-3.jpg}" alt="Dos personas cerrando un trato">
+        <div class="k-hero-texto">
+            <h1>Lo que necesitas, al precio que tú pones.</h1>
+            <p>Publica tu solicitud o busca dónde ofrecer lo que sabes hacer.</p>
+            <div class="k-acciones">
+                <a class="k-btn k-btn-principal" th:href="@{/mis-solicitudes/nueva}">Publicar lo que necesito</a>
+                <a class="k-btn k-btn-linea" th:href="@{/solicitudes}">Ver solicitudes abiertas</a>
+            </div>
+        </div>
+    </section>
+
     <div class="k-invita" th:unless="${usuario.ofreceServicios()}">
         <div>
             <b>¿Sabes hacer algo?</b>
@@ -23,7 +35,7 @@
             <span class="k-vacio" style="margin:0;">Con lo que se está pagando en cada una</span>
         </div>
 
-        <div class="k-mosaico">
+        <div class="k-mosaico k-mosaico-grande">
             <a class="k-tesela" th:each="c : ${categorias}"
                th:href="@{/categorias/{id}(id=${c.id})}">
                 <img th:if="${c.tieneFoto()}" th:src="@{${c.foto}}" th:alt="${c.nombre}" loading="lazy">

@@ -20,6 +20,10 @@
     --sombra-alta: 0 10px 28px rgba(16, 27, 43, 0.11);
     --velo: linear-gradient(to top, rgba(11, 19, 31, 0.88) 0%, rgba(11, 19, 31, 0.42) 40%,
                             rgba(11, 19, 31, 0.04) 74%);
+    --velo-alto: linear-gradient(to top, rgba(11, 19, 31, 0.93) 0%, rgba(11, 19, 31, 0.74) 55%,
+                                 rgba(11, 19, 31, 0.12) 100%);
+    --velo-lado: linear-gradient(to right, rgba(11, 19, 31, 0.86) 0%, rgba(11, 19, 31, 0.6) 42%,
+                                 rgba(11, 19, 31, 0.05) 78%);
 }
 
 * {
@@ -234,7 +238,8 @@ a:hover {
     border-right: none;
 }
 
-.k-flujo .k-flujo-n {
+.k-flujo .k-flujo-n,
+.k-pasos-foto .k-flujo-n {
     width: 1.45rem;
     height: 1.45rem;
     flex-shrink: 0;
@@ -771,6 +776,25 @@ a.k-solicitud {
     flex-direction: column;
     align-items: flex-end;
     gap: 0.5rem;
+}
+
+/* en el celular el precio baja a su propia fila para que el título respire */
+@media (max-width: 40rem) {
+    .k-solicitud {
+        flex-wrap: wrap;
+        gap: 0.8rem;
+    }
+
+    .k-solicitud-cuerpo {
+        flex-basis: calc(100% - 5.6rem);
+    }
+
+    .k-solicitud-derecha {
+        flex-basis: 100%;
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+    }
 }
 
 /* filtros */
@@ -1605,74 +1629,10 @@ a.k-solicitud {
     margin-bottom: 1rem;
 }
 
-.k-hero {
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: 2rem;
-    align-items: center;
-    background: var(--acento-suave);
-    border: 1px solid #d7e3f2;
-    border-radius: var(--r);
-    padding: 2.5rem;
-}
-
-@media (min-width: 56rem) {
-    .k-hero {
-        grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr);
-    }
-}
-
-.k-hero h1 {
-    font-size: clamp(1.8rem, 4vw, 2.4rem);
-    line-height: 1.15;
-    font-weight: 700;
-    margin-bottom: 0.8rem;
-}
-
-.k-hero p {
-    color: var(--tinta-2);
-    margin: 0;
-    max-width: 34rem;
-}
-
-.k-cifras {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 1.75rem;
-    margin-top: 1.75rem;
-    font-size: 0.88rem;
-    color: var(--tinta-2);
-}
-
-.k-cifras b {
-    color: var(--tinta);
-    font-size: 1.1rem;
-    font-variant-numeric: tabular-nums;
-    margin-right: 0.25rem;
-}
-
 .k-rejilla {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(15rem, 1fr));
     gap: 0.75rem;
-}
-
-.k-categoria-ficha {
-    display: flex;
-    align-items: center;
-    gap: 0.85rem;
-    padding: 1rem 1.1rem;
-    text-decoration: none;
-    color: inherit;
-}
-
-.k-categoria-ficha:hover {
-    border-color: var(--acento);
-}
-
-.k-categoria-ficha i {
-    font-size: 1.3rem;
-    color: var(--tinta-2);
 }
 
 .k-categoria-nombre {
@@ -1685,27 +1645,191 @@ a.k-solicitud {
     color: var(--tinta-3);
 }
 
-.k-cierre {
+/* portada: la foto ocupa todo el bloque y el texto va encima, sobre el velo */
+
+.k-hero {
+    position: relative;
     display: flex;
     align-items: center;
-    justify-content: space-between;
-    gap: 1.5rem;
-    flex-wrap: wrap;
+    min-height: 27rem;
+    border-radius: var(--r-grande);
+    overflow: hidden;
+    background: var(--tinta);
+}
+
+.k-hero::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: var(--velo-lado);
+}
+
+.k-hero-foto {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center 22%;
+}
+
+.k-hero-texto {
+    position: relative;
+    z-index: 1;
+    max-width: 40rem;
+    padding: 2.5rem;
+    color: #fff;
+}
+
+.k-hero h1 {
+    font-size: clamp(1.9rem, 4.2vw, 2.75rem);
+    line-height: 1.12;
+    font-weight: 700;
+    margin-bottom: 0.8rem;
+}
+
+.k-hero p {
+    margin: 0;
+    color: rgba(255, 255, 255, 0.88);
+}
+
+@media (max-width: 40rem) {
+    .k-hero {
+        display: block;
+        min-height: 0;
+    }
+
+    .k-hero::after {
+        display: none;
+    }
+
+    .k-hero-foto {
+        position: static;
+        display: block;
+        height: auto;
+        aspect-ratio: 4 / 3;
+    }
+
+    .k-hero-texto {
+        padding: 1.5rem;
+    }
+
+    .k-hero .k-acciones {
+        flex-direction: column;
+        align-items: stretch;
+    }
+}
+
+.k-hero-bajo {
+    min-height: 15rem;
+}
+
+.k-hero-bajo h1 {
+    font-size: clamp(1.6rem, 3.2vw, 2.2rem);
+}
+
+.k-hero-bajo .k-hero-foto {
+    object-position: center 12%;
+}
+
+/* cómo funciona: un paso por foto */
+
+.k-pasos-foto {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr));
+    gap: 1rem;
+}
+
+.k-pasos-foto li {
+    display: flex;
+    flex-direction: column;
     background: var(--panel);
     border: 1px solid var(--linea);
-    border-radius: var(--r);
-    padding: 1.75rem 2rem;
+    border-radius: var(--r-grande);
+    overflow: hidden;
+}
+
+.k-pasos-foto img {
+    display: block;
+    width: 100%;
+    aspect-ratio: 4 / 3;
+    object-fit: cover;
+}
+
+.k-pasos-foto b {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.55rem;
+    padding: 0.95rem 1.1rem 0.25rem;
+    font-weight: 600;
+}
+
+.k-pasos-foto .k-flujo-n {
+    margin-top: 0.12rem;
+}
+
+.k-pasos-foto li > span {
+    padding: 0 1.1rem 1.1rem;
+    color: var(--tinta-2);
+    font-size: 0.88rem;
+}
+
+.k-mosaico.k-mosaico-grande {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1rem;
+}
+
+@media (min-width: 52rem) {
+    .k-mosaico.k-mosaico-grande {
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+}
+
+.k-mosaico-grande .k-tesela-nombre {
+    font-size: 1.05rem;
+}
+
+/* cierre de la portada: la foto a un lado y la invitación al otro */
+
+.k-cierre {
+    display: grid;
+    grid-template-columns: 1fr;
+    background: var(--panel);
+    border: 1px solid var(--linea);
+    border-radius: var(--r-grande);
+    overflow: hidden;
+}
+
+@media (min-width: 52rem) {
+    .k-cierre {
+        grid-template-columns: minmax(0, 1fr) minmax(0, 1.15fr);
+    }
+}
+
+.k-cierre-foto {
+    display: block;
+    width: 100%;
+    height: 100%;
+    min-height: 15rem;
+    object-fit: cover;
+}
+
+.k-cierre-texto {
+    align-self: center;
+    padding: 2.25rem;
 }
 
 .k-cierre h2 {
-    font-size: 1.15rem;
-    margin-bottom: 0.3rem;
+    font-size: 1.4rem;
+    margin-bottom: 0.5rem;
 }
 
 .k-cierre p {
-    margin: 0;
+    margin: 0 0 1.4rem;
     color: var(--tinta-2);
-    font-size: 0.93rem;
 }
 
 .k-buscador {
@@ -1744,13 +1868,6 @@ a.k-solicitud {
 
 .k-invitacion {
     border-style: dashed;
-}
-
-.k-nota-lado {
-    margin: 0.9rem 0 0;
-    font-size: 0.9rem;
-    color: var(--tinta-2);
-    max-width: 46rem;
 }
 
 /* pestañas de Mi actividad */
@@ -1993,7 +2110,7 @@ button.k-chat-boton {
 
 .k-cartas {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(16rem, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(13.5rem, 1fr));
     gap: 0.9rem;
 }
 
@@ -2182,12 +2299,10 @@ img {
     border-radius: 0 0 var(--r-grande) var(--r-grande);
 }
 
-.k-portada-foto {
-    width: 100%;
-    aspect-ratio: 9 / 7;
-    object-fit: cover;
-    border-radius: var(--r-grande);
-    box-shadow: var(--sombra-alta);
+/* en un perfil con portada la foto de la persona se monta sobre ella */
+.k-perfil-cabecera.k-cabecera-bajo-banner > .k-cara {
+    margin-top: -3.6rem;
+    border: 4px solid var(--panel);
 }
 
 /* mosaico de categorias: la foto es el fondo y el nombre va encima */
@@ -2221,6 +2336,10 @@ img {
     position: absolute;
     inset: 0;
     background: var(--velo);
+}
+
+.k-tesela:hover {
+    color: #fff;
 }
 
 .k-tesela:hover img {
@@ -2721,52 +2840,87 @@ button:focus-visible,
     color: var(--tinta-3);
 }
 
-.k-acceso .k-lienzo h2 {
-    letter-spacing: -0.03em;
-}
-
-.k-acceso .k-lienzo em {
-    color: var(--acento-oscuro);
-    font-style: normal;
-    font-weight: 700;
-}
-
-.k-acceso .k-pasos li {
-    color: var(--tinta-2);
-}
-
-.k-acceso .k-muestra {
-    border-color: var(--linea-fuerte);
-    padding: 1.15rem 1.25rem;
-}
-
-.k-acceso .k-muestra-titulo {
-    font-weight: 600;
-    letter-spacing: -0.01em;
-}
-
-.k-acceso .k-muestra-meta,
-.k-acceso .k-muestra-pie {
-    color: var(--tinta-2);
-}
-
 .k-acceso .k-tarjeta-titulo {
     letter-spacing: -0.02em;
 }
 
-.k-acceso-foto {
-    display: block;
-    width: calc(100% + 3.8rem);
-    max-width: none;
-    aspect-ratio: 21 / 8;
-    object-fit: cover;
-    margin: -1.9rem -1.9rem 1.5rem;
-    border-radius: var(--r) var(--r) 0 0;
-    background: var(--hueso);
-}
+/* el panel de la derecha: la foto lo llena y el texto va encima, sobre el velo */
 
 .k-acceso .k-lienzo {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    min-height: 30rem;
+    padding: 2.25rem;
+    border: 0;
+    border-radius: var(--r-grande);
     overflow: hidden;
+    background: var(--tinta);
+    color: #fff;
+}
+
+.k-acceso .k-lienzo::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: var(--velo-alto);
+}
+
+.k-acceso .k-lienzo > * {
+    position: relative;
+    z-index: 1;
+}
+
+.k-acceso .k-lienzo > .k-acceso-foto {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center 25%;
+}
+
+.k-acceso .k-lienzo h2 {
+    font-size: 1.6rem;
+    letter-spacing: -0.03em;
+}
+
+.k-acceso .k-lienzo em {
+    font-style: normal;
+    font-weight: 700;
+}
+
+.k-acceso .k-lienzo p,
+.k-acceso .k-pasos li {
+    color: rgba(255, 255, 255, 0.86);
+}
+
+.k-acceso .k-pasos li::before {
+    background: #fff;
+    color: var(--tinta);
+}
+
+.k-acceso .k-pasos {
+    margin-bottom: 0;
+}
+
+.k-acceso .k-muestra {
+    margin-top: 1.25rem;
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.22);
+    padding: 1.1rem 1.25rem;
+}
+
+.k-acceso .k-muestra-titulo {
+    color: #fff;
+}
+
+.k-acceso .k-muestra-meta,
+.k-acceso .k-muestra-pie {
+    color: rgba(255, 255, 255, 0.8);
+    border-color: rgba(255, 255, 255, 0.22);
 }
 
 /* foto que falta: el icono de la categoria ocupa su lugar con el mismo tamano */
@@ -2830,25 +2984,6 @@ button:focus-visible,
     height: 2rem;
     border-radius: 50%;
     object-fit: cover;
-}
-
-/* enlaces de desarrollo al pie del ingreso: solo existen en una maquina de desarrollo */
-
-.k-desarrollo {
-    display: flex;
-    align-items: center;
-    gap: 0.45rem;
-    margin: 1.4rem 0 0;
-    font-size: 0.78rem;
-    color: var(--tinta-3);
-}
-
-.k-desarrollo form {
-    display: inline;
-}
-
-.k-desarrollo .k-enlace {
-    color: var(--tinta-3);
 }
 
 /* aceptar y rechazar una oferta, uno al lado del otro */

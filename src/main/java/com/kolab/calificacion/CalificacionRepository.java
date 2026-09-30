@@ -26,9 +26,6 @@ public interface CalificacionRepository extends JpaRepository<Calificacion, Long
                            group by c2.evaluado.id)""")
     List<Object[]> ultimosComentarios(@Param("ids") Collection<Long> idsUsuario);
 
-    @Query("select coalesce(avg(c.puntaje), 0) from Calificacion c")
-    Double promedioGeneral();
-
     @Query("select c.puntaje, count(c) from Calificacion c where c.evaluado.id = :idUsuario group by c.puntaje")
     List<Object[]> contarPorPuntaje(@Param("idUsuario") Long idUsuario);
 }

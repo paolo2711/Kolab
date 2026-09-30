@@ -4,7 +4,6 @@ import com.kolab.categoria.CategoriaService;
 import com.kolab.common.Fotos;
 import com.kolab.perfil.BienvenidaController;
 import com.kolab.perfil.DirectorioService;
-import com.kolab.reporte.ReporteService;
 import com.kolab.solicitud.CatalogoService;
 import com.kolab.solicitud.SolicitudResumen;
 import com.kolab.usuario.UsuarioAutenticado;
@@ -27,16 +26,13 @@ public class InicioController {
     private final CatalogoService catalogoService;
     private final CategoriaService categoriaService;
     private final DirectorioService directorioService;
-    private final ReporteService reporteService;
     private final Fotos fotos;
 
     public InicioController(CatalogoService catalogoService, CategoriaService categoriaService,
-                            DirectorioService directorioService, ReporteService reporteService,
-                            Fotos fotos) {
+                            DirectorioService directorioService, Fotos fotos) {
         this.catalogoService = catalogoService;
         this.categoriaService = categoriaService;
         this.directorioService = directorioService;
-        this.reporteService = reporteService;
         this.fotos = fotos;
     }
 
@@ -45,7 +41,6 @@ public class InicioController {
         if (usuario == null) {
             model.addAttribute("categorias", categoriaService.activas());
             model.addAttribute("solicitudes", catalogoService.recientesPublicas(EN_PORTADA));
-            model.addAttribute("plataforma", reporteService.plataforma());
             model.addAttribute("fotoAcceso", fotos.suelta("acceso"));
             return "portada";
         }

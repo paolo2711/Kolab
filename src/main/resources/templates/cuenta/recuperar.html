@@ -19,15 +19,8 @@
                 Si <b th:text="${correo}">correo@ejemplo.com</b> tiene una cuenta en KOLAB, le llega
                 un enlace para poner una contraseña nueva. Vence en 30 minutos.
             </p>
-            <p class="k-vacio" style="margin:0 0 1.4rem;">
-                No te decimos si el correo existe o no, a propósito: así nadie puede averiguar
-                quién tiene cuenta.
-            </p>
+            <p th:if="${enlaceDePrueba}"><a th:href="@{${enlaceDePrueba}}">Enlace de desarrollo</a></p>
             <a class="k-btn k-btn-linea" th:href="@{/login}">Volver a ingresar</a>
-
-            <p class="k-desarrollo" th:if="${enlaceDePrueba}">
-                Desarrollo, todavía sin correo: <a th:href="@{${enlaceDePrueba}}">abrir el enlace</a>
-            </p>
         </div>
 
         <div class="k-tarjeta" th:unless="${enviado}">
@@ -44,7 +37,7 @@
 
                 <div class="k-acciones">
                     <button type="submit" class="k-btn k-btn-principal">Enviar el enlace</button>
-                    <a th:href="@{/login}">Me acordé, quiero ingresar</a>
+                    <a th:href="@{/login}">Volver a ingresar</a>
                 </div>
             </form>
         </div>
@@ -52,7 +45,7 @@
         <div class="k-lienzo">
             <img class="k-acceso-foto" th:if="${fotoAcceso}" th:src="@{${fotoAcceso}}"
                  alt="Una persona enseñándole a otra">
-            <h2>Se te olvidó,<br><em>no se perdió nada</em>.</h2>
+            <h2>Recupera el acceso<br>a tu cuenta.</h2>
             <p>Tus solicitudes, tus ofertas y tu calificación siguen ahí. Con el enlace que te
                 llega pones una contraseña nueva y entras igual que siempre.</p>
 

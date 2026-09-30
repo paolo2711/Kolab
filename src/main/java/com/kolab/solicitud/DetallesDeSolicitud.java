@@ -1,5 +1,6 @@
 package com.kolab.solicitud;
 
+import com.kolab.common.Fotos;
 import com.kolab.common.RecursoNoEncontradoException;
 import com.kolab.common.Tiempo;
 import com.kolab.oferta.EstadoOferta;
@@ -23,15 +24,17 @@ class DetallesDeSolicitud {
     private final ServicioRepository servicioRepository;
     private final ResumenesDeOferta resumenesDeOferta;
     private final Personas personas;
+    private final Fotos fotos;
 
     DetallesDeSolicitud(SolicitudRepository solicitudRepository, OfertaRepository ofertaRepository,
                         ServicioRepository servicioRepository, ResumenesDeOferta resumenesDeOferta,
-                        Personas personas) {
+                        Personas personas, Fotos fotos) {
         this.solicitudRepository = solicitudRepository;
         this.ofertaRepository = ofertaRepository;
         this.servicioRepository = servicioRepository;
         this.resumenesDeOferta = resumenesDeOferta;
         this.personas = personas;
+        this.fotos = fotos;
     }
 
     // quien ya ofertó la sigue viendo aunque se haya cerrado, para saber en qué terminó
@@ -66,7 +69,7 @@ class DetallesDeSolicitud {
                 .map(Servicio::getId)
                 .orElse(null);
         return new SolicitudDetalle(s.getId(), s.getTitulo(), s.getDescripcion(), s.getCategoria().getId(),
-                s.getCategoria().getNombre(), s.getModalidad(), s.getDistrito(), s.getFechaDeseada(),
+                s.getCategoria().getNombre(), fotos.deCategoria(s.getCategoria().getNombre()), s.getModalidad(), s.getDistrito(), s.getFechaDeseada(),
                 s.getPrecioPropuesto(), Tiempo.hace(s.getFechaPublicacion()), s.getEstado(),
                 personas.de(s.getAutor()),
                 s.getDestinatario() == null ? null : personas.de(s.getDestinatario()),

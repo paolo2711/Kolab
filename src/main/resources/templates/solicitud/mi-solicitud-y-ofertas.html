@@ -27,15 +27,7 @@
         </div>
     </div>
 
-    <div class="k-encabezado">
-        <h1 th:text="${solicitud.titulo}">Título de la solicitud</h1>
-        <p>
-            <span th:text="${solicitud.categoria}">Música</span> ·
-            <span th:text="${solicitud.modalidad.etiqueta}">Presencial</span>
-            <span th:if="${solicitud.distrito}"> · <span th:text="${solicitud.distrito}">Jesús María</span></span>
-            · para el <span th:text="${#temporals.format(solicitud.fechaDeseada, 'dd/MM/yyyy')}">12/09/2026</span>
-        </p>
-    </div>
+    <div th:replace="~{fragmentos/componentes :: cabeceraDeSolicitud(${solicitud})}"></div>
 
     <div class="k-dos-columnas k-principal-ancha">
         <div>

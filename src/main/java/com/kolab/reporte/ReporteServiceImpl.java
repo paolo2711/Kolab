@@ -1,9 +1,7 @@
 package com.kolab.reporte;
 
-import com.kolab.calificacion.CalificacionRepository;
 import com.kolab.oferta.EstadoOferta;
 import com.kolab.oferta.OfertaRepository;
-import com.kolab.perfil.PerfilRepository;
 import com.kolab.servicio.EstadoServicio;
 import com.kolab.servicio.ServicioRepository;
 import com.kolab.solicitud.EstadoSolicitud;
@@ -25,29 +23,14 @@ public class ReporteServiceImpl implements ReporteService {
     private final SolicitudRepository solicitudRepository;
     private final OfertaRepository ofertaRepository;
     private final ServicioRepository servicioRepository;
-    private final CalificacionRepository calificacionRepository;
-    private final PerfilRepository perfilRepository;
     private final SeriesDelResumen series;
 
     public ReporteServiceImpl(SolicitudRepository solicitudRepository, OfertaRepository ofertaRepository,
-                              ServicioRepository servicioRepository, CalificacionRepository calificacionRepository,
-                              PerfilRepository perfilRepository, SeriesDelResumen series) {
+                              ServicioRepository servicioRepository, SeriesDelResumen series) {
         this.solicitudRepository = solicitudRepository;
         this.ofertaRepository = ofertaRepository;
         this.servicioRepository = servicioRepository;
-        this.calificacionRepository = calificacionRepository;
-        this.perfilRepository = perfilRepository;
         this.series = series;
-    }
-
-    @Override
-    public IndicadoresDePlataforma plataforma() {
-        BigDecimal promedio = BigDecimal.valueOf(calificacionRepository.promedioGeneral())
-                .setScale(1, RoundingMode.HALF_UP);
-        long abiertas = solicitudRepository.contarAbiertasPorCategoria().stream()
-                .mapToLong(fila -> (Long) fila[1]).sum();
-        return new IndicadoresDePlataforma(servicioRepository.countByEstado(EstadoServicio.CERRADO), promedio,
-                perfilRepository.contarQuienesOfrecen(), abiertas);
     }
 
     @Override

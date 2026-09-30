@@ -14,9 +14,10 @@ Maven no hace falta, el wrapper va incluido.
 
 ## Instalar, una sola vez
 
-1. Doble clic en `instalar-base.cmd`, en la raíz del proyecto. Te pregunta el puerto de PostgreSQL
-   (Enter si no lo cambiaste al instalar) y la clave de `postgres`. Crea la base `kolab` y deja
-   guardado lo que la aplicación necesita para conectarse.
+1. Doble clic en `instalar-base.cmd`, en la raíz del proyecto. Te propone el puerto de tu PostgreSQL
+   (Enter para aceptarlo) y te pide la clave de `postgres`. Crea la base `kolab` y deja guardado lo
+   que la aplicación necesita para conectarse. Si la base ya existía, te pide confirmar y la crea
+   de cero.
 2. Cierra VS Code y vuelve a abrirlo. Sin esto no ve lo que dejó el paso anterior.
 
 ## Ejecutar
@@ -35,7 +36,7 @@ Todas las personas de `src/main/resources/ejemplos/personas.json` entran con `ko
 
 ## Mientras se desarrolla
 
-Al pie de la pantalla de ingreso hay dos enlaces:
+Al pie de la pantalla de ingreso están las cuentas de ejemplo y dos enlaces:
 
 - reiniciar datos: borra todo y vuelve a cargar los ejemplos. Sirve cuando cambias un JSON de
   `ejemplos` o cuando la base quedó desordenada.

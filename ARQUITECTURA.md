@@ -108,10 +108,10 @@ falta el archivo se muestra el ícono de la categoría o las iniciales.
 
 La conexión sale de variables de entorno. No hay contraseñas en el repositorio ni en los scripts.
 
-`instalar-base.cmd` llama a `scripts\crear-base-local.ps1`, que busca psql en `C:` o `D:`, pregunta el
-puerto, crea la base, ejecuta `kolab-roles.sql` y deja las variables con `setx`. Solo pide la clave
-de `postgres`: las de los dos roles las genera al azar y quedan únicamente en las variables. Se
-puede volver a correr: si los roles ya existen les cambia la clave.
+`instalar-base.cmd` llama a `scripts\crear-base-local.ps1`, que busca psql en `C:` o `D:`, propone el
+puerto de esa instalación, crea la base, ejecuta `kolab-roles.sql` y deja las variables con `setx`.
+Solo pide la clave de `postgres`: las de los dos roles las genera al azar y quedan únicamente en las
+variables. Se puede volver a correr: pide confirmación, borra la base y sus roles y los crea de cero.
 
 Las variables que deja:
 

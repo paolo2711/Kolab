@@ -42,7 +42,4 @@ public interface PerfilRepository extends JpaRepository<Perfil, Long> {
             where exists (select 1 from PerfilCategoria pc
                           where pc.perfil = p and pc.categoria.id = :idCategoria)""")
     Page<Perfil> queOfrecen(@Param("idCategoria") Long idCategoria, Pageable pagina);
-
-    @Query("select count(distinct pc.perfil) from PerfilCategoria pc")
-    long contarQuienesOfrecen();
 }
