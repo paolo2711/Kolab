@@ -27,11 +27,17 @@
                 <div class="k-cabecera-precio">
                     <div>
                         <span th:replace="~{fragmentos/componentes :: estado(${servicio.estado})}"></span>
-                        <p style="margin:0.9rem 0 0; color:var(--tinta-2);" th:if="${servicio.enCurso()}">
-                            Ya pueden coordinar por el chat. Cuando terminen, se cierra el servicio y
-                            cada uno califica al otro.</p>
-                        <p style="margin:0.9rem 0 0; color:var(--tinta-2);" th:unless="${servicio.enCurso()}">
-                            Este servicio ya está cerrado y calificado.</p>
+                        <p style="margin:0.9rem 0 0; color:var(--tinta-2);" th:if="${servicio.puedoCerrar()}">
+                            Coordinen por el chat. Cuando se haya hecho, confírmalo aquí y califica a
+                            <span th:text="${servicio.contraparte.nombre}">la otra parte</span>.</p>
+                        <p style="margin:0.9rem 0 0; color:var(--tinta-2);" th:if="${servicio.enCurso() and !servicio.pido}">
+                            Coordinen por el chat. Cuando termines, quien lo pidió lo cierra y después
+                            se califican los dos.</p>
+                        <p style="margin:0.9rem 0 0; color:var(--tinta-2);" th:if="${servicio.puedoCalificar()}">
+                            El servicio ya está cerrado. Te falta calificar a
+                            <span th:text="${servicio.contraparte.nombre}">la otra parte</span>.</p>
+                        <p style="margin:0.9rem 0 0; color:var(--tinta-2);" th:if="${!servicio.enCurso() and servicio.yaCalifique}">
+                            Servicio cerrado y calificado.</p>
                     </div>
                     <div class="k-bloque-precio">
                         <div class="k-etiqueta">Monto acordado</div>
@@ -42,13 +48,17 @@
                 <dl class="k-datos" style="margin-top:1.5rem;">
                     <dt>Comisión de la plataforma</dt>
                     <dd><span th:replace="~{fragmentos/componentes :: precio(${servicio.comision}, 'k-precio-m')}"></span></dd>
-                    <dt>Neto para el experto</dt>
+                    <dt>Neto para quien lo hace</dt>
                     <dd><span th:replace="~{fragmentos/componentes :: precio(${servicio.neto}, 'k-precio-m')}"></span></dd>
                 </dl>
 
-                <div class="k-acciones" th:if="${servicio.enCurso()}">
+                <div class="k-acciones" th:if="${servicio.puedoCerrar()}">
                     <a class="k-btn k-btn-principal" th:href="@{/servicios/{id}/cerrar(id=${servicio.id})}">
-                        Cerrar el servicio y calificar</a>
+                        Confirmar que se hizo y calificar</a>
+                </div>
+                <div class="k-acciones" th:if="${servicio.puedoCalificar()}">
+                    <a class="k-btn k-btn-principal" th:href="@{/servicios/{id}/cerrar(id=${servicio.id})}">
+                        Calificar a <span th:text="${servicio.contraparte.nombre}">la otra parte</span></a>
                 </div>
             </div>
 
@@ -64,9 +74,11 @@
                     <div>
                         <div class="k-oferta-nombre" th:text="${servicio.contraparte.nombre}">Luis Mendoza</div>
                         <div class="k-oferta-meta">
-                            <span th:replace="~{fragmentos/componentes :: nota(${servicio.calificacionContraparte})}"></span>
-                            · <span th:text="${servicio.serviciosContraparte}">33</span> servicios ·
-                            miembro desde <span th:text="${servicio.miembroDesde}">marzo de 2026</span>
+                            <th:block th:unless="${servicio.reputacionContraparte.sinCalificar()}">
+                                <span th:replace="~{fragmentos/componentes :: nota(${servicio.reputacionContraparte.promedio})}"></span> ·
+                            </th:block>
+                            <span th:text="${servicio.reputacionContraparte.serviciosDados}">33</span> servicios dados ·
+                            en KOLAB desde <span th:text="${servicio.miembroDesde}">marzo de 2026</span>
                         </div>
                     </div>
                 </div>
@@ -85,8 +97,11 @@
                     <span class="k-burbuja-hora" th:text="${m.hora}">10:12</span>
                 </div>
             </div>
-            <form class="k-chat-envio" th:action="@{/mensajes}" method="get">
-                <input type="text" name="contenido" placeholder="Escribe un mensaje" autocomplete="off">
+            <p class="k-vacio" style="margin:0; padding:1rem;" th:if="${#lists.isEmpty(servicio.mensajes)}">
+                Todavía no se han escrito.</p>
+            <form class="k-chat-envio" th:action="@{/mensajes/{id}(id=${servicio.idOferta})}" method="post">
+                <input type="hidden" name="volver" th:value="@{/servicios/{id}(id=${servicio.id})}">
+                <input type="text" name="contenido" placeholder="Escribe un mensaje" autocomplete="off" required>
                 <button type="submit" class="k-btn k-btn-oscuro">Enviar</button>
             </form>
         </div>

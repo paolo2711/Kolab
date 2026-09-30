@@ -7,7 +7,17 @@
 <body>
 
 <main>
+    <div th:replace="~{fragmentos/componentes :: aviso}"></div>
+
     <p class="k-migas"><a th:href="@{/solicitudes}">&larr; Todas las solicitudes</a></p>
+
+    <div class="k-invita" th:if="${solicitud.esPropuestaDirecta()}">
+        <span th:replace="~{fragmentos/componentes :: cara(${solicitud.autor}, '2.4rem')}"></span>
+        <div>
+            <b th:text="${solicitud.autor.nombre} + ' te la propuso a ti'">Te la propuso a ti</b>
+            Nadie más la ve. Si el precio no te acomoda, ofértale el tuyo.
+        </div>
+    </div>
 
     <div class="k-encabezado">
         <h1 th:text="${solicitud.titulo}">Título de la solicitud</h1>
@@ -22,11 +32,20 @@
     <div class="k-dos-columnas k-principal-ancha">
         <div>
             <div class="k-tarjeta" style="margin-bottom:1.5rem;">
-                <span th:replace="~{fragmentos/componentes :: estado(${solicitud.estado})}"></span>
+                <div class="k-titulo-fila">
+                    <span th:replace="~{fragmentos/componentes :: estado(${solicitud.estado})}"></span>
+                    <a class="k-enlace-suave" th:href="@{/personas/{id}(id=${solicitud.autor.id})}"
+                       th:text="'Publicada por ' + ${solicitud.autor.nombre}">Publicada por</a>
+                </div>
                 <p style="margin:0.9rem 0 0; color:var(--tinta-2);" th:text="${solicitud.descripcion}">Descripción</p>
             </div>
 
-            <div class="k-tarjeta" th:if="${miOferta == null}">
+            <div class="k-tarjeta" th:if="${miOferta == null and !solicitud.admiteOfertas()}">
+                <h2 class="k-tarjeta-titulo">Ya no recibe ofertas</h2>
+                <p class="k-vacio" style="margin:0;">Quien la publicó ya eligió o la canceló.</p>
+            </div>
+
+            <div class="k-tarjeta" th:if="${miOferta == null and solicitud.admiteOfertas()}">
                 <h2 class="k-tarjeta-titulo">Envía tu oferta</h2>
                 <form th:action="@{/solicitudes/{id}/ofertas(id=${solicitud.id})}" th:object="${ofertaForm}"
                       method="post" novalidate>
@@ -40,7 +59,7 @@
                                        th:classappend="${#fields.hasErrors('monto')} ? 'k-mal'">
                             </div>
                             <span class="k-error" th:if="${#fields.hasErrors('monto')}" th:errors="*{monto}"></span>
-                            <span class="k-pista" th:unless="${#fields.hasErrors('monto')}">Pon el mismo monto del cliente para aceptar su precio.</span>
+                            <span class="k-pista" th:unless="${#fields.hasErrors('monto')}">Pon el mismo monto para aceptar su precio.</span>
                         </div>
                         <div class="k-campo">
                             <label for="mensaje">Mensaje <span class="k-opcional">(opcional)</span></label>
@@ -57,24 +76,40 @@
             </div>
 
             <div class="k-tarjeta" th:if="${miOferta != null}">
-                <h2 class="k-tarjeta-titulo">Ya ofertaste aquí</h2>
+                <div class="k-titulo-fila">
+                    <h2 class="k-tarjeta-titulo" style="margin:0;">Tu oferta</h2>
+                    <span th:replace="~{fragmentos/componentes :: estado(${miOferta.estado})}"></span>
+                </div>
                 <p class="k-vacio">Propusiste
-                    <b>S/ <span th:text="${#numbers.formatDecimal(miOferta.monto, 1, 'COMMA', 2, 'POINT')}">80.00</span></b>.
-                    Ahora le toca al cliente decidir. Si te escribe, te aparece en Mensajes.</p>
-                <a class="k-btn k-btn-linea k-btn-chico" th:href="@{/mis-ofertas}">Ver mis ofertas</a>
+                    <b>S/ <span th:text="${#numbers.formatDecimal(miOferta.monto, 1, 'COMMA', 2, 'POINT')}">80.00</span></b>
+                    <span th:text="${miOferta.enviada}">hace 1 hora</span>.
+                    <span th:if="${miOferta.enJuego()}">Ahora le toca a quien publicó decidir.</span>
+                    <span th:if="${miOferta.estado.name() == 'ACEPTADA'}">Te la aceptaron: ya es un servicio.</span>
+                    <span th:if="${miOferta.estado.name() == 'RECHAZADA'}">Esta vez eligieron otra oferta.</span>
+                </p>
+                <div class="k-acciones">
+                    <a class="k-btn k-btn-principal k-btn-chico" th:if="${solicitud.idServicio != null and miOferta.estado.name() == 'ACEPTADA'}"
+                       th:href="@{/servicios/{id}(id=${solicitud.idServicio})}">Ver el servicio</a>
+                    <a class="k-btn k-btn-linea k-btn-chico" th:href="@{/mensajes/{id}(id=${miOferta.id})}">
+                        Escribirle a <span th:text="${solicitud.autor.nombre}">quien publicó</span></a>
+                </div>
             </div>
 
             <h2 class="k-tarjeta-titulo" style="margin-top:1.75rem;">
-                Con quién compites (<span th:text="${#lists.size(solicitud.ofertas)}">3</span>)
+                Con quién compites (<span th:text="${#lists.size(solicitud.enJuego)}">3</span>)
             </h2>
+            <p class="k-vacio" th:if="${#lists.isEmpty(solicitud.enJuego)}">Todavía nadie ofertó. Puedes ser el primero.</p>
             <div class="k-lista">
-                <div class="k-oferta" th:each="o, i : ${solicitud.ofertas}">
+                <div class="k-oferta" th:each="o, i : ${solicitud.enJuego}">
                     <span th:replace="~{fragmentos/componentes :: cara(${o.persona}, '2.6rem')}"></span>
                     <div class="k-oferta-datos">
                         <div class="k-oferta-nombre" th:text="${o.persona.nombre}">Luis Mendoza</div>
                         <div class="k-oferta-meta">
-                            <span th:replace="~{fragmentos/componentes :: nota(${o.calificacion})}"></span>
-                            · <span th:text="${o.servicios}">32</span> servicios
+                            <th:block th:unless="${o.sinCalificar()}">
+                                <span th:replace="~{fragmentos/componentes :: nota(${o.calificacion})}"></span> ·
+                            </th:block>
+                            <span th:if="${o.sinCalificar()}">Sin calificaciones aún ·</span>
+                            <span th:text="${o.servicios == 1} ? '1 servicio' : ${o.servicios} + ' servicios'">32 servicios</span>
                         </div>
                     </div>
                     <span th:replace="~{fragmentos/componentes :: precio(${o.monto}, 'k-precio-g')}"></span>
@@ -83,7 +118,7 @@
         </div>
 
         <div class="k-tarjeta">
-            <div class="k-etiqueta">Precio propuesto por el cliente</div>
+            <div class="k-etiqueta">Precio que propone</div>
             <span th:replace="~{fragmentos/componentes :: precio(${solicitud.precioPropuesto}, 'k-precio-xl')}"></span>
             <div class="k-solicitud-ofertas" style="margin-bottom:1.4rem;"
                  th:text="'Publicada ' + ${solicitud.publicada}">Publicada hace 2 horas</div>
@@ -98,7 +133,7 @@
                 <dt>Para el</dt>
                 <dd th:text="${#temporals.format(solicitud.fechaDeseada, 'dd/MM/yyyy')}">12/09/2026</dd>
                 <dt>Ofertas</dt>
-                <dd th:text="${#lists.size(solicitud.ofertas)}">3</dd>
+                <dd th:text="${#lists.size(solicitud.enJuego)}">3</dd>
             </dl>
         </div>
     </div>

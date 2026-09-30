@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layout :: base(~{::title}, ~{::main})}">
+<head>
+    <title>Contraseña nueva · KOLAB</title>
+</head>
+<body>
+
+<main class="k-acceso">
+    <div class="k-encabezado">
+        <h1>Pon tu contraseña nueva</h1>
+        <p>Con ella vuelves a entrar. La anterior deja de servir.</p>
+    </div>
+
+    <div class="k-dos-columnas">
+        <div class="k-tarjeta" th:unless="${valido}">
+            <h2 class="k-tarjeta-titulo">Este enlace ya no sirve</h2>
+            <p style="margin:0 0 1.4rem; color:var(--tinta-2);">Venció o ya se usó. Pide uno nuevo y
+                úsalo dentro de los 30 minutos.</p>
+            <a class="k-btn k-btn-principal" th:href="@{/recuperar}">Pedir otro enlace</a>
+        </div>
+
+        <div class="k-tarjeta" th:if="${valido}">
+            <form th:action="@{/recuperar/{codigo}(codigo=${codigo})}" th:object="${nuevaClaveForm}" method="post">
+                <div class="k-campos k-campos-una">
+                    <div class="k-campo">
+                        <label for="password">Contraseña nueva</label>
+                        <input type="password" id="password" th:field="*{password}" autocomplete="new-password"
+                               autofocus th:classappend="${#fields.hasErrors('password')} ? 'k-mal'">
+                        <span class="k-error" th:if="${#fields.hasErrors('password')}" th:errors="*{password}"></span>
+                        <span class="k-pista" th:unless="${#fields.hasErrors('password')}">Mínimo 8 caracteres.</span>
+                    </div>
+                    <div class="k-campo">
+                        <label for="confirmacion">Repítela</label>
+                        <input type="password" id="confirmacion" th:field="*{confirmacion}" autocomplete="new-password"
+                               th:classappend="${#fields.hasErrors('confirmacion')} ? 'k-mal'">
+                        <span class="k-error" th:if="${#fields.hasErrors('confirmacion')}" th:errors="*{confirmacion}"></span>
+                    </div>
+                </div>
+
+                <div class="k-acciones">
+                    <button type="submit" class="k-btn k-btn-principal">Guardar contraseña</button>
+                    <a th:href="@{/login}">Cancelar</a>
+                </div>
+            </form>
+        </div>
+
+        <div class="k-lienzo">
+            <img class="k-acceso-foto" th:if="${fotoAcceso}" th:src="@{${fotoAcceso}}"
+                 alt="Una persona enseñándole a otra">
+            <h2>Se te olvidó,<br><em>no se perdió nada</em>.</h2>
+            <p>Tus solicitudes, tus ofertas y tu calificación siguen ahí. Con la contraseña nueva
+                entras igual que siempre.</p>
+        </div>
+    </div>
+</main>
+
+</body>
+</html>

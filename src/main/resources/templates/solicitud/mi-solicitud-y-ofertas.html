@@ -11,6 +11,22 @@
 
     <p class="k-migas"><a th:href="@{/mis-solicitudes}">&larr; Mis solicitudes</a></p>
 
+    <div class="k-invita" th:if="${solicitud.idServicio != null}">
+        <div>
+            <b>Ya elegiste con quién trabajar.</b>
+            El trato sigue en el servicio: ahí coordinan, lo cierras y se califican.
+        </div>
+        <a class="k-btn k-btn-principal k-btn-chico" th:href="@{/servicios/{id}(id=${solicitud.idServicio})}">Ver el servicio</a>
+    </div>
+
+    <div class="k-invita" th:if="${solicitud.esPropuestaDirecta()}">
+        <span th:replace="~{fragmentos/componentes :: cara(${solicitud.destinatario}, '2.4rem')}"></span>
+        <div>
+            <b th:text="'Propuesta directa a ' + ${solicitud.destinatario.nombre}">Propuesta directa</b>
+            Solo esa persona la ve y solo ella puede ofertar.
+        </div>
+    </div>
+
     <div class="k-encabezado">
         <h1 th:text="${solicitud.titulo}">Título de la solicitud</h1>
         <p>
@@ -34,9 +50,12 @@
 
             <div class="k-tarjeta" th:if="${#lists.isEmpty(solicitud.ofertas)}">
                 <h2 class="k-tarjeta-titulo">Todavía sin ofertas</h2>
-                <p class="k-vacio" style="margin:0;">Los expertos de
+                <p class="k-vacio" style="margin:0;" th:unless="${solicitud.esPropuestaDirecta()}">Quienes saben de
                     <span th:text="${solicitud.categoria}">la categoría</span> ya ven tu solicitud.
                     Puede tardar unas horas o unos días. Cuando alguien oferte te aparece acá.</p>
+                <p class="k-vacio" style="margin:0;" th:if="${solicitud.esPropuestaDirecta()}">
+                    <span th:text="${solicitud.destinatario.nombre}">La persona</span> ya la ve. Cuando
+                    responda, su oferta te aparece acá.</p>
             </div>
 
             <div th:unless="${#lists.isEmpty(solicitud.ofertas)}">
@@ -46,13 +65,17 @@
 
                 <div class="k-lista">
                     <div class="k-oferta-caja" th:each="o, i : ${solicitud.ofertas}">
-                        <div class="k-oferta" th:classappend="${i.first} ? 'k-oferta-destacada'">
+                        <div class="k-oferta" th:classappend="${i.first and o.enJuego()} ? 'k-oferta-destacada'">
                             <span th:replace="~{fragmentos/componentes :: cara(${o.persona}, '2.6rem')}"></span>
                             <div class="k-oferta-datos">
-                                <div class="k-oferta-nombre" th:text="${o.persona.nombre}">Luis Mendoza</div>
+                                <a class="k-oferta-nombre k-enlace-limpio" th:href="@{/personas/{id}(id=${o.persona.id})}"
+                                   th:text="${o.persona.nombre}">Luis Mendoza</a>
                                 <div class="k-oferta-meta">
-                                    <span th:replace="~{fragmentos/componentes :: nota(${o.calificacion})}"></span>
-                                    · <span th:text="${o.servicios}">32</span> servicios
+                                    <th:block th:unless="${o.sinCalificar()}">
+                                        <span th:replace="~{fragmentos/componentes :: nota(${o.calificacion})}"></span> ·
+                                    </th:block>
+                                    <span th:if="${o.sinCalificar()}">Sin calificaciones aún ·</span>
+                                    <span th:text="${o.servicios == 1} ? '1 servicio' : ${o.servicios} + ' servicios'">32 servicios</span>
                                 </div>
                                 <div class="k-oferta-meta" style="margin-top:0.25rem;" th:text="${o.mensaje}">Mensaje</div>
                             </div>
@@ -64,11 +87,19 @@
                                 <span class="k-chat-punto" th:if="${o.tieneSinLeer()}" th:text="${o.sinLeer}">2</span>
                             </button>
 
-                            <form th:if="${solicitud.admiteOfertas()}"
-                                  th:action="@{/mis-solicitudes/{id}/ofertas/{idOferta}(id=${solicitud.id}, idOferta=${o.id})}"
-                                  method="post">
-                                <button type="submit" class="k-btn k-btn-principal k-btn-chico">Aceptar</button>
-                            </form>
+                            <div class="k-oferta-decision" th:if="${solicitud.admiteOfertas() and o.enJuego()}">
+                                <form th:action="@{/mis-solicitudes/{id}/ofertas/{idOferta}(id=${solicitud.id}, idOferta=${o.id})}"
+                                      method="post">
+                                    <button type="submit" class="k-btn k-btn-principal k-btn-chico">Aceptar</button>
+                                </form>
+                                <form th:action="@{/mis-solicitudes/{id}/ofertas/{idOferta}/rechazar(id=${solicitud.id}, idOferta=${o.id})}"
+                                      method="post">
+                                    <button type="submit" class="k-btn k-btn-linea k-btn-chico">Rechazar</button>
+                                </form>
+                            </div>
+                            <th:block th:unless="${o.enJuego()}">
+                                <span th:replace="~{fragmentos/componentes :: estado(${o.estado})}"></span>
+                            </th:block>
                         </div>
 
                         <div class="k-hilo" th:id="'hilo-' + ${o.id}" hidden>
@@ -81,8 +112,9 @@
                                 <p class="k-vacio" style="margin:0;" th:if="${#lists.isEmpty(hilos.get(o.id))}">
                                     Todavía no se han escrito.</p>
                             </div>
-                            <form class="k-chat-envio" th:action="@{/mensajes/{id}(id=${o.id})}" method="get">
-                                <input type="text" name="contenido" placeholder="Escribe un mensaje" autocomplete="off">
+                            <form class="k-chat-envio" th:action="@{/mensajes/{id}(id=${o.id})}" method="post">
+                                <input type="hidden" name="volver" th:value="@{/mis-solicitudes/{id}(id=${solicitud.id})}">
+                                <input type="text" name="contenido" placeholder="Escribe un mensaje" autocomplete="off" required>
                                 <button type="submit" class="k-btn k-btn-oscuro">Enviar</button>
                             </form>
                         </div>

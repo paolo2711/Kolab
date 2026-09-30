@@ -1,0 +1,20 @@
+[
+  { "oferta": "guitarra-luis", "deQuienPide": false, "contenido": "Hola, ¿tienes guitarra propia?", "haceMinutos": 55, "leido": true },
+  { "oferta": "guitarra-luis", "deQuienPide": true, "contenido": "Sí, una criolla.", "haceMinutos": 50, "leido": true },
+  { "oferta": "guitarra-luis", "deQuienPide": false, "contenido": "Perfecto. ¿El sábado a las 10 te va?", "haceMinutos": 20, "leido": false },
+
+  { "oferta": "guitarra-carlos", "deQuienPide": false, "contenido": "Hola, ¿el precio de 75 te sirve?", "haceMinutos": 40, "leido": true },
+  { "oferta": "guitarra-carlos", "deQuienPide": true, "contenido": "Lo estoy viendo, gracias.", "haceMinutos": 35, "leido": true },
+  { "oferta": "guitarra-carlos", "deQuienPide": false, "contenido": "Cualquier cosa me avisas.", "haceMinutos": 30, "leido": false },
+
+  { "oferta": "ingles-luis", "deQuienPide": false, "contenido": "Te mando el material antes de la clase.", "haceMinutos": 1500, "leido": true },
+  { "oferta": "ingles-luis", "deQuienPide": true, "contenido": "Gracias, lo reviso hoy.", "haceMinutos": 1480, "leido": true },
+  { "oferta": "ingles-luis", "deQuienPide": false, "contenido": "Mañana practicamos presentaciones personales.", "haceMinutos": 90, "leido": false },
+
+  { "oferta": "ingles-paula-luis", "deQuienPide": true, "contenido": "¿Podemos empezar el lunes a las 7 de la noche?", "haceMinutos": 600, "leido": false },
+
+  { "oferta": "cano-ana", "deQuienPide": false, "contenido": "Listo, quedó sin goteo.", "haceMinutos": 42100, "leido": true },
+  { "oferta": "cano-ana", "deQuienPide": true, "contenido": "Mil gracias, quedó perfecto.", "haceMinutos": 42080, "leido": true },
+
+  { "oferta": "cano-jorge", "deQuienPide": false, "contenido": "Puedo ir a las cinco de la tarde. ¿Te acomoda?", "haceMinutos": 200, "leido": false }
+]

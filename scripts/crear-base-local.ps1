@@ -7,13 +7,12 @@
     Se puede volver a correr. Si los roles ya existen, les cambia la clave por una nueva y
     actualiza las variables.
 
-    Uso:
-        powershell -ExecutionPolicy Bypass -File scripts\crear-base-local.ps1
+    Uso: doble clic en instalar-base.cmd, en la raiz del proyecto. Ese archivo llama a este.
 #>
 
 param(
-    [string] $Psql = "D:\Program Files\PostgreSQL\18\bin\psql.exe",
-    [int]    $Puerto = 5433,
+    [string] $Psql = "",
+    [int]    $Puerto = 0,
     [string] $Servidor = "localhost",
     [string] $Base = "kolab"
 )
@@ -49,9 +48,25 @@ function Existe-Rol {
     return $r -eq "1"
 }
 
+# el psql de la version mas nueva instalada, en C: o en D:
+function Buscar-Psql {
+    $encontrados = Get-ChildItem -Path "C:\Program Files\PostgreSQL\*\bin\psql.exe",
+                                       "D:\Program Files\PostgreSQL\*\bin\psql.exe" -ErrorAction SilentlyContinue |
+        Sort-Object { [int]($_.FullName -replace '.*PostgreSQL\\(\d+)\\.*', '$1') } -Descending
+    if ($encontrados) { return $encontrados[0].FullName }
+    return ""
+}
+
 try {
-    if (-not (Test-Path $Psql)) {
-        throw "No encuentro psql en $Psql. Pasa la ruta con -Psql."
+    if ([string]::IsNullOrWhiteSpace($Psql)) {
+        $Psql = Buscar-Psql
+    }
+    if ([string]::IsNullOrWhiteSpace($Psql) -or -not (Test-Path $Psql)) {
+        throw "No encuentro PostgreSQL instalado. Instalalo desde https://www.postgresql.org/download/windows/ y vuelve a correr esto."
+    }
+    if ($Puerto -eq 0) {
+        $respuesta = Read-Host -Prompt "Puerto de PostgreSQL (Enter para 5432)"
+        $Puerto = if ([string]::IsNullOrWhiteSpace($respuesta)) { 5432 } else { [int]$respuesta }
     }
 
     $rolesSql = Join-Path $PSScriptRoot "kolab-roles.sql"
@@ -111,10 +126,13 @@ try {
     setx KOLAB_DB_PASSWORD $claveApp | Out-Null
     setx KOLAB_MIGRACION_USER "kolab_migracion" | Out-Null
     setx KOLAB_MIGRACION_PASSWORD $claveMigracion | Out-Null
+    setx KOLAB_DESARROLLO "true" | Out-Null
     Write-Host " listas"
 
     Write-Host ""
-    Write-Host "Listo. Abre una terminal NUEVA y corre: mvnw.cmd -B clean package; java -jar target\kolab.jar" -ForegroundColor Green
+    Write-Host "Listo." -ForegroundColor Green
+    Write-Host "Cierra VS Code (o IntelliJ) y vuelve a abrirlo para que vea las variables nuevas."
+    Write-Host "Despues dale Run a KolabApplication. La primera vez la base se llena sola con los ejemplos."
 }
 catch {
     Write-Host ""

@@ -7,25 +7,28 @@
 <body>
 
 <main>
+    <div th:replace="~{fragmentos/componentes :: aviso}"></div>
+
     <p class="k-migas"><a th:href="@{/mis-solicitudes}">&larr; Mis solicitudes</a></p>
 
     <div class="k-invita" th:if="${destinatario != null}">
         <span th:replace="~{fragmentos/componentes :: cara(${destinatario}, '2.4rem')}"></span>
         <div>
             <b th:text="'Dirigida a ' + ${destinatario.nombre}">Dirigida a Luis Mendoza</b>
-            Le llega primero, pero otros también van a poder ofertar.
+            Solo le llega a esta persona. Nadie más la ve en Explorar.
         </div>
         <a class="k-enlace-suave" th:href="@{/personas/{id}(id=${destinatario.id})}">Ver su perfil</a>
     </div>
 
     <div class="k-encabezado">
         <h1>Publica lo que necesitas</h1>
-        <p>El precio lo pones tú. Los expertos deciden si lo aceptan o te proponen otro monto.</p>
+        <p>El precio lo pones tú. Quien sabe hacerlo decide si lo acepta o te propone otro monto.</p>
     </div>
 
     <div class="k-dos-columnas k-principal-ancha">
         <div class="k-tarjeta">
             <form th:action="@{/mis-solicitudes}" th:object="${solicitudForm}" method="post" novalidate id="formSolicitud">
+                <input type="hidden" th:field="*{idDestinatario}">
 
                 <div class="k-campos">
                     <div class="k-campo k-campo-ancho">
@@ -61,7 +64,7 @@
                     <div class="k-campo k-campo-ancho">
                         <label for="descripcion">Descripción</label>
                         <textarea id="descripcion" th:field="*{descripcion}"
-                                  placeholder="Cuenta con detalle qué necesitas, cada cuánto y cualquier cosa que el experto deba saber."
+                                  placeholder="Cuenta con detalle qué necesitas, cada cuánto y cualquier cosa que deba saber quien lo haga."
                                   th:classappend="${#fields.hasErrors('descripcion')} ? 'k-mal'"></textarea>
                         <span class="k-error" th:if="${#fields.hasErrors('descripcion')}" th:errors="*{descripcion}"></span>
                     </div>
@@ -82,7 +85,7 @@
                                    th:classappend="${#fields.hasErrors('precioPropuesto')} ? 'k-mal'">
                         </div>
                         <span class="k-error" th:if="${#fields.hasErrors('precioPropuesto')}" th:errors="*{precioPropuesto}"></span>
-                        <span class="k-pista" th:unless="${#fields.hasErrors('precioPropuesto')}">Los expertos pueden aceptarlo o proponerte otro.</span>
+                        <span class="k-pista" th:unless="${#fields.hasErrors('precioPropuesto')}">Pueden aceptarlo o proponerte otro.</span>
                     </div>
                 </div>
 
@@ -96,7 +99,7 @@
 
         <div class="k-tarjeta">
             <h2 class="k-tarjeta-titulo">Vista previa</h2>
-            <p class="k-vacio">Así van a ver tu solicitud los expertos.</p>
+            <p class="k-vacio">Así la van a ver quienes pueden ofertar.</p>
 
             <div class="k-solicitud" style="align-items:flex-start;">
                 <div>

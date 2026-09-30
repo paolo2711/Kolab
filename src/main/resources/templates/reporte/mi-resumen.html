@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layout :: base(~{::title}, ~{::main})}">
+<head>
+    <title>Mi resumen · KOLAB</title>
+</head>
+<body>
+
+<main>
+    <p class="k-migas"><a th:href="@{/mis-solicitudes}">&larr; Mi actividad</a></p>
+
+    <div class="k-encabezado">
+        <h1>Mi resumen</h1>
+        <p>Cómo te va de los dos lados de tu cuenta. Tu calificación y tus reseñas están en
+            <a th:href="@{/perfil}">tu perfil</a>.</p>
+    </div>
+
+    <section class="k-bloque" th:with="p=${resumen.pendientes}" th:if="${resumen.pendientes.hayAlgo()}">
+        <h2 class="k-bloque-titulo">Te toca</h2>
+        <div class="k-lista">
+            <a class="k-solicitud" th:if="${p.ofertasPorRevisar > 0}" th:href="@{/mis-solicitudes}">
+                <span class="k-solicitud-cuerpo"><span class="k-solicitud-titulo"
+                      th:text="${p.ofertasPorRevisar == 1} ? 'Tienes 1 oferta por revisar' : 'Tienes ' + ${p.ofertasPorRevisar} + ' ofertas por revisar'">
+                    Tienes ofertas por revisar</span></span>
+                <span class="k-solicitud-derecha"><span class="k-btn k-btn-linea k-btn-chico">Revisarlas</span></span>
+            </a>
+            <a class="k-solicitud" th:if="${p.serviciosPorCerrar > 0}" th:href="@{/mis-solicitudes}">
+                <span class="k-solicitud-cuerpo"><span class="k-solicitud-titulo"
+                      th:text="${p.serviciosPorCerrar == 1} ? 'Un servicio que pediste sigue en curso' : ${p.serviciosPorCerrar} + ' servicios que pediste siguen en curso'">
+                    Servicios en curso</span></span>
+                <span class="k-solicitud-derecha"><span class="k-btn k-btn-linea k-btn-chico">Ver cuáles cerrar</span></span>
+            </a>
+            <a class="k-solicitud" th:if="${p.porCalificar > 0}" th:href="@{/mis-solicitudes}">
+                <span class="k-solicitud-cuerpo"><span class="k-solicitud-titulo"
+                      th:text="${p.porCalificar == 1} ? 'Te falta calificar 1 servicio' : 'Te falta calificar ' + ${p.porCalificar} + ' servicios'">
+                    Te falta calificar</span></span>
+                <span class="k-solicitud-derecha"><span class="k-btn k-btn-linea k-btn-chico">Calificar</span></span>
+            </a>
+        </div>
+    </section>
+
+    <section class="k-bloque" th:with="o=${resumen.ofrezco}">
+        <div class="k-titulo-fila">
+            <h2 class="k-bloque-titulo" style="margin:0;">Lo que ofrezco</h2>
+            <a th:href="@{/mis-ofertas}">Ver mis ofertas</a>
+        </div>
+
+        <p class="k-vacio" th:if="${o.vacio()}">Todavía no ofertaste en ninguna solicitud.
+            <a th:href="@{/solicitudes}">Mira lo que se está pidiendo</a> y propón tu precio.</p>
+
+        <th:block th:unless="${o.vacio()}">
+            <div class="k-metricas k-metricas-cuatro">
+                <div class="k-metrica">
+                    <div class="k-metrica-valor">
+                        <span th:replace="~{fragmentos/componentes :: precio(${o.ganado}, '')}"></span></div>
+                    <div class="k-metrica-nombre">Ganado en servicios cerrados, ya sin la comisión</div>
+                </div>
+                <div class="k-metrica">
+                    <div class="k-metrica-valor" th:text="${o.tasaDeAceptacion} + ' %'">40 %</div>
+                    <div class="k-metrica-nombre">
+                        De tus <span th:text="${o.ofertasEnviadas}">10</span> ofertas terminaron en trato</div>
+                </div>
+                <div class="k-metrica">
+                    <div class="k-metrica-valor" th:text="${o.clientesQueVolvieron} + ' de ' + ${o.clientes}">1 de 4</div>
+                    <div class="k-metrica-nombre">Clientes que volvieron a contratarte</div>
+                </div>
+                <div class="k-metrica">
+                    <div class="k-metrica-valor" th:if="${o.ofertasIgual()}">Igual</div>
+                    <div class="k-metrica-valor" th:unless="${o.ofertasIgual()}"
+                         th:text="(${o.ofertasArriba()} ? '+' : '−') + ' S/ ' + ${#numbers.formatDecimal(o.diferenciaSinSigno, 1, 2, 'POINT')}">− S/ 5.00</div>
+                    <div class="k-metrica-nombre"
+                         th:text="${o.ofertasIgual()} ? 'Ofertas justo lo que piden' : (${o.ofertasArriba()} ? 'Ofertas en promedio por encima de lo que piden' : 'Ofertas en promedio por debajo de lo que piden')">
+                        Frente a lo que piden</div>
+                </div>
+            </div>
+
+            <div class="k-dos-graficos">
+                <div class="k-tarjeta">
+                    <h3 class="k-tarjeta-titulo">Lo que ganaste mes a mes</h3>
+                    <div class="k-meses">
+                        <div class="k-mes" th:each="b : ${o.ganadoPorMes}">
+                            <span class="k-mes-valor"
+                                  th:text="${b.valor.signum() == 0} ? '' : ${#numbers.formatDecimal(b.valor, 1, 0, 'POINT')}">114</span>
+                            <span class="k-mes-pista"><span class="k-mes-barra" th:style="'height:' + ${b.largo} + '%'"></span></span>
+                            <span class="k-mes-rotulo" th:text="${b.rotulo}">set</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="k-tarjeta">
+                    <h3 class="k-tarjeta-titulo">De dónde viene lo que ganas</h3>
+                    <p class="k-vacio" style="margin:0;" th:if="${#lists.isEmpty(o.ganadoPorCategoria)}">
+                        Aparece cuando cierres tu primer servicio.</p>
+                    <div class="k-barras">
+                        <div class="k-barras-fila" th:each="b : ${o.ganadoPorCategoria}">
+                            <span class="k-barras-rotulo" th:text="${b.rotulo}">Música</span>
+                            <span class="k-barras-pista"><span class="k-barras-valor" th:style="'width:' + ${b.largo} + '%'"></span></span>
+                            <span th:replace="~{fragmentos/componentes :: precio(${b.valor}, '')}"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </th:block>
+    </section>
+
+    <section class="k-bloque" th:with="p=${resumen.pido}">
+        <div class="k-titulo-fila">
+            <h2 class="k-bloque-titulo" style="margin:0;">Lo que pido</h2>
+            <a th:href="@{/mis-solicitudes}">Ver mis solicitudes</a>
+        </div>
+
+        <p class="k-vacio" th:if="${p.vacio()}">Todavía no pediste nada.
+            <a th:href="@{/mis-solicitudes/nueva}">Publica lo que necesitas</a> con el precio que propones.</p>
+
+        <th:block th:unless="${p.vacio()}">
+            <div class="k-metricas k-metricas-cuatro">
+                <div class="k-metrica">
+                    <div class="k-metrica-valor">
+                        <span th:replace="~{fragmentos/componentes :: precio(${p.pagado}, '')}"></span></div>
+                    <div class="k-metrica-nombre">Pagado en servicios cerrados</div>
+                </div>
+                <div class="k-metrica">
+                    <div class="k-metrica-valor"
+                         th:text="${p.diferenciaConLoPropuesto == null} ? '—' : ((${p.negociasteAbajo()} ? '− S/ ' : '+ S/ ') + ${#numbers.formatDecimal(p.diferenciaSinSigno, 1, 2, 'POINT')})">− S/ 5.00</div>
+                    <div class="k-metrica-nombre"
+                         th:text="${p.negociasteAbajo()} ? 'Cerraste en promedio por debajo de tu precio' : 'Frente al precio que propusiste, en promedio'">
+                        Frente a tu precio</div>
+                </div>
+                <div class="k-metrica">
+                    <div class="k-metrica-valor" th:text="${p.esperaPrimeraOferta}">3 h</div>
+                    <div class="k-metrica-nombre">Lo que tarda en llegarte la primera oferta</div>
+                </div>
+                <div class="k-metrica">
+                    <div class="k-metrica-valor" th:text="${p.tasaDeTrato} + ' %'">60 %</div>
+                    <div class="k-metrica-nombre">
+                        De tus <span th:text="${p.publicadas}">5</span> solicitudes terminaron en trato</div>
+                </div>
+            </div>
+
+            <div class="k-tarjeta" th:unless="${#lists.isEmpty(p.pagadoPorCategoria)}">
+                <h3 class="k-tarjeta-titulo">En qué gastas</h3>
+                <div class="k-barras">
+                    <div class="k-barras-fila" th:each="b : ${p.pagadoPorCategoria}">
+                        <span class="k-barras-rotulo" th:text="${b.rotulo}">Idiomas</span>
+                        <span class="k-barras-pista"><span class="k-barras-valor" th:style="'width:' + ${b.largo} + '%'"></span></span>
+                        <span th:replace="~{fragmentos/componentes :: precio(${b.valor}, '')}"></span>
+                    </div>
+                </div>
+            </div>
+        </th:block>
+    </section>
+</main>
+
+</body>
+</html>

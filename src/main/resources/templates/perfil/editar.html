@@ -40,11 +40,11 @@
                     </div>
 
                     <div class="k-campo">
-                        <label for="ubicacion">Dónde estás</label>
-                        <input type="text" id="ubicacion" th:field="*{ubicacion}" placeholder="Jesús María, Lima"
-                               th:classappend="${#fields.hasErrors('ubicacion')} ? 'k-mal'">
-                        <span class="k-error" th:if="${#fields.hasErrors('ubicacion')}" th:errors="*{ubicacion}"></span>
-                        <span class="k-pista" th:unless="${#fields.hasErrors('ubicacion')}">
+                        <label for="distrito">Distrito</label>
+                        <input type="text" id="distrito" th:field="*{distrito}" placeholder="Jesús María"
+                               th:classappend="${#fields.hasErrors('distrito')} ? 'k-mal'">
+                        <span class="k-error" th:if="${#fields.hasErrors('distrito')}" th:errors="*{distrito}"></span>
+                        <span class="k-pista" th:unless="${#fields.hasErrors('distrito')}">
                             Sirve para ordenar por cercanía las solicitudes presenciales.</span>
                     </div>
 
@@ -54,6 +54,14 @@
                                   placeholder="Qué haces, hace cuánto y cómo trabajas."
                                   th:classappend="${#fields.hasErrors('descripcion')} ? 'k-mal'"></textarea>
                         <span class="k-error" th:if="${#fields.hasErrors('descripcion')}" th:errors="*{descripcion}"></span>
+                    </div>
+
+                    <div class="k-campo k-campo-ancho">
+                        <label for="experiencia">Experiencia <span class="k-opcional">(opcional)</span></label>
+                        <textarea id="experiencia" rows="3" th:field="*{experiencia}"
+                                  placeholder="Años haciéndolo, estudios, certificados."
+                                  th:classappend="${#fields.hasErrors('experiencia')} ? 'k-mal'"></textarea>
+                        <span class="k-error" th:if="${#fields.hasErrors('experiencia')}" th:errors="*{experiencia}"></span>
                     </div>
                 </div>
 

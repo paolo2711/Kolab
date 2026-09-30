@@ -1,6 +1,8 @@
 package com.kolab.solicitud;
 
 import java.math.BigDecimal;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 
 public class FiltroSolicitudes {
 
@@ -14,6 +16,25 @@ public class FiltroSolicitudes {
     public boolean vacio() {
         return idCategoria == null && precioMinimo == null && precioMaximo == null
                 && modalidad == null && (distrito == null || distrito.isBlank()) && !soloLoQueSe;
+    }
+
+    // los filtros activos como parte de una dirección, para que al pasar de página no se pierdan
+    public String aConsulta() {
+        StringBuilder consulta = new StringBuilder();
+        agregar(consulta, "idCategoria", idCategoria);
+        agregar(consulta, "precioMinimo", precioMinimo);
+        agregar(consulta, "precioMaximo", precioMaximo);
+        agregar(consulta, "modalidad", modalidad);
+        agregar(consulta, "distrito", distrito == null || distrito.isBlank() ? null : distrito);
+        agregar(consulta, "soloLoQueSe", soloLoQueSe ? true : null);
+        return consulta.toString();
+    }
+
+    private static void agregar(StringBuilder consulta, String nombre, Object valor) {
+        if (valor != null) {
+            consulta.append(nombre).append('=')
+                    .append(URLEncoder.encode(valor.toString(), StandardCharsets.UTF_8)).append('&');
+        }
     }
 
     public Long getIdCategoria() {

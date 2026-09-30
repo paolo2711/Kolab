@@ -8,7 +8,7 @@
 </span>
 
 <span th:fragment="nota(puntaje)" class="k-nota">
-    <i class="bi bi-star-fill k-estrella"></i><span th:text="${puntaje}">4.8</span>
+    <i class="bi bi-star-fill k-estrella"></i><span th:text="${#numbers.formatDecimal(puntaje, 1, 1, 'POINT')}">4.8</span>
 </span>
 
 <span th:fragment="estado(estado)" class="k-estado" th:classappend="'k-estado-' + ${estado.tono}">
@@ -17,18 +17,33 @@
 
 <div th:fragment="aviso">
     <div class="k-aviso" th:if="${aviso}" th:text="${aviso}"></div>
+    <div class="k-aviso k-aviso-error" th:if="${error}" th:text="${error}"></div>
 </div>
+
+<th:block th:fragment="miniatura(foto, icono, alt)">
+    <img class="k-miniatura" th:if="${foto != null}" th:src="@{${foto}}" th:alt="${alt}" loading="lazy">
+    <span class="k-miniatura k-sin-foto" th:unless="${foto != null}" th:title="${alt}">
+        <i class="bi" th:classappend="${icono}"></i></span>
+</th:block>
+
+<nav th:fragment="paginas(pagina, ruta, consulta)" class="k-paginas" th:if="${pagina.totalPages > 1}">
+    <a th:if="${pagina.hasPrevious()}"
+       th:href="@{${ruta}} + '?' + ${consulta} + 'pagina=' + ${pagina.number - 1}">&larr; Anteriores</a>
+    <span>Página <b th:text="${pagina.number + 1}">1</b> de <span th:text="${pagina.totalPages}">3</span></span>
+    <a th:if="${pagina.hasNext()}"
+       th:href="@{${ruta}} + '?' + ${consulta} + 'pagina=' + ${pagina.number + 1}">Siguientes &rarr;</a>
+</nav>
 
 <ol th:fragment="comoFunciona" class="k-flujo">
     <li><span class="k-flujo-n">1</span> Publicas con tu precio</li>
-    <li><span class="k-flujo-n">2</span> Los expertos ofertan</li>
+    <li><span class="k-flujo-n">2</span> Te llegan ofertas</li>
     <li><span class="k-flujo-n">3</span> Aceptas una y coordinan</li>
     <li><span class="k-flujo-n">4</span> Cierras y califican</li>
 </ol>
 
 <span th:fragment="cara(p, lado)" class="k-cara" th:style="'--lado:' + ${lado}"
       th:classappend="${p.tieneFoto()} ? '' : 'k-cara-letras t' + ${p.tono}">
-    <img th:if="${p.tieneFoto()}" th:src="${p.retrato()}" th:alt="${p.nombre}" loading="lazy">
+    <img th:if="${p.tieneFoto()}" th:src="@{${p.retrato()}}" th:alt="${p.nombre}" loading="lazy">
     <span th:unless="${p.tieneFoto()}" th:text="${p.iniciales}">LM</span>
 </span>
 
@@ -36,11 +51,13 @@
     <div class="k-pila" th:if="${solicitud.tieneOfertas()}">
         <span class="k-pila-caras">
             <th:block th:each="p, i : ${solicitud.ofertantes}">
-                <span th:if="${i.index < 4}" th:replace="~{fragmentos/componentes :: cara(${p}, '1.9rem')}"></span>
+                <th:block th:if="${i.index < 4}">
+                    <span th:replace="~{fragmentos/componentes :: cara(${p}, '1.9rem')}"></span>
+                </th:block>
             </th:block>
         </span>
         <span class="k-pila-texto">
-            <span th:text="${solicitud.ofertas}">3</span> ofertaron ·
+            <span th:text="${solicitud.ofertas == 1} ? '1 ofertó' : ${solicitud.ofertas} + ' ofertaron'">3 ofertaron</span> ·
             desde S/ <span th:text="${#numbers.formatDecimal(solicitud.mejorOferta, 1, 'COMMA', 2, 'POINT')}">0.00</span>
         </span>
     </div>
@@ -102,10 +119,13 @@
 </div>
 
 <a th:fragment="fila(s, accion)" class="k-solicitud" th:href="@{/solicitudes/{id}(id=${s.id})}">
-    <img class="k-miniatura" th:src="${s.foto()}" th:alt="${s.categoria}" loading="lazy">
+    <th:block th:replace="~{fragmentos/componentes :: miniatura(${s.foto}, ${s.icono}, ${s.categoria})}"></th:block>
 
     <div class="k-solicitud-cuerpo">
-        <span class="k-solicitud-titulo" th:text="${s.titulo}">Título</span>
+        <span class="k-solicitud-titulo">
+            <span th:text="${s.titulo}">Título</span>
+            <span class="k-para-ti" th:if="${s.directa}">Para ti</span>
+        </span>
         <div class="k-solicitud-meta">
             <span th:text="${s.categoria}">Categoría</span> ·
             <span th:text="${s.ubicacion}">Presencial</span>
@@ -127,20 +147,22 @@
     <div class="k-carta k-carta-experto" th:each="e : ${lista}">
         <div class="k-carta-cima">
             <span th:replace="~{fragmentos/componentes :: cara(${e.persona}, '3.2rem')}"></span>
-            <span class="k-sello" th:if="${e.verificado}"><i class="bi bi-patch-check-fill"></i> Verificado</span>
         </div>
 
         <a class="k-carta-titulo k-enlace-limpio" th:href="@{/personas/{id}(id=${e.persona.id})}"
            th:text="${e.persona.nombre}">Luis Mendoza</a>
-        <div class="k-carta-meta" th:text="${e.titular}">Profesor de guitarra</div>
+        <div class="k-carta-meta" th:text="${e.enQueTrabaja}">Música · Idiomas</div>
 
         <div class="k-oferta-meta" style="margin-top:0.55rem;">
-            <span th:replace="~{fragmentos/componentes :: nota(${e.calificacion})}"></span>
-            · <span th:text="${e.servicios}">32</span> servicios
-            · <span th:text="${e.distrito}">Pueblo Libre</span>
+            <th:block th:unless="${e.sinCalificar()}">
+                <span th:replace="~{fragmentos/componentes :: nota(${e.calificacion})}"></span> ·
+            </th:block>
+            <span th:if="${e.sinCalificar()}">Sin calificaciones aún ·</span>
+            <span th:text="${e.servicios}">32</span> <span th:text="${e.servicios == 1} ? 'servicio' : 'servicios'">servicios</span>
+            <th:block th:if="${e.distrito}"> · <span th:text="${e.distrito}">Pueblo Libre</span></th:block>
         </div>
 
-        <p class="k-cita" th:text="'“' + ${e.ultimaResena} + '”'">Última reseña</p>
+        <p class="k-cita" th:if="${e.ultimaResena}" th:text="'“' + ${e.ultimaResena} + '”'">Última reseña</p>
 
         <div class="k-carta-pie">
             <a class="k-btn k-btn-linea k-btn-chico"

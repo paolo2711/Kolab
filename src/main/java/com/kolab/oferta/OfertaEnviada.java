@@ -1,22 +1,26 @@
 package com.kolab.oferta;
 
-import com.kolab.common.Foto;
 import java.math.BigDecimal;
 
-public record OfertaEnviada(Long idSolicitud,
+/**
+ * Una oferta propia en la lista de Mi actividad: a qué solicitud fue, cuánto pedía el cliente,
+ * cuánto propuse y cómo va.
+ */
+public record OfertaEnviada(Long idOferta,
+                            Long idSolicitud,
                             String solicitud,
                             String categoria,
                             String icono,
-                            String tema,
+                            String foto,
                             BigDecimal precioDelCliente,
                             BigDecimal miMonto,
                             EstadoOferta estado,
-                            int mensajesSinLeer,
-                            int cuantasOfertas,
+                            long mensajesSinLeer,
+                            long cuantasOfertas,
                             String enviada) {
 
-    public String foto() {
-        return Foto.de(tema);
+    public boolean tieneFoto() {
+        return foto != null;
     }
 
     public boolean aceptaste() {
@@ -25,5 +29,9 @@ public record OfertaEnviada(Long idSolicitud,
 
     public boolean tieneMensajes() {
         return mensajesSinLeer > 0;
+    }
+
+    public long getCompetidores() {
+        return Math.max(0, cuantasOfertas - 1);
     }
 }

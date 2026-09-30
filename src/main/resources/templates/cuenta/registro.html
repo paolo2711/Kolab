@@ -71,21 +71,22 @@
         </div>
 
         <div class="k-lienzo">
-            <img class="k-acceso-foto" th:src="@{/img/categoria/teaching-workshop.jpg}"
-                 alt="Alguien enseñando a otra persona">
+            <img class="k-acceso-foto" th:if="${fotoAcceso}" th:src="@{${fotoAcceso}}"
+                 alt="Una persona enseñándole a otra">
             <h2>Una cuenta,<br><em>dos formas</em> de usarla.</h2>
-            <p>No eliges bando. Lo que marques arriba solo decide con qué pantalla entras la primera vez.</p>
+            <p>No eliges bando. Con la misma cuenta pides lo que necesitas y ofreces lo que sabes
+                hacer. Lo que sabes hacer lo marcas después de entrar, o nunca, si solo vienes a contratar.</p>
 
             <ol class="k-pasos">
                 <li>Publicas una solicitud, fijas tu precio y eliges entre las ofertas que llegan.</li>
-                <li>Y con la misma cuenta ves las solicitudes abiertas y ofertas por el monto publicado o por otro.</li>
-                <li>Al cerrar el servicio ambos se califican y esa nota queda en el perfil.</li>
+                <li>Con la misma cuenta ves las solicitudes abiertas y ofertas por el monto publicado o por otro.</li>
+                <li>Al cerrar el servicio los dos se califican y esa nota queda en el perfil.</li>
             </ol>
 
             <div class="k-muestra">
                 <div class="k-muestra-titulo">Comisión de la plataforma</div>
-                <div class="k-muestra-meta">Se calcula sobre el monto acordado y solo cuando el
-                    servicio se concreta. Si no cierras trato, no pagas nada.</div>
+                <div class="k-muestra-meta">Se calcula sobre el monto acordado y solo cuando se acepta
+                    una oferta. Si no cierras trato con nadie, no pagas nada.</div>
             </div>
         </div>
     </div>

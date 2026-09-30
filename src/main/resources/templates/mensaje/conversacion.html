@@ -7,6 +7,8 @@
 <body>
 
 <main>
+    <div th:replace="~{fragmentos/componentes :: aviso}"></div>
+
     <p class="k-migas"><a th:href="@{/mensajes}">&larr; Mensajes</a></p>
 
     <div class="k-encabezado">
@@ -29,8 +31,10 @@
                 <span class="k-burbuja-hora" th:text="${m.hora}">10:12</span>
             </div>
         </div>
-        <form class="k-chat-envio" th:action="@{/mensajes/{id}(id=${conversacion.idOferta})}" method="get">
-            <input type="text" name="contenido" placeholder="Escribe un mensaje" autocomplete="off">
+        <p class="k-vacio" style="margin:0; padding:1rem;" th:if="${#lists.isEmpty(conversacion.mensajes)}">
+            Todavía no se han escrito. Escribe el primero.</p>
+        <form class="k-chat-envio" th:action="@{/mensajes/{id}(id=${conversacion.idOferta})}" method="post">
+            <input type="text" name="contenido" placeholder="Escribe un mensaje" autocomplete="off" required autofocus>
             <button type="submit" class="k-btn k-btn-oscuro">Enviar</button>
         </form>
     </div>

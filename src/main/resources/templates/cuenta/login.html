@@ -44,39 +44,46 @@
 
             <a class="k-btn k-btn-linea" th:href="@{/registro}">Crear cuenta</a>
 
-            <p class="k-prueba">
-                Datos de prueba:
-                <button type="submit" form="entrarCliente" class="k-enlace">cliente</button> ·
-                <button type="submit" form="entrarExperto" class="k-enlace">experto</button>
-            </p>
-
-            <form id="entrarCliente" th:action="@{/login}" method="post" hidden>
-                <input type="hidden" name="email" value="cliente@kolab.pe">
-                <input type="hidden" name="password" value="kolab1234">
-            </form>
-            <form id="entrarExperto" th:action="@{/login}" method="post" hidden>
-                <input type="hidden" name="email" value="experto@kolab.pe">
-                <input type="hidden" name="password" value="kolab1234">
-            </form>
+            <div class="k-desarrollo" th:if="${modoDesarrollo}">
+                <span>Desarrollo:</span>
+                <form th:action="@{/desarrollo/reiniciar}" method="post"
+                      onsubmit="return confirm('Se borra todo lo que hay en la base y se cargan los ejemplos. ¿Seguro?')">
+                    <button type="submit" class="k-enlace">reiniciar datos</button>
+                </form>
+                <span>·</span>
+                <form th:action="@{/desarrollo/ejemplos}" method="post">
+                    <button type="submit" class="k-enlace">cargar ejemplos</button>
+                </form>
+            </div>
 
         </div>
 
         <div class="k-lienzo">
-            <img class="k-acceso-foto" th:src="@{/img/categoria/teaching-workshop.jpg}"
-                 alt="Alguien enseñando a otra persona">
-            <h2>Tú pones el precio.<br><em>Los expertos deciden</em> si lo toman.</h2>
+            <img class="k-acceso-foto" th:if="${fotoAcceso}" th:src="@{${fotoAcceso}}"
+                 alt="Una persona enseñándole a otra">
+            <h2>Tú pones el precio.<br><em>Quien sabe hacerlo</em> decide si lo toma.</h2>
             <p>Nadie te impone una tarifa. Publicas cuánto estás dispuesto a pagar y quien sepa
                 hacerlo acepta ese monto o te propone otro.</p>
 
             <ol class="k-pasos">
-                <li>Publicas tu solicitud con el precio que propones.</li>
-                <li>Los expertos ofertan y comparas montos y calificaciones.</li>
-                <li>Coordinan por mensajería interna y al cerrar se califican.</li>
+                <li>Publicas lo que necesitas con el precio que propones.</li>
+                <li>Te llegan ofertas y comparas montos y calificaciones.</li>
+                <li>Coordinan por mensajes y al cerrar se califican.</li>
             </ol>
 
+            <div th:replace="~{cuenta/login :: cifras}"></div>
         </div>
     </div>
 </main>
+
+<div th:fragment="cifras" class="k-muestra" th:if="${plataforma.hayActividad()}">
+    <div class="k-muestra-titulo">Lo que pasa hoy en KOLAB</div>
+    <div class="k-muestra-pie">
+        <span><b th:text="${plataforma.serviciosConcretados}">13</b> servicios concretados</span>
+        <span><b th:text="${plataforma.calificacionPromedio}">4.9</b> de promedio</span>
+        <span><b th:text="${plataforma.personasQueOfrecen}">12</b> personas ofrecen</span>
+    </div>
+</div>
 
 </body>
 </html>

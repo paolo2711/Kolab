@@ -1,5 +1,6 @@
 package com.kolab.usuario;
 
+import com.kolab.perfil.Personas;
 import java.util.List;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
@@ -11,8 +12,9 @@ public class UsuarioAutenticado extends User {
     private final String nombreCompleto;
     private final String iniciales;
     private final boolean ofreceServicios;
+    private final String foto;
 
-    public UsuarioAutenticado(Usuario usuario, boolean ofreceServicios) {
+    public UsuarioAutenticado(Usuario usuario, boolean ofreceServicios, String foto) {
         super(usuario.getEmail(),
                 usuario.getPasswordHash(),
                 usuario.getEstado() == EstadoUsuario.ACTIVO,
@@ -22,7 +24,8 @@ public class UsuarioAutenticado extends User {
         this.idUsuario = usuario.getId();
         this.nombre = usuario.getNombre();
         this.nombreCompleto = usuario.getNombreCompleto();
-        this.iniciales = inicialesDe(usuario);
+        this.iniciales = Personas.inicialesDe(usuario);
+        this.foto = foto;
     }
 
     public Long getIdUsuario() {
@@ -41,6 +44,11 @@ public class UsuarioAutenticado extends User {
         return iniciales;
     }
 
+    // null si no hay foto: el menú pinta las iniciales
+    public String getFoto() {
+        return foto;
+    }
+
     // ofrece quien haya declarado alguna categoria
     public boolean ofreceServicios() {
         return ofreceServicios;
@@ -48,14 +56,5 @@ public class UsuarioAutenticado extends User {
 
     public boolean esExperto() {
         return ofreceServicios;
-    }
-
-    private static String inicialesDe(Usuario usuario) {
-        String apellidos = usuario.getApellidos();
-        char primera = usuario.getNombre().charAt(0);
-        if (apellidos == null || apellidos.isBlank()) {
-            return String.valueOf(primera);
-        }
-        return "" + primera + apellidos.charAt(0);
     }
 }

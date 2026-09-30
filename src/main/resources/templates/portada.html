@@ -9,29 +9,30 @@
 <main>
     <section class="k-bloque k-hero">
         <div>
-            <h1>Titular de la propuesta de valor</h1>
-            <p>Una línea explicando que el precio lo pone quien contrata y que los expertos
-                aceptan o proponen otro. Texto provisional.</p>
+            <h1>Tú pones el precio. Quien sabe hacerlo decide si lo toma.</h1>
+            <p>Publica la clase o el arreglo que necesitas con el monto que puedes pagar. Te llegan
+                ofertas de gente de tu zona, eliges con quién trabajar y al terminar se califican.
+                Y con la misma cuenta ofreces lo que tú sabes hacer.</p>
             <div class="k-acciones" style="margin-top:1.5rem;">
                 <a class="k-btn k-btn-principal" th:href="@{/registro}">Publicar lo que necesito</a>
                 <a class="k-btn k-btn-linea" th:href="@{/registro}">Ganar ofreciendo lo que sé</a>
             </div>
-            <div class="k-cifras">
-                <span><b th:text="${#numbers.formatInteger(plataforma.serviciosConcretados, 1, 'WHITESPACE')}">1 240</b> servicios concretados</span>
-                <span><b th:text="${plataforma.calificacionPromedio}">4.7</b> calificación promedio</span>
-                <span><b th:text="${plataforma.expertosActivos}">380</b> expertos activos</span>
+            <div class="k-cifras" th:if="${plataforma.hayActividad()}">
+                <span><b th:text="${plataforma.serviciosConcretados}">13</b> servicios concretados</span>
+                <span><b th:text="${plataforma.calificacionPromedio}">4.9</b> calificación promedio</span>
+                <span><b th:text="${plataforma.personasQueOfrecen}">12</b> personas ofreciendo</span>
             </div>
         </div>
-        <img class="k-portada-foto" th:src="@{/img/categoria/teaching-workshop.jpg}" alt="Alguien enseñando en persona">
+        <img class="k-portada-foto" th:if="${fotoAcceso}" th:src="@{${fotoAcceso}}" alt="Una persona enseñándole a otra">
     </section>
 
-    <section class="k-bloque">
+    <section class="k-bloque" id="como-funciona">
         <h2 class="k-bloque-titulo">Cómo funciona</h2>
         <div th:replace="~{fragmentos/componentes :: comoFunciona}"></div>
         <p class="k-nota-lado">Si eres tú quien sabe hacerlo, el camino es al revés: encuentras una solicitud, ofertas por el monto publicado o por otro, te aceptan y al cerrar te califican.</p>
     </section>
 
-    <section class="k-bloque">
+    <section class="k-bloque" id="categorias">
         <h2 class="k-bloque-titulo">Categorías y lo que se está pagando</h2>
         <div class="k-rejilla">
             <a class="k-tarjeta k-categoria-ficha" th:each="c : ${categorias}" th:href="@{/registro}">
@@ -44,11 +45,11 @@
         </div>
     </section>
 
-    <section class="k-bloque">
+    <section class="k-bloque" th:unless="${#lists.isEmpty(solicitudes)}">
         <h2 class="k-bloque-titulo">Lo que se está pidiendo ahora</h2>
         <div class="k-lista">
             <div class="k-solicitud" th:each="s : ${solicitudes}">
-                <div>
+                <div class="k-solicitud-cuerpo">
                     <span class="k-solicitud-titulo" th:text="${s.titulo}">Título</span>
                     <div class="k-solicitud-meta">
                         <span th:text="${s.categoria}">Categoría</span> ·
@@ -66,8 +67,9 @@
 
     <section class="k-bloque k-cierre">
         <div>
-            <h2>Bloque de cierre</h2>
-            <p>Última llamada a crear cuenta. Texto provisional.</p>
+            <h2>Lo que sabes hacer también vale</h2>
+            <p>Crea tu cuenta, marca lo que sabes hacer y empieza a recibir solicitudes de tu zona.
+                Solo se cobra una comisión cuando cierras un trato.</p>
         </div>
         <a class="k-btn k-btn-principal" th:href="@{/registro}">Crear cuenta</a>
     </section>

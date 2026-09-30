@@ -9,7 +9,7 @@
 <main>
     <div th:replace="~{fragmentos/componentes :: aviso}"></div>
 
-    <div class="k-invita" th:if="${#lists.isEmpty(misCategorias)}">
+    <div class="k-invita" th:unless="${usuario.ofreceServicios()}">
         <div>
             <b>¿Sabes hacer algo?</b>
             Dinos qué y empiezan a llegarte solicitudes de esas categorías para ofertar.
@@ -26,16 +26,17 @@
         <div class="k-mosaico">
             <a class="k-tesela" th:each="c : ${categorias}"
                th:href="@{/categorias/{id}(id=${c.id})}">
-                <img th:src="${c.foto()}" th:alt="${c.nombre}" loading="lazy">
+                <img th:if="${c.tieneFoto()}" th:src="@{${c.foto}}" th:alt="${c.nombre}" loading="lazy">
+                <span class="k-sin-foto" th:unless="${c.tieneFoto()}"><i class="bi" th:classappend="${c.icono}"></i></span>
                 <span class="k-tesela-texto">
                     <span class="k-tesela-nombre" th:text="${c.nombre}">Categoría</span>
                     <span class="k-tesela-dato" th:if="${c.tieneDemanda()}">
                         <span th:text="${c.abiertas}">3</span>
                         <span th:text="${c.abiertas == 1} ? 'abierta' : 'abiertas'">abiertas</span>
-                        · desde S/ <span th:text="${c.precioMinimo}">50</span>
+                        · desde S/ <span th:text="${c.desde}">50</span>
                     </span>
                     <span class="k-tesela-dato" th:unless="${c.tieneDemanda()}"
-                          th:text="'desde S/ ' + ${c.precioMinimo}">desde S/ 50</span>
+                          th:text="'desde S/ ' + ${c.desde}">desde S/ 50</span>
                 </span>
             </a>
         </div>
@@ -46,13 +47,14 @@
             <h2 class="k-bloque-titulo" style="margin:0;">Cerca de ti</h2>
             <a th:href="@{/solicitudes(modalidad='PRESENCIAL')}">Ver todas las presenciales</a>
         </div>
-        <p class="k-vacio">Presenciales, desde <span th:text="${miDistrito}">Jesús María</span>.</p>
+        <p class="k-vacio">Presenciales, ordenadas por lo cerca que quedan de tu distrito.</p>
 
         <div class="k-tira">
             <a class="k-pieza" th:each="s : ${cercanas}"
                th:href="@{/solicitudes/{id}(id=${s.id})}">
                 <span class="k-pieza-foto">
-                    <img th:src="${s.foto()}" th:alt="${s.categoria}" loading="lazy">
+                    <img th:if="${s.tieneFoto()}" th:src="@{${s.foto}}" th:alt="${s.categoria}" loading="lazy">
+                    <span class="k-sin-foto" th:unless="${s.tieneFoto()}"><i class="bi" th:classappend="${s.icono}"></i></span>
                     <span class="k-pieza-distancia">
                         <i class="bi bi-geo-alt-fill"></i>
                         <span th:text="${s.distancia}">3.1 km</span>
@@ -68,8 +70,8 @@
 
                     <span class="k-pieza-pie">
                         <span th:replace="~{fragmentos/componentes :: precio(${s.precioPropuesto}, 'k-precio-g')}"></span>
-                        <span class="k-carta-meta" th:if="${s.tieneOfertas()}">
-                            <span th:text="${s.ofertas}">1</span> ofertó</span>
+                        <span class="k-carta-meta" th:if="${s.tieneOfertas()}"
+                              th:text="${s.ofertas == 1} ? '1 ofertó' : ${s.ofertas} + ' ofertaron'">1 ofertó</span>
                         <span class="k-carta-meta" th:unless="${s.tieneOfertas()}">sin ofertas</span>
                     </span>
                 </span>
@@ -82,6 +84,8 @@
             <h2 class="k-bloque-titulo" style="margin:0;">Los mejor calificados</h2>
             <span class="k-vacio" style="margin:0;">Puedes pedirles un servicio directo</span>
         </div>
+        <p class="k-vacio" th:if="${#lists.isEmpty(expertos)}">Cuando alguien reciba su primera
+            calificación va a aparecer aquí.</p>
         <div th:replace="~{fragmentos/componentes :: expertos(${expertos}, null)}"></div>
     </section>
 
@@ -92,6 +96,8 @@
             <a th:href="@{/solicitudes}">Ver todas</a>
         </div>
 
+        <p class="k-vacio" th:if="${#lists.isEmpty(oportunidades)}">No hay solicitudes abiertas ahora.
+            Puedes publicar la tuya con el botón de arriba.</p>
         <div class="k-lista">
             <th:block th:each="s : ${oportunidades}">
                 <div th:replace="~{fragmentos/componentes :: fila(${s}, 'Ofertar')}"></div>

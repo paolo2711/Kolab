@@ -22,7 +22,7 @@ import java.time.LocalDateTime;
  * quien la publica fija el precio y quien sabe hacerlo decide si lo toma.
  *
  * <p>Si {@code destinatario} viene vacío la ve todo el mundo. Si trae a alguien es una propuesta
- * directa: le llega primero a esa persona, pero no la reserva, otros pueden ofertar igual.
+ * directa: solo esa persona la ve y solo ella puede ofertar.
  */
 @Entity
 @Table(name = "solicitud")
@@ -123,6 +123,26 @@ public class Solicitud {
      */
     public void aceptarTrato() {
         this.estado = EstadoSolicitud.EN_CURSO;
+    }
+
+    /**
+     * El servicio que salió de esta solicitud terminó. Queda como registro y no vuelve a cambiar.
+     */
+    public void cerrar() {
+        this.estado = EstadoSolicitud.CERRADA;
+    }
+
+    public boolean esDe(Long idUsuario) {
+        return autor.getId().equals(idUsuario);
+    }
+
+    /**
+     * Si esta persona la puede ver en el catálogo y ofertar: no es suya y, si es una propuesta
+     * directa, va para ella.
+     */
+    public boolean laPuedeOfertar(Long idUsuario) {
+        return estado == EstadoSolicitud.ABIERTA && !esDe(idUsuario)
+                && (destinatario == null || destinatario.getId().equals(idUsuario));
     }
 
     public Long getId() {

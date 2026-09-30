@@ -1,16 +1,15 @@
 package com.kolab.inicio;
 
-import com.kolab.demo.ArchivosDeDatos;
-import com.kolab.demo.CatalogoDeCategorias;
-import com.kolab.demo.DirectorioDePersonas;
-import com.kolab.demo.SolicitudesDeEjemplo;
-import com.kolab.categoria.CategoriaResumen;
+import com.kolab.categoria.CategoriaService;
+import com.kolab.common.Fotos;
 import com.kolab.perfil.BienvenidaController;
-import com.kolab.perfil.PerfilService;
-import java.util.List;
-import jakarta.servlet.http.HttpSession;
+import com.kolab.perfil.DirectorioService;
+import com.kolab.reporte.ReporteService;
+import com.kolab.solicitud.CatalogoService;
 import com.kolab.solicitud.SolicitudResumen;
 import com.kolab.usuario.UsuarioAutenticado;
+import jakarta.servlet.http.HttpSession;
+import java.util.List;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -23,32 +22,31 @@ public class InicioController {
     private static final int EN_PORTADA = 4;
     private static final int CERCANAS = 6;
     private static final int MEJORES_EXPERTOS = 4;
-    private static final int OPORTUNIDADES = 3;
+    private static final int OPORTUNIDADES = 5;
 
-    private final SolicitudesDeEjemplo solicitudes;
-    private final CatalogoDeCategorias catalogo;
-    private final DirectorioDePersonas directorio;
-    private final ArchivosDeDatos archivos;
-    private final PerfilService perfilService;
+    private final CatalogoService catalogoService;
+    private final CategoriaService categoriaService;
+    private final DirectorioService directorioService;
+    private final ReporteService reporteService;
+    private final Fotos fotos;
 
-    public InicioController(SolicitudesDeEjemplo solicitudes, CatalogoDeCategorias catalogo,
-                            DirectorioDePersonas directorio, ArchivosDeDatos archivos,
-                            PerfilService perfilService) {
-        this.solicitudes = solicitudes;
-        this.catalogo = catalogo;
-        this.directorio = directorio;
-        this.archivos = archivos;
-        this.perfilService = perfilService;
+    public InicioController(CatalogoService catalogoService, CategoriaService categoriaService,
+                            DirectorioService directorioService, ReporteService reporteService,
+                            Fotos fotos) {
+        this.catalogoService = catalogoService;
+        this.categoriaService = categoriaService;
+        this.directorioService = directorioService;
+        this.reporteService = reporteService;
+        this.fotos = fotos;
     }
 
     @GetMapping("/")
-    public String inicio(@AuthenticationPrincipal UsuarioAutenticado usuario,
-                         HttpSession sesion,
-                         Model model) {
+    public String inicio(@AuthenticationPrincipal UsuarioAutenticado usuario, HttpSession sesion, Model model) {
         if (usuario == null) {
-            model.addAttribute("categorias", catalogo.categorias());
-            model.addAttribute("solicitudes", solicitudes.catalogo().stream().limit(EN_PORTADA).toList());
-            model.addAttribute("plataforma", archivos.plataforma());
+            model.addAttribute("categorias", categoriaService.activas());
+            model.addAttribute("solicitudes", catalogoService.recientesPublicas(EN_PORTADA));
+            model.addAttribute("plataforma", reporteService.plataforma());
+            model.addAttribute("fotoAcceso", fotos.suelta("acceso"));
             return "portada";
         }
 
@@ -57,40 +55,26 @@ public class InicioController {
             return "redirect:/bienvenida";
         }
 
-        List<Long> mias = perfilService.categoriasDe(usuario.getIdUsuario());
-        List<CategoriaResumen> misCategorias = catalogo.categorias().stream()
-                .filter(c -> mias.contains(c.id()))
-                .toList();
+        Long yo = usuario.getIdUsuario();
+        List<SolicitudResumen> cercanas = catalogoService.cercanas(yo, CERCANAS);
+        List<SolicitudResumen> deLoMio = catalogoService.enMisCategorias(yo, OPORTUNIDADES + CERCANAS);
+        List<SolicitudResumen> lista = deLoMio.isEmpty() ? catalogoService.recientes(yo, OPORTUNIDADES + CERCANAS) : deLoMio;
 
         model.addAttribute("seccion", "inicio");
         model.addAttribute("usuario", usuario);
-        model.addAttribute("categorias", catalogo.categorias());
-        model.addAttribute("misCategorias", misCategorias);
-
-        var perfil = archivos.perfilDe(usuario.esExperto());
-        List<SolicitudResumen> cercanas = solicitudes.cercaDe(perfil.latitud(), perfil.longitud(), CERCANAS);
-        model.addAttribute("miDistrito", perfil.distrito());
+        model.addAttribute("categorias", categoriaService.activas());
         model.addAttribute("cercanas", cercanas);
-        model.addAttribute("expertos", directorio.mejoresExpertos(MEJORES_EXPERTOS));
-
-        List<String> nombres = misCategorias.stream().map(CategoriaResumen::nombre).toList();
-        List<SolicitudResumen> deLoMio = solicitudes.catalogo().stream()
-                .filter(s -> nombres.contains(s.categoria()))
-                .toList();
-        List<SolicitudResumen> lista = deLoMio.isEmpty() ? solicitudes.catalogo() : deLoMio;
-
-        // lo que ya salió en "cerca de ti" no se repite más abajo, salvo que al quitarlo
-        // el bloque quede casi vacío: más vale repetir una que dejar un hueco
-        List<Long> yaMostradas = cercanas.stream().map(SolicitudResumen::id).toList();
-        List<SolicitudResumen> conDistancia = solicitudes.conDistancia(lista, perfil.latitud(), perfil.longitud());
-        List<SolicitudResumen> sinRepetir = conDistancia.stream()
-                .filter(s -> !yaMostradas.contains(s.id()))
-                .toList();
-        List<SolicitudResumen> restantes = sinRepetir.size() >= 2 ? sinRepetir : conDistancia;
-
+        model.addAttribute("expertos", directorioService.mejorCalificados(MEJORES_EXPERTOS));
         model.addAttribute("filtradas", !deLoMio.isEmpty());
-        model.addAttribute("oportunidades", restantes.stream().limit(OPORTUNIDADES).toList());
+        model.addAttribute("oportunidades", sinRepetir(lista, cercanas));
         return "inicio/inicio-usuario";
     }
 
+    // lo que ya salió en "cerca de ti" no se repite más abajo, salvo que al quitarlo el bloque
+    // quede casi vacío: más vale repetir una que dejar un hueco
+    private List<SolicitudResumen> sinRepetir(List<SolicitudResumen> lista, List<SolicitudResumen> cercanas) {
+        List<Long> yaMostradas = cercanas.stream().map(SolicitudResumen::id).toList();
+        List<SolicitudResumen> restantes = lista.stream().filter(s -> !yaMostradas.contains(s.id())).toList();
+        return (restantes.size() >= 2 ? restantes : lista).stream().limit(OPORTUNIDADES).toList();
+    }
 }

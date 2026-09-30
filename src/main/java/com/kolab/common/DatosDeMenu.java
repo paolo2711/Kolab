@@ -1,7 +1,10 @@
 package com.kolab.common;
 
-import com.kolab.demo.OfertasDeEjemplo;
-import com.kolab.demo.SolicitudesDeEjemplo;
+import com.kolab.mensaje.MensajeService;
+import com.kolab.oferta.OfertaService;
+import com.kolab.solicitud.SolicitudService;
+import com.kolab.usuario.UsuarioAutenticado;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ModelAttribute;
 
@@ -9,26 +12,29 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 @ControllerAdvice
 public class DatosDeMenu {
 
-    private final OfertasDeEjemplo ofertas;
-    private final SolicitudesDeEjemplo solicitudes;
+    private final MensajeService mensajeService;
+    private final SolicitudService solicitudService;
+    private final OfertaService ofertaService;
 
-    public DatosDeMenu(OfertasDeEjemplo ofertas, SolicitudesDeEjemplo solicitudes) {
-        this.ofertas = ofertas;
-        this.solicitudes = solicitudes;
+    public DatosDeMenu(MensajeService mensajeService, SolicitudService solicitudService,
+                       OfertaService ofertaService) {
+        this.mensajeService = mensajeService;
+        this.solicitudService = solicitudService;
+        this.ofertaService = ofertaService;
     }
 
     @ModelAttribute("mensajesSinLeer")
-    public int mensajesSinLeer() {
-        return ofertas.mensajesSinLeer();
+    public long mensajesSinLeer(@AuthenticationPrincipal UsuarioAutenticado usuario) {
+        return usuario == null ? 0 : mensajeService.sinLeer(usuario.getIdUsuario());
     }
 
     @ModelAttribute("cuantasPedidas")
-    public int cuantasPedidas() {
-        return solicitudes.misSolicitudes().size();
+    public long cuantasPedidas(@AuthenticationPrincipal UsuarioAutenticado usuario) {
+        return usuario == null ? 0 : solicitudService.cuantasMias(usuario.getIdUsuario());
     }
 
     @ModelAttribute("cuantasOfrecidas")
-    public int cuantasOfrecidas() {
-        return ofertas.misOfertas().size();
+    public long cuantasOfrecidas(@AuthenticationPrincipal UsuarioAutenticado usuario) {
+        return usuario == null ? 0 : ofertaService.cuantasMias(usuario.getIdUsuario());
     }
 }

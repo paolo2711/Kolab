@@ -21,8 +21,10 @@ public class SecurityConfig {
     public SecurityFilterChain filtros(HttpSecurity http) throws Exception {
         http
                 .authorizeHttpRequests(rutas -> rutas
-                        .requestMatchers("/", "/login", "/registro", "/recuperar",
+                        .requestMatchers("/", "/login", "/registro", "/recuperar", "/recuperar/**",
                                 "/css/**", "/js/**", "/img/**", "/error").permitAll()
+                        // estas rutas solo existen con kolab.desarrollo=true; fuera de eso dan 404
+                        .requestMatchers("/desarrollo/**").permitAll()
                         .requestMatchers("/actuator/health").permitAll()
                         .anyRequest().authenticated())
                 .formLogin(login -> login

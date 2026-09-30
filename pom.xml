@@ -66,11 +66,11 @@
             <artifactId>postgresql</artifactId>
             <scope>runtime</scope>
         </dependency>
-        <!-- runtime y no test: el perfil demo levanta con H2 y sin instalar nada -->
+        <!-- solo para las pruebas: corren contra H2 en memoria con las mismas migraciones -->
         <dependency>
             <groupId>com.h2database</groupId>
             <artifactId>h2</artifactId>
-            <scope>runtime</scope>
+            <scope>test</scope>
         </dependency>
 
         <dependency>

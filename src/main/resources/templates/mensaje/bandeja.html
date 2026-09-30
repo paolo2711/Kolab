@@ -12,8 +12,11 @@
         <p>Cada conversación vive dentro de la solicitud a la que pertenece.</p>
     </div>
 
+    <p class="k-vacio" th:if="${conversaciones.isEmpty()}">Todavía no tienes conversaciones. Empiezan
+        cuando alguien oferta en tu solicitud o cuando tú ofertas en una.</p>
+
     <div class="k-bandeja">
-        <a class="k-charla" th:each="c : ${conversaciones}" th:href="@{${c.enlace}}"
+        <a class="k-charla" th:each="c : ${conversaciones.content}" th:href="@{${c.enlace}}"
            th:classappend="${c.sinLeer} ? 'k-charla-nuevo' : ''">
             <span th:replace="~{fragmentos/componentes :: cara(${c.con}, '2.9rem')}"></span>
 
@@ -29,6 +32,8 @@
             <span class="k-charla-punto" th:if="${c.sinLeer}" title="Sin leer"></span>
         </a>
     </div>
+
+    <nav th:replace="~{fragmentos/componentes :: paginas(${conversaciones}, '/mensajes', '')}"></nav>
 </main>
 
 </body>

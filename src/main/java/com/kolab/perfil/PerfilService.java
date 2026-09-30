@@ -3,7 +3,8 @@ package com.kolab.perfil;
 import java.util.List;
 
 /**
- * Lo que la persona declara saber hacer. De aquí sale qué solicitudes le aparecen para ofertar.
+ * El perfil propio: lo que la persona cuenta de sí y lo que declara saber hacer, de donde sale qué
+ * solicitudes le aparecen para ofertar.
  */
 public interface PerfilService {
 
@@ -23,8 +24,17 @@ public interface PerfilService {
     void guardarCategorias(Long idUsuario, List<Long> idsCategoria);
 
     /**
-     * Si la persona aparece como experta, que es lo mismo que decir si declaró al menos una
-     * categoría. No depende de cómo se registró.
+     * Si la persona ofrece algo, que es lo mismo que decir si declaró al menos una categoría.
      */
     boolean ofreceServicios(Long idUsuario);
+
+    PerfilResumen miPerfil(Long idUsuario);
+
+    PerfilForm formularioDe(Long idUsuario);
+
+    /**
+     * Guarda los datos de la cuenta y lo que la persona cuenta de sí. Si escribió algo sobre ella y
+     * todavía no tenía perfil, se le crea.
+     */
+    void actualizar(Long idUsuario, PerfilForm form);
 }
