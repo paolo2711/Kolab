@@ -54,9 +54,9 @@ try {
         throw "No encuentro psql en $Psql. Pasa la ruta con -Psql."
     }
 
-    $rolesSql = Join-Path $PSScriptRoot "..\..\2 APF2\entrega\anexos\B base de datos\kolab-roles.sql"
+    $rolesSql = Join-Path $PSScriptRoot "kolab-roles.sql"
     if (-not (Test-Path $rolesSql)) {
-        throw "No encuentro kolab-roles.sql en $rolesSql"
+        throw "No encuentro kolab-roles.sql junto a este script."
     }
 
     Write-Host "Base $Base en ${Servidor}:$Puerto" -ForegroundColor Cyan

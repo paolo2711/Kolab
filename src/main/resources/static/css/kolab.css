@@ -2657,3 +2657,112 @@ button:focus-visible,
     flex: 1;
     min-width: 12rem;
 }
+
+/* panel */
+
+.k-cifras-panel {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(10rem, 1fr));
+    gap: 0.9rem;
+    margin-bottom: 1.5rem;
+}
+
+.k-cifra {
+    background: var(--panel);
+    border: 1px solid var(--linea);
+    border-radius: var(--r-grande);
+    padding: 1.1rem 1.2rem;
+}
+
+.k-cifra-valor {
+    font-size: 1.7rem;
+    font-weight: 700;
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+    font-variant-numeric: tabular-nums;
+}
+
+.k-cifra-vacia {
+    color: var(--tinta-3);
+}
+
+.k-cifra-nombre {
+    margin-top: 0.3rem;
+    font-size: 0.83rem;
+    color: var(--tinta-2);
+}
+
+.k-medidores {
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+}
+
+.k-medidor {
+    display: grid;
+    grid-template-columns: 9rem 1fr 2rem;
+    align-items: center;
+    gap: 0.8rem;
+}
+
+.k-medidor-rotulo {
+    font-size: 0.87rem;
+    color: var(--tinta-2);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.k-medidor-pista {
+    height: 0.7rem;
+    border-radius: 999px;
+    background: var(--hueso);
+    border: 1px solid var(--linea);
+    overflow: hidden;
+}
+
+.k-medidor-valor {
+    display: block;
+    height: 100%;
+    min-width: 2px;
+    border-radius: 999px;
+    background: var(--acento);
+}
+
+.k-medidor-numero {
+    text-align: right;
+    font-weight: 600;
+    font-variant-numeric: tabular-nums;
+}
+
+.k-tabla {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.89rem;
+}
+
+.k-tabla th {
+    text-align: left;
+    font-size: 0.72rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--tinta-3);
+    font-weight: 600;
+    padding: 0 0.6rem 0.5rem 0;
+    border-bottom: 1px solid var(--linea);
+}
+
+.k-tabla td {
+    padding: 0.6rem 0.6rem 0.6rem 0;
+    border-bottom: 1px solid var(--linea);
+}
+
+.k-tabla tr:last-child td {
+    border-bottom: 0;
+}
+
+.k-tabla-numero {
+    text-align: right;
+    padding-right: 0 !important;
+    font-variant-numeric: tabular-nums;
+}

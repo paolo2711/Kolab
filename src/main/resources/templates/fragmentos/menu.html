@@ -11,6 +11,7 @@
             <li><a th:href="@{/}" th:classappend="${seccion == 'inicio'} ? 'activo'">Inicio</a></li>
             <li><a th:href="@{/solicitudes}" th:classappend="${seccion == 'explorar'} ? 'activo'">Explorar</a></li>
             <li><a th:href="@{/mis-solicitudes}" th:classappend="${seccion == 'actividad'} ? 'activo'">Mi actividad</a></li>
+            <li><a th:href="@{/panel}" th:classappend="${seccion == 'panel'} ? 'activo'">Panel</a></li>
             <li>
                 <a th:href="@{/mensajes}" th:classappend="${seccion == 'mensajes'} ? 'activo'">
                     Mensajes

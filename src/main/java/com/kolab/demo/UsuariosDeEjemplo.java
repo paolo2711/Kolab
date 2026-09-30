@@ -6,11 +6,12 @@ import com.kolab.usuario.UsuarioService;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import java.util.List;
+import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 
-// la base es en memoria, se vacía en cada arranque, así que las cuentas de la demo se
-// vuelven a crear aquí. se borra cuando entre la base de verdad.
+// las dos cuentas con las que se entra a mostrar la aplicacion. se crean solo si faltan.
 @Component
+@Order(10)
 public class UsuariosDeEjemplo implements ApplicationRunner {
 
     private static final String CLAVE = "kolab1234";
