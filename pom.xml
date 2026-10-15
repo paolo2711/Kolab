@@ -129,6 +129,8 @@
                 <artifactId>dependency-check-maven</artifactId>
                 <version>10.0.4</version>
                 <configuration>
+                    <!-- OSS Index pide cuenta y devuelve 401 sin ella; con la base de la NVD alcanza -->
+                    <ossindexAnalyzerEnabled>false</ossindexAnalyzerEnabled>
                     <formats>
                         <format>HTML</format>
                         <format>JSON</format>
