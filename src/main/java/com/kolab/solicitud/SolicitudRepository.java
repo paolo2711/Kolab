@@ -29,8 +29,6 @@ public interface SolicitudRepository extends JpaRepository<Solicitud, Long>,
 
     long countByAutorId(Long idAutor);
 
-    long countByAutorIdAndEstado(Long idAutor, EstadoSolicitud estado);
-
     // cuenta solo las que ve todo el mundo: una propuesta directa no es demanda de la categoría
     @Query("""
             select s.categoria.id, count(s) from Solicitud s

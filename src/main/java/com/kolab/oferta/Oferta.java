@@ -64,13 +64,6 @@ public class Oferta {
     }
 
     /**
-     * Si quien ofertó tomó el precio tal como lo puso el cliente, sin regatear.
-     */
-    public boolean aceptaElPrecioDelCliente() {
-        return montoPropuesto.compareTo(solicitud.getPrecioPropuesto()) == 0;
-    }
-
-    /**
      * Cierra el trato con esta oferta: la marca aceptada, pasa la solicitud a EN_CURSO y crea el
      * servicio con la comisión calculada sobre el monto acordado.
      *

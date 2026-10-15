@@ -53,8 +53,4 @@ public class UsuarioAutenticado extends User {
     public boolean ofreceServicios() {
         return ofreceServicios;
     }
-
-    public boolean esExperto() {
-        return ofreceServicios;
-    }
 }

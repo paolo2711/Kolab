@@ -25,7 +25,4 @@ public interface CalificacionRepository extends JpaRepository<Calificacion, Long
                            where c2.evaluado.id in :ids and c2.comentario is not null
                            group by c2.evaluado.id)""")
     List<Object[]> ultimosComentarios(@Param("ids") Collection<Long> idsUsuario);
-
-    @Query("select c.puntaje, count(c) from Calificacion c where c.evaluado.id = :idUsuario group by c.puntaje")
-    List<Object[]> contarPorPuntaje(@Param("idUsuario") Long idUsuario);
 }

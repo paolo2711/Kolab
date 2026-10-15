@@ -35,13 +35,7 @@ public interface ServicioRepository extends JpaRepository<Servicio, Long> {
             group by o.usuario.id""")
     List<Object[]> contarCerradosPorQuienOfrece(@Param("ids") Collection<Long> idsUsuario);
 
-    @Query("select s.oferta.id, s.id from Servicio s where s.oferta.id in :ids")
-    List<Object[]> idsPorOferta(@Param("ids") Collection<Long> idsOferta);
-
-
     long countByOfertaSolicitudAutorIdAndEstado(Long idAutor, EstadoServicio estado);
-
-    long countByOfertaUsuarioIdAndEstado(Long idUsuario, EstadoServicio estado);
 
     @Query("""
             select coalesce(sum(s.montoFinal), 0) from Servicio s
