@@ -2,11 +2,11 @@ package com.kolab.common;
 
 import java.io.IOException;
 import java.io.UncheckedIOException;
-import java.text.Normalizer;
 import java.util.Arrays;
 import java.util.Locale;
 import java.util.Set;
 import java.util.stream.Collectors;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.support.ResourcePatternResolver;
 import org.springframework.stereotype.Component;
@@ -56,11 +56,8 @@ public class Fotos {
 
     // "Hogar y reparaciones" pasa a "hogar-y-reparaciones"
     static String aNombreDeArchivo(String texto) {
-        return Normalizer.normalize(texto, Normalizer.Form.NFD)
-                .replaceAll("\\p{M}", "")
-                .toLowerCase(Locale.ROOT)
-                .replaceAll("[^a-z0-9]+", "-")
-                .replaceAll("(^-|-$)", "");
+        String sinTildes = StringUtils.stripAccents(StringUtils.trimToEmpty(texto));
+        return StringUtils.strip(sinTildes.toLowerCase(Locale.ROOT).replaceAll("[^a-z0-9]+", "-"), "-");
     }
 
     // se leen una vez al arrancar; con classpath* una carpeta que falta es solo una carpeta sin fotos
