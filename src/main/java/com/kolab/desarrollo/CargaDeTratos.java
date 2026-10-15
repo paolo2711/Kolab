@@ -5,12 +5,14 @@ import com.kolab.mensaje.MensajeService;
 import com.kolab.oferta.OfertaForm;
 import com.kolab.oferta.OfertaService;
 import com.kolab.servicio.ServicioService;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Component;
 
 /**
  * La segunda mitad de los ejemplos: ofertas, tratos cerrados con sus calificaciones y mensajes.
  */
 @Component
+@ConditionalOnProperty(name = "kolab.desarrollo", havingValue = "true")
 class CargaDeTratos {
 
     private final Ejemplos ejemplos;

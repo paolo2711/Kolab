@@ -13,4 +13,8 @@ public class RecursoNoEncontradoException extends RuntimeException {
     public RecursoNoEncontradoException(String que, Long id) {
         super("No hay " + que + " con id " + id);
     }
+
+    public RecursoNoEncontradoException(String motivo) {
+        super(motivo);
+    }
 }

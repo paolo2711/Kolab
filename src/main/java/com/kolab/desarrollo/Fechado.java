@@ -3,6 +3,7 @@ package com.kolab.desarrollo;
 import jakarta.persistence.EntityManager;
 import java.time.LocalDateTime;
 import java.util.List;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Component;
 
 /**
@@ -13,6 +14,7 @@ import org.springframework.stereotype.Component;
  * momento, el siguiente guardado de la misma fila los pisaría con la fecha de la entidad.
  */
 @Component
+@ConditionalOnProperty(name = "kolab.desarrollo", havingValue = "true")
 class Fechado {
 
     private final EntityManager em;

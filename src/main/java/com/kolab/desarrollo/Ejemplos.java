@@ -6,6 +6,7 @@ import java.io.InputStream;
 import java.io.UncheckedIOException;
 import java.math.BigDecimal;
 import java.util.List;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Component;
 
@@ -14,6 +15,7 @@ import org.springframework.stereotype.Component;
  * correo, por nombre de categoría o por una clave propia, nunca por id: los ids los pone la base.
  */
 @Component
+@ConditionalOnProperty(name = "kolab.desarrollo", havingValue = "true")
 class Ejemplos {
 
     record Persona(String nombre, String apellidos, String email, String telefono, String distrito,
