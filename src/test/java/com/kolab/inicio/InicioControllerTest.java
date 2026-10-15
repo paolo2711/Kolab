@@ -8,6 +8,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
 import com.kolab.categoria.CategoriaService;
+import com.kolab.common.BitacoraDeSeguridad;
 import com.kolab.common.Fotos;
 import com.kolab.config.SecurityConfig;
 import com.kolab.mensaje.MensajeService;
@@ -34,6 +35,9 @@ class InicioControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
+
+    @MockitoBean
+    private BitacoraDeSeguridad bitacora;
 
     @MockitoBean
     private CatalogoService catalogoService;

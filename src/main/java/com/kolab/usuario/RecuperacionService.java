@@ -26,5 +26,5 @@ public interface RecuperacionService {
      *
      * @throws com.kolab.common.OperacionNoPermitidaException si el código ya no es válido
      */
-    void cambiarClave(String codigo, String nuevaClave);
+    String cambiarClave(String codigo, String nuevaClave);
 }

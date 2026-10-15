@@ -13,6 +13,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
 import com.kolab.common.EmailYaRegistradoException;
+import com.kolab.common.BitacoraDeSeguridad;
 import com.kolab.common.Fotos;
 import com.kolab.config.SecurityConfig;
 import com.kolab.mensaje.MensajeService;
@@ -32,6 +33,9 @@ class CuentaControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
+
+    @MockitoBean
+    private BitacoraDeSeguridad bitacora;
 
     @MockitoBean
     private UsuarioService usuarioService;

@@ -7,6 +7,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrl;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import com.kolab.common.BitacoraDeSeguridad;
 import com.kolab.common.Fotos;
 import com.kolab.config.SecurityConfig;
 import com.kolab.mensaje.MensajeService;
@@ -29,6 +30,9 @@ class HerramientasControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
+
+    @MockitoBean
+    private BitacoraDeSeguridad bitacora;
 
     @MockitoBean
     private ReinicioDeBase reinicio;

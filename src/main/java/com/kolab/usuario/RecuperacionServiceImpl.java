@@ -61,11 +61,11 @@ public class RecuperacionServiceImpl implements RecuperacionService {
 
     @Override
     @Transactional
-    public void cambiarClave(String codigo, String nuevaClave) {
+    public String cambiarClave(String codigo, String nuevaClave) {
         Usuario u = dueno(codigo).orElseThrow(() -> new OperacionNoPermitidaException(
                 "El enlace venció o ya se usó. Pide uno nuevo."));
         u.setPasswordHash(passwordEncoder.encode(nuevaClave));
-        log.info("contraseña cambiada por enlace, usuario id={}", u.getId());
+        return u.getEmail();
     }
 
     private Optional<Usuario> dueno(String codigo) {
