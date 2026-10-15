@@ -13,6 +13,8 @@
         <h1>Mi resumen</h1>
         <p>Cómo te va de los dos lados de tu cuenta. Tu calificación y tus reseñas están en
             <a th:href="@{/perfil}">tu perfil</a>.</p>
+        <a class="k-btn" th:href="@{/mi-resumen/excel}">
+            <i class="bi bi-file-earmark-excel"></i> Descargar en Excel</a>
     </div>
 
     <section class="k-bloque" th:with="p=${resumen.pendientes}" th:if="${resumen.pendientes.hayAlgo()}">
