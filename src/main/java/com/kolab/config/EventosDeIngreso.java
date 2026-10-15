@@ -1,7 +1,9 @@
 package com.kolab.config;
 
 import com.kolab.common.BitacoraDeSeguridad;
+import com.kolab.usuario.ControlDeIntentos;
 import org.springframework.context.event.EventListener;
+import org.springframework.security.authentication.LockedException;
 import org.springframework.security.authentication.event.AbstractAuthenticationFailureEvent;
 import org.springframework.security.authentication.event.AuthenticationSuccessEvent;
 import org.springframework.security.web.authentication.WebAuthenticationDetails;
@@ -16,21 +18,29 @@ import org.springframework.stereotype.Component;
 class EventosDeIngreso {
 
     private final BitacoraDeSeguridad bitacora;
+    private final ControlDeIntentos intentos;
 
-    EventosDeIngreso(BitacoraDeSeguridad bitacora) {
+    EventosDeIngreso(BitacoraDeSeguridad bitacora, ControlDeIntentos intentos) {
         this.bitacora = bitacora;
+        this.intentos = intentos;
     }
 
     @EventListener
     void entro(AuthenticationSuccessEvent evento) {
-        bitacora.ingreso(evento.getAuthentication().getName(), ipDe(evento.getAuthentication().getDetails()));
+        String email = evento.getAuthentication().getName();
+        intentos.entro(email);
+        bitacora.ingreso(email, ipDe(evento.getAuthentication().getDetails()));
     }
 
     @EventListener
     void noEntro(AbstractAuthenticationFailureEvent evento) {
-        bitacora.ingresoFallido(evento.getAuthentication().getName(),
-                ipDe(evento.getAuthentication().getDetails()),
-                evento.getException().getClass().getSimpleName());
+        String email = evento.getAuthentication().getName();
+        String ip = ipDe(evento.getAuthentication().getDetails());
+        bitacora.ingresoFallido(email, ip, evento.getException().getClass().getSimpleName());
+        // el bloqueo ya existente vuelve a fallar aqui: solo se avisa cuando es este fallo el que bloquea
+        if (!(evento.getException() instanceof LockedException) && intentos.fallo(email)) {
+            bitacora.cuentaBloqueada(email, ip, intentos.minutosDeBloqueo());
+        }
     }
 
     private String ipDe(Object detalles) {
