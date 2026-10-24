@@ -3,6 +3,8 @@ package com.kolab;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
+import com.kolab.administracion.AdministracionService;
+import com.kolab.administracion.Tablero;
 import com.kolab.calificacion.CalificacionForm;
 import com.kolab.common.OperacionNoPermitidaException;
 import com.kolab.common.RecursoNoEncontradoException;
@@ -49,6 +51,7 @@ class FlujoPrincipalTest {
     @Autowired private ServicioService servicioService;
     @Autowired private MensajeService mensajeService;
     @Autowired private ReputacionService reputacionService;
+    @Autowired private AdministracionService administracionService;
 
     private Long pide;
     private Long ofrece;
@@ -154,6 +157,22 @@ class FlujoPrincipalTest {
         assertThat(solicitudService.propia(id, pide).estado()).isEqualTo(EstadoSolicitud.CERRADA);
         assertThatThrownBy(() -> servicioService.cerrarYCalificar(idServicio, nota(5), pide))
                 .isInstanceOf(OperacionNoPermitidaException.class);
+    }
+
+    @Test
+    void elPanelCuentaLoQuePasaEnLaPlataforma() {
+        Tablero antes = administracionService.tablero();
+
+        Long id = publicar(null, "80");
+        Long idServicio = ofertaService.aceptar(ofertaService.ofertar(id, oferta("80"), ofrece), pide);
+        servicioService.cerrarYCalificar(idServicio, nota(5), pide);
+
+        Tablero despues = administracionService.tablero();
+        assertThat(despues.serviciosCerrados()).isEqualTo(antes.serviciosCerrados() + 1);
+        assertThat(despues.comisionDelMes()).isEqualByComparingTo(antes.comisionDelMes().add(new BigDecimal("4.00")));
+        assertThat(despues.meses().get(5).solicitudes()).isEqualTo(antes.meses().get(5).solicitudes() + 1);
+        assertThat(despues.meses().get(5).serviciosCerrados()).isEqualTo(antes.meses().get(5).serviciosCerrados() + 1);
+        assertThat(despues.categorias()).extracting(Tablero.CategoriaPedida::nombre).contains("Música");
     }
 
     @Test

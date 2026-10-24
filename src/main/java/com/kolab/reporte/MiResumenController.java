@@ -1,9 +1,6 @@
 package com.kolab.reporte;
 
 import com.kolab.usuario.UsuarioAutenticado;
-import org.springframework.http.ContentDisposition;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
@@ -32,12 +29,7 @@ public class MiResumenController {
 
     @GetMapping("/mi-resumen/excel")
     public ResponseEntity<byte[]> excel(@AuthenticationPrincipal UsuarioAutenticado usuario) {
-        byte[] libro = enExcel.de(reporteService.resumenDe(usuario.getIdUsuario()), usuario.getNombre());
-        return ResponseEntity.ok()
-                .contentType(MediaType.parseMediaType(
-                        "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"))
-                .header(HttpHeaders.CONTENT_DISPOSITION,
-                        ContentDisposition.attachment().filename("mi-resumen-kolab.xlsx").build().toString())
-                .body(libro);
+        return DescargaExcel.de("mi-resumen-kolab.xlsx",
+                enExcel.de(reporteService.resumenDe(usuario.getIdUsuario()), usuario.getNombre()));
     }
 }
