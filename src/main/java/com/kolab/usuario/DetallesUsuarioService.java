@@ -49,6 +49,10 @@ public class DetallesUsuarioService implements UserDetailsService {
                 .orElseThrow(() -> new UsernameNotFoundException("No hay cuenta " + rol + " con el correo " + email));
     }
 
+    public boolean suspendida(Long idUsuario) {
+        return usuarioService.estaSuspendida(idUsuario);
+    }
+
     private boolean ofreceServicios(Usuario usuario) {
         return perfilCategoriaRepository.countByPerfilUsuarioId(usuario.getId()) > 0;
     }
