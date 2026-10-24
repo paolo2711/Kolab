@@ -6,34 +6,94 @@
 </head>
 <body>
 
-<main>
-    <div class="k-encabezado">
-        <h1>Mensajes</h1>
-        <p>Cada conversación vive dentro de la solicitud a la que pertenece.</p>
-    </div>
+<main class="k-total k-msj" th:classappend="${conversacion != null} ? 'k-msj-abierta'">
 
-    <p class="k-vacio" th:if="${conversaciones.isEmpty()}">Todavía no tienes conversaciones. Empiezan
-        cuando alguien oferta en tu solicitud o cuando tú ofertas en una.</p>
+    <section class="k-msj-lista">
+        <div class="k-msj-lista-cima">
+            <h1 class="k-msj-titulo">Mensajes</h1>
+            <input type="search" class="k-msj-buscar" id="buscarCharla" autocomplete="off"
+                   placeholder="Buscar por persona o solicitud" aria-label="Buscar conversaciones">
+            <div class="k-msj-filtros" role="group" aria-label="Filtrar conversaciones">
+                <button type="button" class="k-msj-filtro" data-filtro="todos" aria-pressed="true">Todos</button>
+                <button type="button" class="k-msj-filtro" data-filtro="sin-leer" aria-pressed="false">No leídos</button>
+            </div>
+        </div>
 
-    <div class="k-bandeja">
-        <a class="k-charla" th:each="c : ${conversaciones.content}" th:href="@{${c.enlace}}"
-           th:classappend="${c.sinLeer} ? 'k-charla-nuevo' : ''">
-            <span th:replace="~{fragmentos/componentes :: cara(${c.con}, '2.9rem')}"></span>
+        <div class="k-msj-charlas" id="charlas">
+            <p class="k-vacio k-msj-sin-nada" th:if="${conversaciones.isEmpty()}">Todavía no tienes
+                conversaciones. Empiezan cuando alguien oferta en tu solicitud o cuando tú ofertas en una.</p>
 
-            <span class="k-charla-cuerpo">
-                <span class="k-charla-cima">
-                    <span class="k-charla-nombre" th:text="${c.con.nombre}">Luis Mendoza</span>
-                    <span class="k-charla-hora" th:text="${c.hace}">10:12</span>
+            <a class="k-msj-charla" th:each="c : ${conversaciones.content}" th:href="@{${c.enlace}}"
+               th:classappend="${conversacion != null and c.enlace == '/mensajes/' + conversacion.idOferta}
+                               ? 'k-msj-charla-abierta'"
+               th:data-sin-leer="${c.sinLeer}"
+               th:data-busca="${#strings.toLowerCase(c.con.nombre + ' ' + c.titulo)}">
+                <span th:replace="~{fragmentos/componentes :: cara(${c.con}, '2.6rem')}"></span>
+
+                <span class="k-msj-charla-cuerpo">
+                    <span class="k-msj-charla-cima">
+                        <span class="k-msj-charla-nombre" th:text="${c.con.nombre}">Luis Mendoza</span>
+                        <span class="k-msj-charla-hora" th:text="${c.hace}">10:12</span>
+                    </span>
+                    <span class="k-msj-charla-sobre" th:text="${c.titulo}">Clases de guitarra</span>
+                    <span class="k-msj-charla-ultimo" th:text="${c.ultimo}">Último mensaje</span>
                 </span>
-                <span class="k-charla-sobre" th:text="${c.titulo}">Clases de guitarra</span>
-                <span class="k-charla-ultimo" th:text="${c.ultimo}">Último mensaje</span>
-            </span>
 
-            <span class="k-charla-punto" th:if="${c.sinLeer}" title="Sin leer"></span>
-        </a>
-    </div>
+                <span class="k-msj-punto" th:if="${c.sinLeer}" title="Sin leer"></span>
+            </a>
 
-    <nav th:replace="~{fragmentos/componentes :: paginas(${conversaciones}, '/mensajes', '')}"></nav>
+            <p class="k-vacio k-msj-sin-nada" id="sinResultados" hidden>Ninguna conversación coincide.</p>
+        </div>
+    </section>
+
+    <section class="k-msj-panel">
+        <div class="k-msj-elegir" th:if="${conversacion == null}">
+            <i class="bi bi-chat-left-text"></i>
+            <p>Elige una conversación</p>
+        </div>
+
+        <th:block th:if="${conversacion != null}">
+            <header class="k-msj-cabecera">
+                <a class="k-msj-volver" th:href="@{/mensajes}" aria-label="Volver a mensajes">
+                    <i class="bi bi-arrow-left"></i></a>
+                <span th:replace="~{fragmentos/componentes :: cara(${conversacion.con}, '2.4rem')}"></span>
+                <span class="k-msj-cabecera-cuerpo">
+                    <span class="k-msj-cabecera-nombre" th:text="${conversacion.con.nombre}">Luis Mendoza</span>
+                    <a class="k-msj-cabecera-sobre" th:href="@{${conversacion.enlace}}"
+                       th:text="${conversacion.solicitud}">Clases de guitarra</a>
+                </span>
+            </header>
+
+            <div class="k-msj-hilo" id="hilo">
+                <div th:replace="~{fragmentos/componentes :: aviso}"></div>
+
+                <p class="k-vacio k-msj-sin-nada" th:if="${#lists.isEmpty(conversacion.mensajes)}">
+                    Todavía no se han escrito. Escribe el primero.</p>
+
+                <th:block th:each="m, i : ${conversacion.mensajes}">
+                    <div class="k-msj-dia"
+                         th:if="${i.first or m.dia != conversacion.mensajes[i.index - 1].dia}"
+                         th:text="${m.dia}">Hoy</div>
+
+                    <div class="k-msj-burbuja"
+                         th:classappend="${m.mio} ? 'k-msj-mio' : 'k-msj-suyo'"
+                         th:attrappend="data-seguido=${!i.first
+                             and m.mio == conversacion.mensajes[i.index - 1].mio
+                             and m.dia == conversacion.mensajes[i.index - 1].dia} ? 'si' : null">
+                        <span th:text="${m.contenido}">Mensaje</span>
+                        <span class="k-msj-hora" th:text="${m.minuto}">10:12</span>
+                    </div>
+                </th:block>
+            </div>
+
+            <form class="k-msj-escribir" th:action="@{/mensajes/{id}(id=${conversacion.idOferta})}" method="post">
+                <input type="text" name="contenido" placeholder="Escribe un mensaje" autocomplete="off" required autofocus>
+                <button type="submit" class="k-btn k-btn-principal">Enviar</button>
+            </form>
+        </th:block>
+    </section>
+
+    <script th:src="@{/js/mensajes.js}" defer></script>
 </main>
 
 </body>
