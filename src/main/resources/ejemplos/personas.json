@@ -85,5 +85,10 @@
     "nombre": "Lucía", "apellidos": "Huamán Ríos", "email": "lucia.huaman@kolab.pe", "telefono": null,
     "distrito": "San Isidro", "latitud": -12.0977, "longitud": -77.0365, "mesesEnKolab": 2,
     "descripcion": null, "experiencia": null, "categorias": []
+  },
+  {
+    "nombre": "Equipo", "apellidos": "KOLAB", "email": "admin@kolab.pe", "telefono": null,
+    "distrito": "Lima", "latitud": null, "longitud": null, "mesesEnKolab": 3,
+    "descripcion": null, "experiencia": null, "categorias": [], "administrador": true
   }
 ]

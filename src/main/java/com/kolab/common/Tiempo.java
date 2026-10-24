@@ -80,6 +80,10 @@ public final class Tiempo {
         return cuando.format(HORA);
     }
 
+    public static String fecha(LocalDateTime cuando) {
+        return cuando.format(DIA);
+    }
+
     public static String mesYAnio(LocalDateTime cuando) {
         return cuando.format(MES);
     }

@@ -10,6 +10,7 @@ import com.kolab.solicitud.SolicitudForm;
 import com.kolab.solicitud.SolicitudRepository;
 import com.kolab.solicitud.SolicitudService;
 import com.kolab.usuario.RegistroForm;
+import com.kolab.usuario.Rol;
 import com.kolab.usuario.Usuario;
 import com.kolab.usuario.UsuarioRepository;
 import com.kolab.usuario.UsuarioService;
@@ -90,6 +91,9 @@ class CargaDeEjemplos {
         Usuario u = usuarioRepository.getReferenceById(id);
         u.setLatitud(p.latitud());
         u.setLongitud(p.longitud());
+        if (p.administrador()) {
+            u.setRol(Rol.ADMINISTRADOR);
+        }
         carga.fechas.add(Fechado.registro(id, p.mesesEnKolab()));
     }
 
@@ -111,6 +115,19 @@ class CargaDeEjemplos {
         carga.solicitudes.put(s.clave(), id);
         carga.autores.put(s.clave(), s.autor());
         carga.fechas.add(Fechado.solicitud(id, s.haceHoras()));
+    }
+
+    /**
+     * Deja creadas las cuentas de administración de los ejemplos aunque la base ya tenga datos.
+     */
+    @Transactional
+    public void asegurarAdministradores() {
+        ejemplos.personas().stream().filter(Ejemplos.Persona::administrador).forEach(p -> {
+            Long id = usuarioService.buscarPorEmail(p.email())
+                    .map(Usuario::getId)
+                    .orElseGet(() -> usuarioService.registrar(registro(p)).getId());
+            usuarioRepository.getReferenceById(id).setRol(Rol.ADMINISTRADOR);
+        });
     }
 
     private RegistroForm registro(Ejemplos.Persona p) {

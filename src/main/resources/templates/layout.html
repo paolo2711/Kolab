@@ -12,7 +12,7 @@
 </head>
 <body>
 
-<div th:replace="~{fragmentos/menu :: menu}"></div>
+<div th:replace="${panel} ? ~{fragmentos/menu :: panel} : ~{fragmentos/menu :: menu}"></div>
 
 <div class="k-cuerpo">
     <div class="k-ancho">
@@ -20,7 +20,7 @@
     </div>
 </div>
 
-<footer class="k-pie">
+<footer class="k-pie" th:unless="${panel}">
     <div class="k-ancho k-pie-caja">
         <span>KOLAB · Lima, Perú</span>
         <span>

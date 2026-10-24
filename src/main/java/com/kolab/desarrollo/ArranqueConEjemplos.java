@@ -19,5 +19,6 @@ class ArranqueConEjemplos implements ApplicationRunner {
     @Override
     public void run(ApplicationArguments args) {
         carga.cargarSiVacia();
+        carga.asegurarAdministradores();
     }
 }

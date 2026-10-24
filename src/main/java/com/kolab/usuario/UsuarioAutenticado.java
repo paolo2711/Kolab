@@ -13,19 +13,21 @@ public class UsuarioAutenticado extends User {
     private final String iniciales;
     private final boolean ofreceServicios;
     private final String foto;
+    private final boolean administrador;
 
     public UsuarioAutenticado(Usuario usuario, boolean ofreceServicios, String foto) {
         super(usuario.getEmail(),
                 usuario.getPasswordHash(),
                 usuario.getEstado() == EstadoUsuario.ACTIVO,
                 true, true, true,
-                List.of(new SimpleGrantedAuthority("ROLE_USUARIO")));
+                permisos(usuario));
         this.ofreceServicios = ofreceServicios;
         this.idUsuario = usuario.getId();
         this.nombre = usuario.getNombre();
         this.nombreCompleto = usuario.getNombreCompleto();
         this.iniciales = Personas.inicialesDe(usuario);
         this.foto = foto;
+        this.administrador = usuario.esAdministrador();
     }
 
     public Long getIdUsuario() {
@@ -52,5 +54,14 @@ public class UsuarioAutenticado extends User {
     // ofrece quien haya declarado alguna categoria
     public boolean ofreceServicios() {
         return ofreceServicios;
+    }
+
+    public boolean esAdministrador() {
+        return administrador;
+    }
+
+    // quien administra no es usuario del mercado: no publica, no oferta ni escribe, solo ve el panel
+    private static List<SimpleGrantedAuthority> permisos(Usuario usuario) {
+        return List.of(new SimpleGrantedAuthority(usuario.esAdministrador() ? "ROLE_ADMINISTRADOR" : "ROLE_USUARIO"));
     }
 }
