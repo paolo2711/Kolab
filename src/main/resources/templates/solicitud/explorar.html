@@ -6,7 +6,7 @@
 </head>
 <body>
 
-<main>
+<main class="k-total">
     <div th:replace="~{fragmentos/componentes :: aviso}"></div>
 
     <div class="k-encabezado">
@@ -77,7 +77,7 @@
             <p class="k-vacio" th:if="${solicitudes.isEmpty()}">
                 No hay solicitudes abiertas con esos filtros. Prueba quitando alguno.</p>
 
-            <div class="k-lista">
+            <div class="k-lista k-lista-doble">
                 <th:block th:each="s : ${solicitudes.content}">
                     <div th:replace="~{fragmentos/componentes :: fila(${s}, 'Ofertar')}"></div>
                 </th:block>
