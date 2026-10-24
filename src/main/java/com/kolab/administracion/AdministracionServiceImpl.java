@@ -1,5 +1,7 @@
 package com.kolab.administracion;
 
+import com.kolab.common.OperacionNoPermitidaException;
+import com.kolab.common.RecursoNoEncontradoException;
 import com.kolab.common.Tiempo;
 import com.kolab.servicio.EstadoServicio;
 import com.kolab.servicio.ServicioRepository;
@@ -47,6 +49,25 @@ public class AdministracionServiceImpl implements AdministracionService {
     }
 
     @Override
+    @Transactional
+    public String suspender(Long idCuenta, Long idAdministrador) {
+        if (idCuenta.equals(idAdministrador)) {
+            throw new OperacionNoPermitidaException("No puedes suspender tu propia cuenta.");
+        }
+        Usuario cuenta = cuenta(idCuenta);
+        cuenta.suspender();
+        return cuenta.getEmail();
+    }
+
+    @Override
+    @Transactional
+    public String reactivar(Long idCuenta) {
+        Usuario cuenta = cuenta(idCuenta);
+        cuenta.reactivar();
+        return cuenta.getEmail();
+    }
+
+    @Override
     public Tablero tablero() {
         List<Tablero.Mes> meses = ultimosMeses();
         return new Tablero(
@@ -89,8 +110,12 @@ public class AdministracionServiceImpl implements AdministracionService {
         return YearMonth.of(((Number) fila[0]).intValue(), ((Number) fila[1]).intValue());
     }
 
+    private Usuario cuenta(Long id) {
+        return usuarioRepository.findById(id).orElseThrow(() -> new RecursoNoEncontradoException("cuenta", id));
+    }
+
     private CuentaResumen aResumen(Usuario u) {
-        return new CuentaResumen(u.getNombreCompleto(), u.getEmail(),
+        return new CuentaResumen(u.getId(), u.getNombreCompleto(), u.getEmail(),
                 Tiempo.fecha(u.getFechaRegistro()), u.getEstado() == EstadoUsuario.ACTIVO);
     }
 }

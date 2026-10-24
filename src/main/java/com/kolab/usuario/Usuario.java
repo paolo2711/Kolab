@@ -172,4 +172,12 @@ public class Usuario {
     public boolean esAdministrador() {
         return rol == Rol.ADMINISTRADOR;
     }
+
+    public void suspender() {
+        this.estado = EstadoUsuario.SUSPENDIDO;
+    }
+
+    public void reactivar() {
+        this.estado = EstadoUsuario.ACTIVO;
+    }
 }
