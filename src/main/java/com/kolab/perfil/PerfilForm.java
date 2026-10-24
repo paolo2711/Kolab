@@ -17,12 +17,14 @@ public class PerfilForm {
     @Pattern(regexp = "^$|^[0-9]{9}$", message = "El celular son 9 dígitos")
     private String telefono;
 
-    @NotBlank(message = "Pon tu distrito")
     @Size(max = 60, message = "Máximo 60 caracteres")
-    private String ubicacion;
+    private String distrito;
 
     @Size(max = 500, message = "Máximo 500 caracteres")
     private String descripcion;
+
+    @Size(max = 500, message = "Máximo 500 caracteres")
+    private String experiencia;
 
     public String getNombre() {
         return nombre;
@@ -48,12 +50,12 @@ public class PerfilForm {
         this.telefono = telefono;
     }
 
-    public String getUbicacion() {
-        return ubicacion;
+    public String getDistrito() {
+        return distrito;
     }
 
-    public void setUbicacion(String ubicacion) {
-        this.ubicacion = ubicacion;
+    public void setDistrito(String distrito) {
+        this.distrito = distrito;
     }
 
     public String getDescripcion() {
@@ -62,5 +64,13 @@ public class PerfilForm {
 
     public void setDescripcion(String descripcion) {
         this.descripcion = descripcion;
+    }
+
+    public String getExperiencia() {
+        return experiencia;
+    }
+
+    public void setExperiencia(String experiencia) {
+        this.experiencia = experiencia;
     }
 }

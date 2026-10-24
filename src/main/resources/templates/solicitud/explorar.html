@@ -11,7 +11,7 @@
 
     <div class="k-encabezado">
         <h1>Solicitudes abiertas</h1>
-        <p>Cada una lleva el precio que propuso el cliente. Puedes aceptarlo o proponer el tuyo.</p>
+        <p>Cada una lleva el precio que propuso quien la publicó. Puedes aceptarlo o proponer el tuyo.</p>
     </div>
 
     <div class="k-dos-columnas k-lateral-izquierda">
@@ -69,18 +69,21 @@
 
         <div>
             <p class="k-conteo">
-                <span th:text="${#lists.size(solicitudes)}">6</span> solicitudes encontradas
+                <span th:text="${solicitudes.totalElements}">6</span>
+                <span th:text="${solicitudes.totalElements == 1} ? 'solicitud encontrada' : 'solicitudes encontradas'">solicitudes encontradas</span>
                 <a th:if="${!filtro.vacio()}" th:href="@{/solicitudes}" style="margin-left:0.75rem;">Quitar filtros</a>
             </p>
 
-            <p class="k-vacio" th:if="${#lists.isEmpty(solicitudes)}">
+            <p class="k-vacio" th:if="${solicitudes.isEmpty()}">
                 No hay solicitudes abiertas con esos filtros. Prueba quitando alguno.</p>
 
             <div class="k-lista">
-                <th:block th:each="s : ${solicitudes}">
-                <div th:replace="~{fragmentos/componentes :: fila(${s}, 'Ofertar')}"></div>
-            </th:block>
+                <th:block th:each="s : ${solicitudes.content}">
+                    <div th:replace="~{fragmentos/componentes :: fila(${s}, 'Ofertar')}"></div>
+                </th:block>
             </div>
+
+            <nav th:replace="~{fragmentos/componentes :: paginas(${solicitudes}, '/solicitudes', ${filtro.aConsulta()})}"></nav>
         </div>
     </div>
 </main>

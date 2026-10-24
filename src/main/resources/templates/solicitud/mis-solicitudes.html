@@ -9,17 +9,21 @@
 <main>
     <div th:replace="~{fragmentos/componentes :: aviso}"></div>
 
-    <div class="k-encabezado">
+    <div class="k-titulo-fila k-encabezado">
         <h1>Mi actividad</h1>
+        <a class="k-enlace-suave" th:href="@{/mi-resumen}">Ver mi resumen</a>
     </div>
 
     <div th:replace="~{fragmentos/menu :: pestanasActividad('pedi')}"></div>
 
     <p class="k-pestana-nota">Publicaste y estás esperando ofertas. Aquí decides tú con quién cerrar.</p>
 
+    <p class="k-vacio" th:if="${solicitudes.isEmpty()}">Todavía no publicaste nada.
+        <a th:href="@{/mis-solicitudes/nueva}">Publica lo que necesitas</a> con el precio que propones.</p>
+
     <div class="k-lista">
-        <a class="k-solicitud" th:each="s : ${solicitudes}" th:href="@{/mis-solicitudes/{id}(id=${s.id})}">
-            <img class="k-miniatura" th:src="${s.foto()}" th:alt="${s.categoria}" loading="lazy">
+        <a class="k-solicitud" th:each="s : ${solicitudes.content}" th:href="@{/mis-solicitudes/{id}(id=${s.id})}">
+            <th:block th:replace="~{fragmentos/componentes :: miniatura(${s.foto}, ${s.icono}, ${s.categoria})}"></th:block>
             <div class="k-solicitud-cuerpo">
                 <span class="k-solicitud-titulo" th:text="${s.titulo}">Título</span>
                 <div class="k-solicitud-meta">
@@ -44,7 +48,9 @@
         </a>
     </div>
 
-    <div th:replace="~{fragmentos/componentes :: servicios(${servicios}, 'Servicios que contraté', 'Todavía no has cerrado trato con nadie.')}"></div>
+    <nav th:replace="~{fragmentos/componentes :: paginas(${solicitudes}, '/mis-solicitudes', '')}"></nav>
+
+    <div th:replace="~{fragmentos/componentes :: servicios(${servicios.content}, 'Servicios que contraté', 'Todavía no has cerrado trato con nadie.')}"></div>
 </main>
 
 </body>

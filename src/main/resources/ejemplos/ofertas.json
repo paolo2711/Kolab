@@ -1,0 +1,41 @@
+[
+  { "clave": "guitarra-luis", "solicitud": "guitarra-paolo", "autor": "experto@kolab.pe", "monto": 80, "mensaje": "Acepto tu precio. Puedo empezar este sábado.", "haceHoras": 1, "rechazada": false },
+  { "clave": "guitarra-carlos", "solicitud": "guitarra-paolo", "autor": "carlos.talavera@kolab.pe", "monto": 75, "mensaje": "Vivo en Pueblo Libre, me queda cerca. Te dejo en 75.", "haceHoras": 1, "rechazada": false },
+
+  { "clave": "ingles-luis", "solicitud": "ingles-paolo", "autor": "experto@kolab.pe", "monto": 60, "mensaje": "Tengo material propio para conversación.", "haceHoras": 98, "rechazada": false },
+  { "clave": "ingles-nadia", "solicitud": "ingles-paolo", "autor": "nadia.flores@kolab.pe", "monto": 70, "mensaje": "Puedo los martes y jueves por la noche.", "haceHoras": 97, "rechazada": false },
+
+  { "clave": "cano-ana", "solicitud": "cano-paolo", "autor": "ana.ramirez@kolab.pe", "monto": 110, "mensaje": "Lo dejo sin goteo o no cobro.", "haceHoras": 738, "rechazada": false },
+
+  { "clave": "cano-jorge", "solicitud": "cano-lucia", "autor": "jorge.vilchez@kolab.pe", "monto": 95, "mensaje": "Voy hoy mismo si te sirve.", "haceHoras": 4, "rechazada": false },
+  { "clave": "cano-maria", "solicitud": "cano-lucia", "autor": "maria.pineda@kolab.pe", "monto": 110, "mensaje": "Incluye el cambio de empaquetadura.", "haceHoras": 3, "rechazada": false },
+  { "clave": "cano-rosa", "solicitud": "cano-lucia", "autor": "rosa.salazar@kolab.pe", "monto": 120, "mensaje": "Acepto tu precio y te doy garantía de tres meses.", "haceHoras": 2, "rechazada": false },
+
+  { "clave": "ingles-paula-luis", "solicitud": "ingles-paula", "autor": "experto@kolab.pe", "monto": 60, "mensaje": "Acepto el monto que publicaste.", "haceHoras": 29, "rechazada": false },
+  { "clave": "ingles-paula-nadia", "solicitud": "ingles-paula", "autor": "nadia.flores@kolab.pe", "monto": 55, "mensaje": "Te dejo en 55 si tomas ocho sesiones.", "haceHoras": 28, "rechazada": false },
+
+  { "clave": "logo-carlos", "solicitud": "logo-sofia", "autor": "carlos.talavera@kolab.pe", "monto": 120, "mensaje": "Te mando dos propuestas el viernes.", "haceHoras": 26, "rechazada": false },
+  { "clave": "logo-paula", "solicitud": "logo-sofia", "autor": "paula.lizana@kolab.pe", "monto": 150, "mensaje": "Acepto tu precio. Trabajo con tres rondas de cambios.", "haceHoras": 20, "rechazada": false },
+  { "clave": "logo-diego", "solicitud": "logo-sofia", "autor": "diego.ynga@kolab.pe", "monto": 140, "mensaje": "Incluyo los archivos editables.", "haceHoras": 18, "rechazada": true },
+
+  { "clave": "camaras-hugo", "solicitud": "camaras-nadia", "autor": "hugo.ochoa@kolab.pe", "monto": 190, "mensaje": "Incluye configuración en el celular.", "haceHoras": 40, "rechazada": false },
+  { "clave": "mate-sofia", "solicitud": "mate-carlos", "autor": "sofia.bermudez@kolab.pe", "monto": 45, "mensaje": "Acepto tu precio. Tengo material de trigonometría.", "haceHoras": 60, "rechazada": false },
+  { "clave": "maquillaje-rosa", "solicitud": "maquillaje-maria", "autor": "rosa.salazar@kolab.pe", "monto": 170, "mensaje": "Llevo todo el material. Puedo llegar a las cuatro.", "haceHoras": 3, "rechazada": false },
+  { "clave": "schnauzer-valeria", "solicitud": "schnauzer-rosa", "autor": "valeria.campos@kolab.pe", "monto": 70, "mensaje": "Acepto tu precio. Llevo secador silencioso.", "haceHoras": 10, "rechazada": false },
+  { "clave": "televisor-jorge", "solicitud": "televisor-diego", "autor": "jorge.vilchez@kolab.pe", "monto": 130, "mensaje": "Llevo taladro percutor y nivel.", "haceHoras": 50, "rechazada": false },
+  { "clave": "mate3-sofia", "solicitud": "mate-jorge", "autor": "sofia.bermudez@kolab.pe", "monto": 60, "mensaje": "Acepto tu precio. Puedo lunes y jueves.", "haceHoras": 90, "rechazada": false },
+
+  { "clave": "chapa-jorge", "solicitud": "chapa-sofia", "autor": "jorge.vilchez@kolab.pe", "monto": 80, "mensaje": "Voy hoy mismo con la chapa nueva.", "haceHoras": 975, "rechazada": false },
+  { "clave": "logo-hugo-diego", "solicitud": "logo-hugo", "autor": "diego.ynga@kolab.pe", "monto": 150, "mensaje": "Te mando tres propuestas en cuatro días.", "haceHoras": 1210, "rechazada": false },
+  { "clave": "tarjetas-paula", "solicitud": "tarjetas-nadia", "autor": "paula.lizana@kolab.pe", "monto": 180, "mensaje": "Acepto tu precio. Incluye el archivo para imprenta.", "haceHoras": 890, "rechazada": false },
+  { "clave": "entrevista-nadia", "solicitud": "entrevista-diego", "autor": "nadia.flores@kolab.pe", "monto": 70, "mensaje": "Preparo contigo las preguntas más comunes.", "haceHoras": 1390, "rechazada": false },
+  { "clave": "wifi-hugo", "solicitud": "wifi-rosa", "autor": "hugo.ochoa@kolab.pe", "monto": 150, "mensaje": "Incluye un repetidor y la configuración.", "haceHoras": 550, "rechazada": false },
+  { "clave": "algebra-sofia", "solicitud": "algebra-maria", "autor": "sofia.bermudez@kolab.pe", "monto": 50, "mensaje": "Acepto tu precio.", "haceHoras": 1490, "rechazada": false },
+  { "clave": "sala-rosa", "solicitud": "sala-carlos", "autor": "rosa.salazar@kolab.pe", "monto": 300, "mensaje": "Lo termino en dos días.", "haceHoras": 690, "rechazada": false },
+  { "clave": "criolla-carlos", "solicitud": "criolla-ana", "autor": "carlos.talavera@kolab.pe", "monto": 60, "mensaje": "Te enseño el repertorio criollo desde lo básico.", "haceHoras": 1590, "rechazada": false },
+  { "clave": "guitarra-nadia-luis", "solicitud": "guitarra-nadia", "autor": "experto@kolab.pe", "monto": 70, "mensaje": "Tengo experiencia con niños. Acepto tu precio.", "haceHoras": 1090, "rechazada": false },
+  { "clave": "terma-maria", "solicitud": "terma-hugo", "autor": "maria.pineda@kolab.pe", "monto": 130, "mensaje": "Puede ser la resistencia. Voy hoy.", "haceHoras": 395, "rechazada": false },
+  { "clave": "viaje-luis", "solicitud": "viaje-paolo", "autor": "experto@kolab.pe", "monto": 50, "mensaje": "Armo las sesiones según tu viaje.", "haceHoras": 610, "rechazada": false },
+  { "clave": "golden-valeria", "solicitud": "golden-lucia", "autor": "valeria.campos@kolab.pe", "monto": 60, "mensaje": "Acepto tu precio. Llevo champú para pelo largo.", "haceHoras": 315, "rechazada": false },
+  { "clave": "ducha-ana", "solicitud": "ducha-diego", "autor": "ana.ramirez@kolab.pe", "monto": 140, "mensaje": "Incluye la llave térmica.", "haceHoras": 845, "rechazada": false }
+]

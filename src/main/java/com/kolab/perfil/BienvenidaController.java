@@ -1,7 +1,10 @@
 package com.kolab.perfil;
 
-import com.kolab.demo.CatalogoDeCategorias;
+import com.kolab.categoria.CategoriaService;
+import com.kolab.usuario.SesionActual;
 import com.kolab.usuario.UsuarioAutenticado;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import java.util.List;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -18,17 +21,20 @@ public class BienvenidaController {
     public static final String YA_PREGUNTADO = "bienvenidaVista";
 
     private final PerfilService perfilService;
-    private final CatalogoDeCategorias catalogo;
+    private final CategoriaService categoriaService;
+    private final SesionActual sesionActual;
 
-    public BienvenidaController(PerfilService perfilService, CatalogoDeCategorias catalogo) {
+    public BienvenidaController(PerfilService perfilService, CategoriaService categoriaService,
+                                SesionActual sesionActual) {
         this.perfilService = perfilService;
-        this.catalogo = catalogo;
+        this.categoriaService = categoriaService;
+        this.sesionActual = sesionActual;
     }
 
     @GetMapping("/bienvenida")
     public String preguntar(@AuthenticationPrincipal UsuarioAutenticado usuario, Model model) {
         model.addAttribute("usuario", usuario);
-        model.addAttribute("categorias", catalogo.categorias());
+        model.addAttribute("categorias", categoriaService.activas());
         model.addAttribute("elegidas", perfilService.categoriasDe(usuario.getIdUsuario()));
         return "cuenta/bienvenida";
     }
@@ -37,9 +43,12 @@ public class BienvenidaController {
     public String guardar(@AuthenticationPrincipal UsuarioAutenticado usuario,
                           @RequestParam(name = "categoria", required = false) List<Long> categorias,
                           HttpSession sesion,
-                          RedirectAttributes flash) {
+                          RedirectAttributes flash,
+                          HttpServletRequest pedido,
+                          HttpServletResponse respuesta) {
         List<Long> elegidas = categorias == null ? List.of() : categorias;
         perfilService.guardarCategorias(usuario.getIdUsuario(), elegidas);
+        sesionActual.refrescar(pedido, respuesta);
         sesion.setAttribute(YA_PREGUNTADO, true);
 
         if (elegidas.isEmpty()) {

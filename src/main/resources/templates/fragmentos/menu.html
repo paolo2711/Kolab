@@ -11,7 +11,6 @@
             <li><a th:href="@{/}" th:classappend="${seccion == 'inicio'} ? 'activo'">Inicio</a></li>
             <li><a th:href="@{/solicitudes}" th:classappend="${seccion == 'explorar'} ? 'activo'">Explorar</a></li>
             <li><a th:href="@{/mis-solicitudes}" th:classappend="${seccion == 'actividad'} ? 'activo'">Mi actividad</a></li>
-            <li><a th:href="@{/panel}" th:classappend="${seccion == 'panel'} ? 'activo'">Panel</a></li>
             <li>
                 <a th:href="@{/mensajes}" th:classappend="${seccion == 'mensajes'} ? 'activo'">
                     Mensajes
@@ -21,8 +20,8 @@
         </ul>
 
         <ul class="k-nav" sec:authorize="!isAuthenticated()">
-            <li><a th:href="@{/}">Cómo funciona</a></li>
-            <li><a th:href="@{/}">Categorías</a></li>
+            <li><a th:href="@{/#como-funciona}">Cómo funciona</a></li>
+            <li><a th:href="@{/#categorias}">Categorías</a></li>
         </ul>
 
         <div class="k-sesion" sec:authorize="!isAuthenticated()">
@@ -35,7 +34,10 @@
 
         <details class="k-cuenta" sec:authorize="isAuthenticated()">
             <summary>
+                <img class="k-cuenta-foto" th:if="${#authentication.principal.foto != null}"
+                     th:src="@{${#authentication.principal.foto}}" alt="Tu foto">
                 <span class="k-inicial t0" style="width:2rem; height:2rem; font-size:0.72rem;"
+                      th:unless="${#authentication.principal.foto != null}"
                       sec:authentication="principal.iniciales">PR</span>
                 <i class="bi bi-chevron-down"></i>
             </summary>
@@ -47,8 +49,9 @@
                 </div>
 
                 <a th:href="@{/perfil}"><i class="bi bi-person"></i> Ver mi perfil</a>
+                <a th:href="@{/mi-resumen}"><i class="bi bi-bar-chart"></i> Mi resumen</a>
                 <a th:href="@{/bienvenida}"><i class="bi bi-stars"></i> Lo que sé hacer</a>
-                <a class="apagado"><i class="bi bi-gear"></i> Configuración</a>
+                <a th:href="@{/perfil/editar}"><i class="bi bi-gear"></i> Editar mis datos</a>
 
                 <div class="k-cuenta-sep"></div>
 

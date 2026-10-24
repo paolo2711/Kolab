@@ -9,7 +9,8 @@
 <main>
     <p class="k-migas"><a th:href="@{/solicitudes}">&larr; Explorar</a></p>
 
-    <img class="k-banner" th:src="${categoria.foto()}" th:alt="${categoria.nombre}">
+    <img class="k-banner" th:if="${categoria.tieneFoto()}" th:src="@{${categoria.foto}}" th:alt="${categoria.nombre}">
+    <div class="k-banner k-sin-foto" th:unless="${categoria.tieneFoto()}"><i class="bi" th:classappend="${categoria.icono}"></i></div>
 
     <div class="k-cabecera-categoria k-cabecera-bajo-banner">
         <div>
@@ -17,10 +18,11 @@
             <p th:if="${categoria.tieneDemanda()}">
                 <b th:text="${categoria.abiertas}">3</b>
                 <span th:text="${categoria.abiertas == 1} ? 'solicitud abierta ahora' : 'solicitudes abiertas ahora'">solicitudes abiertas ahora</span>
-                · <span th:text="${#lists.size(expertos)}">4</span> expertos disponibles
+                · <span th:text="${#lists.size(expertos)}">4</span>
+                <span th:text="${#lists.size(expertos) == 1} ? 'persona ofrece esto' : 'personas ofrecen esto'">personas ofrecen esto</span>
             </p>
             <p th:unless="${categoria.tieneDemanda()}">
-                Todavía no hay solicitudes abiertas. Publica la primera y los expertos te ofertan.
+                Todavía no hay solicitudes abiertas. Publica la primera y quienes saben te ofertan.
             </p>
         </div>
         <a class="k-btn k-btn-principal" th:href="@{/mis-solicitudes/nueva(idCategoria=${categoria.id})}">
@@ -48,12 +50,17 @@
                 </div>
             </div>
         </div>
-        <p class="k-vacio" style="margin-top:0.9rem;">Sale de lo que la gente publicó en esta categoría.
+        <p class="k-vacio" style="margin-top:0.9rem;" th:unless="${precios.esDeReferencia()}">Sale de las
+            <span th:text="${precios.solicitudes}">5</span> solicitudes que la gente publicó en esta categoría.
             Tú puedes proponer el monto que quieras.</p>
+        <p class="k-vacio" style="margin-top:0.9rem;" th:if="${precios.esDeReferencia()}">Todavía no hay
+            solicitudes aquí: es el rango de referencia de la categoría. Tú puedes proponer el monto que quieras.</p>
     </section>
 
     <section class="k-bloque">
         <h2 class="k-bloque-titulo">Mejor calificados en <span th:text="${categoria.nombre}">la categoría</span></h2>
+        <p class="k-vacio" th:if="${#lists.isEmpty(expertos)}">Todavía nadie ofrece esto. Si tú sabes,
+            márcalo en <a th:href="@{/bienvenida}">lo que sé hacer</a>.</p>
 
         <div th:replace="~{fragmentos/componentes :: expertos(${expertos}, ${categoria.id})}"></div>
     </section>

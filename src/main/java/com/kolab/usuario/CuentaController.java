@@ -24,24 +24,6 @@ public class CuentaController {
         return "cuenta/login";
     }
 
-    @GetMapping("/recuperar")
-    public String formularioRecuperar(Model model) {
-        model.addAttribute("recuperarForm", new RecuperarForm());
-        return "cuenta/recuperar";
-    }
-
-    // no se dice si el correo existe: eso deja averiguar quien tiene cuenta
-    @PostMapping("/recuperar")
-    public String recuperar(@Valid @ModelAttribute RecuperarForm recuperarForm, BindingResult errores,
-                            Model model) {
-        if (errores.hasErrors()) {
-            return "cuenta/recuperar";
-        }
-        model.addAttribute("enviado", true);
-        model.addAttribute("correo", recuperarForm.getEmail().trim());
-        return "cuenta/recuperar";
-    }
-
     @GetMapping("/registro")
     public String formularioRegistro(Model model) {
         model.addAttribute("registroForm", new RegistroForm());

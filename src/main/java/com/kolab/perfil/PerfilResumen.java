@@ -1,23 +1,21 @@
 package com.kolab.perfil;
 
 import com.kolab.calificacion.ResenaResumen;
-import java.math.BigDecimal;
 import java.util.List;
 
+/**
+ * Mi perfil: lo que cuento de mí, mi reputación y mi actividad en cifras.
+ */
 public record PerfilResumen(String descripcion,
-                            String ubicacion,
+                            String experiencia,
                             String distrito,
-                            Double latitud,
-                            Double longitud,
+                            String telefono,
                             String miembroDesde,
-                            BigDecimal calificacion,
-                            int calificaciones,
-                            int serviciosCerrados,
-                            int solicitudesPublicadas,
-                            int tasaRespuesta,
+                            Reputacion reputacion,
+                            long solicitudesPublicadas,
                             List<ResenaResumen> resenas) {
 
     public boolean sinCalificar() {
-        return calificaciones == 0;
+        return reputacion.sinCalificar();
     }
 }

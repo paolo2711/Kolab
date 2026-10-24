@@ -11,17 +11,22 @@
     <p class="k-migas"><a th:href="@{/servicios/{id}(id=${servicio.id})}">&larr; Volver al servicio</a></p>
 
     <div class="k-encabezado">
-        <h1>Cierra el servicio y califica</h1>
-        <p>La nota que pongas entra en el promedio del experto y queda visible en su perfil.</p>
+        <h1 th:text="${servicio.puedoCerrar()} ? 'Cierra el servicio y califica' : 'Califica a ' + ${servicio.contraparte.nombre}">
+            Cierra el servicio y califica</h1>
+        <p>Tu nota entra en el promedio de <span th:text="${servicio.contraparte.nombre}">la otra parte</span>
+            y queda visible en su perfil.</p>
     </div>
 
     <div class="k-dos-columnas k-principal-ancha">
         <div>
             <div class="k-tarjeta" style="margin-bottom:1.5rem;">
-                <span class="k-estado k-estado-bien"><i class="bi bi-check-circle-fill"></i><span>Trato cerrado</span></span>
+                <span class="k-estado k-estado-espera" th:if="${servicio.puedoCerrar()}"><i class="bi bi-circle-half"></i>
+                    <span>Al enviar tu nota, el servicio queda cerrado</span></span>
+                <span class="k-estado k-estado-bien" th:unless="${servicio.puedoCerrar()}"><i class="bi bi-check-circle-fill"></i>
+                    <span>Servicio cerrado</span></span>
                 <h2 class="k-tarjeta-titulo" style="margin-top:0.9rem;" th:text="${servicio.titulo}">Servicio</h2>
                 <dl class="k-datos">
-                    <dt>Experto</dt>
+                    <dt>Con</dt>
                     <dd th:text="${servicio.contraparte.nombre}">Luis Mendoza</dd>
                     <dt>Monto acordado</dt>
                     <dd><span th:replace="~{fragmentos/componentes :: precio(${servicio.montoFinal}, 'k-precio-m')}"></span></dd>
@@ -68,23 +73,26 @@
         </div>
 
         <div class="k-tarjeta">
-            <h2 class="k-tarjeta-titulo">Resumen del experto</h2>
+            <h2 class="k-tarjeta-titulo">Con quién trabajaste</h2>
 
             <div style="display:flex; align-items:center; gap:0.9rem; margin-bottom:1.25rem;">
                 <span th:replace="~{fragmentos/componentes :: cara(${servicio.contraparte}, '2.6rem')}"></span>
                 <div>
                     <div class="k-oferta-nombre" th:text="${servicio.contraparte.nombre}">Luis Mendoza</div>
-                    <div class="k-oferta-meta" th:text="'Miembro desde ' + ${servicio.miembroDesde}">Miembro desde marzo de 2026</div>
+                    <div class="k-oferta-meta" th:text="'En KOLAB desde ' + ${servicio.miembroDesde}">En KOLAB desde marzo de 2026</div>
                 </div>
             </div>
 
             <div class="k-etiqueta">Calificación promedio</div>
-            <div class="k-precio k-precio-xl" style="margin-bottom:0.4rem;">
-                <span th:text="${servicio.calificacionContraparte}">4.8</span>
+            <div class="k-precio k-precio-xl" style="margin-bottom:0.4rem;"
+                 th:unless="${servicio.reputacionContraparte.sinCalificar()}">
+                <span th:text="${servicio.reputacionContraparte.promedio}">4.8</span>
                 <span style="font-size:0.5em; color:var(--tinta-2); font-weight:500;">de 5</span>
             </div>
+            <p class="k-vacio" th:if="${servicio.reputacionContraparte.sinCalificar()}">Todavía nadie la calificó.
+                Tu nota va a ser la primera.</p>
             <div class="k-oferta-meta">
-                <span th:text="${servicio.serviciosContraparte}">33</span> servicios concretados
+                <span th:text="${servicio.reputacionContraparte.serviciosDados}">33</span> servicios dados
             </div>
         </div>
     </div>

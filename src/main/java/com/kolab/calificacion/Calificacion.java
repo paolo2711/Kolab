@@ -67,14 +67,6 @@ public class Calificacion {
         this.comentario = comentario;
     }
 
-    /**
-     * Si la calificación se puede guardar: el puntaje está en rango y nadie se está calificando a
-     * sí mismo. Son las dos reglas que la base también controla.
-     */
-    public boolean esValida() {
-        return puntaje >= 1 && puntaje <= 5 && !evaluador.getId().equals(evaluado.getId());
-    }
-
     public Long getId() {
         return id;
     }

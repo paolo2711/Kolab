@@ -9,18 +9,22 @@
 <main>
     <div th:replace="~{fragmentos/componentes :: aviso}"></div>
 
-    <div class="k-encabezado">
+    <div class="k-titulo-fila k-encabezado">
         <h1>Mi actividad</h1>
+        <a class="k-enlace-suave" th:href="@{/mi-resumen}">Ver mi resumen</a>
     </div>
 
     <div th:replace="~{fragmentos/menu :: pestanasActividad('ofrezco')}"></div>
 
-    <p class="k-pestana-nota">Ofertaste y estás esperando. Aquí decide el cliente, no tú.</p>
+    <p class="k-pestana-nota">Ofertaste y estás esperando. Aquí decide quien publicó, no tú.</p>
+
+    <p class="k-vacio" th:if="${ofertas.isEmpty()}">Todavía no ofertaste en ninguna solicitud.
+        <a th:href="@{/solicitudes}">Mira lo que se está pidiendo</a>.</p>
 
     <div class="k-lista">
-        <a class="k-solicitud" th:each="o : ${ofertas}"
+        <a class="k-solicitud" th:each="o : ${ofertas.content}"
            th:href="@{/solicitudes/{id}(id=${o.idSolicitud})}">
-            <img class="k-miniatura" th:src="${o.foto()}" th:alt="${o.categoria}" loading="lazy">
+            <th:block th:replace="~{fragmentos/componentes :: miniatura(${o.foto}, ${o.icono}, ${o.categoria})}"></th:block>
             <div class="k-solicitud-cuerpo">
                 <span class="k-solicitud-titulo" th:text="${o.solicitud}">Solicitud</span>
                 <div class="k-solicitud-meta">
@@ -28,10 +32,10 @@
                     enviada <span th:text="${o.enviada}">hace 1 hora</span>
                 </div>
                 <div class="k-solicitud-ofertas">
-                    El cliente pedía S/ <span th:text="${#numbers.formatDecimal(o.precioDelCliente, 1, 'COMMA', 2, 'POINT')}">80.00</span>
+                    Pedían S/ <span th:text="${#numbers.formatDecimal(o.precioDelCliente, 1, 'COMMA', 2, 'POINT')}">80.00</span>
                     <span th:if="${o.aceptaste()}">· aceptaste su precio</span>
                     <span th:unless="${o.aceptaste()}">· propusiste otro monto</span>
-                    · compites con <span th:text="${o.cuantasOfertas}">3</span>
+                    <span th:if="${o.competidores > 0}">· compites con <span th:text="${o.competidores}">3</span></span>
                     <span class="k-senal" th:if="${o.tieneMensajes()}">
                         <i class="bi bi-chat-dots"></i>
                         <span th:text="${o.mensajesSinLeer}">2</span> sin leer</span>
@@ -44,7 +48,9 @@
         </a>
     </div>
 
-    <div th:replace="~{fragmentos/componentes :: servicios(${servicios}, 'Servicios que estoy dando', 'Todavía no te aceptaron ninguna oferta.')}"></div>
+    <nav th:replace="~{fragmentos/componentes :: paginas(${ofertas}, '/mis-ofertas', '')}"></nav>
+
+    <div th:replace="~{fragmentos/componentes :: servicios(${servicios.content}, 'Servicios que estoy dando', 'Todavía no te aceptaron ninguna oferta.')}"></div>
 </main>
 
 </body>

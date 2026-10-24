@@ -52,13 +52,6 @@ public class Mensaje {
         this.contenido = contenido;
     }
 
-    /**
-     * Marca el mensaje como visto por quien lo recibió. Es lo que apaga el contador del menú.
-     */
-    public void marcarLeido() {
-        this.leido = true;
-    }
-
     public Long getId() {
         return id;
     }

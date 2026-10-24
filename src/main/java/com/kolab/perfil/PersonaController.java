@@ -1,36 +1,30 @@
 package com.kolab.perfil;
 
-import com.kolab.categoria.CategoriaResumen;
-import com.kolab.demo.CatalogoDeCategorias;
-import com.kolab.demo.DirectorioDePersonas;
-import java.util.List;
+import com.kolab.usuario.UsuarioAutenticado;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
-// el perfil que ve el resto. desde aqui se le propone un servicio directo, sin pasar por el
-// catalogo
+// el perfil que ve el resto. desde aquí se le propone un servicio directo, sin pasar por el catálogo
 @Controller
 public class PersonaController {
 
-    private final DirectorioDePersonas directorio;
-    private final CatalogoDeCategorias catalogo;
+    private final DirectorioService directorioService;
 
-    public PersonaController(DirectorioDePersonas directorio, CatalogoDeCategorias catalogo) {
-        this.directorio = directorio;
-        this.catalogo = catalogo;
+    public PersonaController(DirectorioService directorioService) {
+        this.directorioService = directorioService;
     }
 
     @GetMapping("/personas/{id}")
-    public String publico(@PathVariable Long id, Model model) {
-        List<Long> suyas = directorio.categoriasDe(id);
-        List<CategoriaResumen> categorias = catalogo.categorias().stream()
-                .filter(c -> suyas.contains(c.id()))
-                .toList();
-
-        model.addAttribute("experto", directorio.experto(id));
-        model.addAttribute("categorias", categorias);
+    public String publico(@PathVariable Long id, @AuthenticationPrincipal UsuarioAutenticado usuario,
+                          Model model) {
+        if (id.equals(usuario.getIdUsuario())) {
+            return "redirect:/perfil";
+        }
+        model.addAttribute("seccion", "explorar");
+        model.addAttribute("perfil", directorioService.publico(id));
         return "perfil/persona";
     }
 }

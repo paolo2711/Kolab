@@ -37,6 +37,9 @@ public class SolicitudForm {
     @DecimalMax(value = "9999.00", message = "El máximo es S/ 9999")
     private BigDecimal precioPropuesto;
 
+    // lleno cuando es una propuesta directa a una persona
+    private Long idDestinatario;
+
     public String getTitulo() {
         return titulo;
     }
@@ -91,5 +94,13 @@ public class SolicitudForm {
 
     public void setPrecioPropuesto(BigDecimal precioPropuesto) {
         this.precioPropuesto = precioPropuesto;
+    }
+
+    public Long getIdDestinatario() {
+        return idDestinatario;
+    }
+
+    public void setIdDestinatario(Long idDestinatario) {
+        this.idDestinatario = idDestinatario;
     }
 }

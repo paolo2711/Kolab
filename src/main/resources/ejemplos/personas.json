@@ -1,0 +1,89 @@
+[
+  {
+    "nombre": "Paolo", "apellidos": "Rodríguez Paredes", "email": "cliente@kolab.pe", "telefono": "987654321",
+    "distrito": "Jesús María", "latitud": -12.0742, "longitud": -77.0489, "mesesEnKolab": 2,
+    "descripcion": "Vivo en Jesús María y suelo contratar clases y arreglos para la casa. Respondo rápido por el chat.",
+    "experiencia": null, "categorias": []
+  },
+  {
+    "nombre": "Luis", "apellidos": "Mendoza Quispe", "email": "experto@kolab.pe", "telefono": "912345678",
+    "distrito": "Pueblo Libre", "latitud": -12.0742, "longitud": -77.0631, "mesesEnKolab": 7,
+    "descripcion": "Profesor de guitarra y de inglés conversacional. Voy a domicilio en Pueblo Libre, Jesús María y Magdalena, o por videollamada.",
+    "experiencia": "Ocho años enseñando guitarra criolla y acústica. Inglés nivel C1 con certificado.",
+    "categorias": ["Música", "Idiomas"]
+  },
+  {
+    "nombre": "Ana", "apellidos": "Ramírez Soto", "email": "ana.ramirez@kolab.pe", "telefono": "923456781",
+    "distrito": "Santiago de Surco", "latitud": -12.1350, "longitud": -76.9836, "mesesEnKolab": 10,
+    "descripcion": "Gasfitería y reparaciones del hogar. Llevo mi propia herramienta y dejo todo limpio.",
+    "experiencia": "Doce años en gasfitería y electricidad domiciliaria.",
+    "categorias": ["Hogar y reparaciones"]
+  },
+  {
+    "nombre": "Carlos", "apellidos": "Talavera Rojas", "email": "carlos.talavera@kolab.pe", "telefono": "934567812",
+    "distrito": "Pueblo Libre", "latitud": -12.0768, "longitud": -77.0655, "mesesEnKolab": 5,
+    "descripcion": "Guitarra criolla para principiantes y diseño de marca para negocios pequeños.",
+    "experiencia": null, "categorias": ["Música", "Diseño"]
+  },
+  {
+    "nombre": "Nadia", "apellidos": "Flores Vega", "email": "nadia.flores@kolab.pe", "telefono": "945678123",
+    "distrito": "Miraflores", "latitud": -12.1211, "longitud": -77.0297, "mesesEnKolab": 9,
+    "descripcion": "Inglés conversacional y preparación de entrevistas de trabajo, todo por videollamada.",
+    "experiencia": "Traductora colegiada, cinco años preparando entrevistas.",
+    "categorias": ["Idiomas"]
+  },
+  {
+    "nombre": "Paula", "apellidos": "Lizana Torres", "email": "paula.lizana@kolab.pe", "telefono": "956781234",
+    "distrito": "Barranco", "latitud": -12.1464, "longitud": -77.0206, "mesesEnKolab": 11,
+    "descripcion": "Identidad de marca para emprendimientos: logo, colores y empaques.",
+    "experiencia": null, "categorias": ["Diseño"]
+  },
+  {
+    "nombre": "Hugo", "apellidos": "Ochoa Díaz", "email": "hugo.ochoa@kolab.pe", "telefono": "967812345",
+    "distrito": "San Miguel", "latitud": -12.0776, "longitud": -77.0913, "mesesEnKolab": 4,
+    "descripcion": "Instalo cámaras de seguridad y redes wifi, y dejo todo configurado en el celular.",
+    "experiencia": null, "categorias": ["Tecnología"]
+  },
+  {
+    "nombre": "Jorge", "apellidos": "Vílchez Pardo", "email": "jorge.vilchez@kolab.pe", "telefono": "978123456",
+    "distrito": "Santiago de Surco", "latitud": -12.1405, "longitud": -76.9901, "mesesEnKolab": 6,
+    "descripcion": "Gasfitería de emergencia, cerrajería y arreglos rápidos.",
+    "experiencia": null, "categorias": ["Hogar y reparaciones"]
+  },
+  {
+    "nombre": "Sofía", "apellidos": "Bermúdez Lara", "email": "sofia.bermudez@kolab.pe", "telefono": "981234567",
+    "distrito": "Lince", "latitud": -12.0855, "longitud": -77.0364, "mesesEnKolab": 8,
+    "descripcion": "Inglés y matemática para escolares de primaria y secundaria.",
+    "experiencia": "Licenciada en educación, siete años en colegio.",
+    "categorias": ["Idiomas", "Clases escolares"]
+  },
+  {
+    "nombre": "María", "apellidos": "Pineda Quispe", "email": "maria.pineda@kolab.pe", "telefono": "992345678",
+    "distrito": "Santiago de Surco", "latitud": -12.1302, "longitud": -76.9950, "mesesEnKolab": 5,
+    "descripcion": "Gasfitería y arreglos de emergencia en Surco y alrededores.",
+    "experiencia": null, "categorias": ["Hogar y reparaciones"]
+  },
+  {
+    "nombre": "Rosa", "apellidos": "Salazar Núñez", "email": "rosa.salazar@kolab.pe", "telefono": "913456789",
+    "distrito": "Lince", "latitud": -12.0880, "longitud": -77.0330, "mesesEnKolab": 3,
+    "descripcion": "Pintura de interiores y acabados. También maquillaje y peinado para eventos.",
+    "experiencia": null, "categorias": ["Hogar y reparaciones", "Belleza"]
+  },
+  {
+    "nombre": "Diego", "apellidos": "Ynga Castro", "email": "diego.ynga@kolab.pe", "telefono": "924567891",
+    "distrito": "Magdalena del Mar", "latitud": -12.0906, "longitud": -77.0722, "mesesEnKolab": 12,
+    "descripcion": "Diseñador gráfico: marcas, empaques y páginas sencillas para negocios.",
+    "experiencia": null, "categorias": ["Diseño", "Tecnología"]
+  },
+  {
+    "nombre": "Valeria", "apellidos": "Campos Lugo", "email": "valeria.campos@kolab.pe", "telefono": "935678912",
+    "distrito": "Jesús María", "latitud": -12.0720, "longitud": -77.0450, "mesesEnKolab": 6,
+    "descripcion": "Baño, corte y paseo de perros a domicilio.",
+    "experiencia": null, "categorias": ["Mascotas"]
+  },
+  {
+    "nombre": "Lucía", "apellidos": "Huamán Ríos", "email": "lucia.huaman@kolab.pe", "telefono": null,
+    "distrito": "San Isidro", "latitud": -12.0977, "longitud": -77.0365, "mesesEnKolab": 2,
+    "descripcion": null, "experiencia": null, "categorias": []
+  }
+]

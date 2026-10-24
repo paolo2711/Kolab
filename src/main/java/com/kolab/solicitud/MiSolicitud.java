@@ -1,24 +1,26 @@
 package com.kolab.solicitud;
 
-import com.kolab.common.Foto;
 import java.math.BigDecimal;
 
+/**
+ * Una solicitud propia en la lista de Mi actividad, con lo que hace falta para saber si hay que
+ * hacer algo: ofertas recibidas, la más baja y mensajes sin leer.
+ */
 public record MiSolicitud(Long id,
                           String titulo,
                           String categoria,
                           String icono,
-                          String tema,
+                          String foto,
                           Modalidad modalidad,
-                          String distrito,
                           BigDecimal precioPropuesto,
-                          int ofertas,
+                          long ofertas,
                           BigDecimal mejorOferta,
-                          int mensajesSinLeer,
+                          long mensajesSinLeer,
                           EstadoSolicitud estado,
                           String publicada) {
 
-    public String foto() {
-        return Foto.de(tema);
+    public boolean tieneFoto() {
+        return foto != null;
     }
 
     public boolean tieneOfertas() {
@@ -29,19 +31,13 @@ public record MiSolicitud(Long id,
         return mensajesSinLeer > 0;
     }
 
-    public int getPaso() {
-        return switch (estado) {
-            case CERRADA -> 4;
-            case CANCELADA -> 0;
-            case EN_CURSO -> 3;
-            case ABIERTA -> ofertas == 0 ? 2 : 3;
-        };
-    }
-
     public String getResumenOfertas() {
         if (estado != EstadoSolicitud.ABIERTA) {
             return estado.getEtiqueta();
         }
-        return ofertas == 0 ? "Todavía sin ofertas" : ofertas + " ofertas recibidas";
+        if (ofertas == 0) {
+            return "Todavía sin ofertas";
+        }
+        return ofertas == 1 ? "1 oferta recibida" : ofertas + " ofertas recibidas";
     }
 }

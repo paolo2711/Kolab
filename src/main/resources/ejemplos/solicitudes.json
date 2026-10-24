@@ -1,0 +1,198 @@
+[
+  {
+    "clave": "guitarra-paolo", "autor": "cliente@kolab.pe", "para": null, "categoria": "Música",
+    "titulo": "Clases de guitarra para principiante",
+    "descripcion": "Nunca he tocado guitarra y quiero empezar desde cero. Busco alguien con paciencia que pueda venir a mi casa los sábados por la mañana. Tengo guitarra criolla propia.",
+    "modalidad": "PRESENCIAL", "distrito": "Jesús María", "latitud": -12.0742, "longitud": -77.0489,
+    "precio": 80, "dentroDeDias": 10, "haceHoras": 2
+  },
+  {
+    "clave": "fachada-paolo", "autor": "cliente@kolab.pe", "para": null, "categoria": "Hogar y reparaciones",
+    "titulo": "Pintar la fachada de la casa",
+    "descripcion": "La fachada está descascarada por la humedad. Son dos pisos e incluye el material.",
+    "modalidad": "PRESENCIAL", "distrito": "Jesús María", "latitud": -12.0755, "longitud": -77.0521,
+    "precio": 450, "dentroDeDias": 20, "haceHoras": 0
+  },
+  {
+    "clave": "ingles-paolo", "autor": "cliente@kolab.pe", "para": null, "categoria": "Idiomas",
+    "titulo": "Clases de inglés conversacional",
+    "descripcion": "Quiero soltarme hablando. Nivel intermedio, dos sesiones por semana de una hora.",
+    "modalidad": "VIRTUAL", "distrito": null, "latitud": null, "longitud": null,
+    "precio": 60, "dentroDeDias": 3, "haceHoras": 100
+  },
+  {
+    "clave": "cano-paolo", "autor": "cliente@kolab.pe", "para": null, "categoria": "Hogar y reparaciones",
+    "titulo": "Reparación de caño de cocina",
+    "descripcion": "El caño del lavadero gotea desde hace una semana y ya humedeció el mueble.",
+    "modalidad": "PRESENCIAL", "distrito": "Jesús María", "latitud": -12.0771, "longitud": -77.0463,
+    "precio": 120, "dentroDeDias": -28, "haceHoras": 740
+  },
+  {
+    "clave": "cano-lucia", "autor": "lucia.huaman@kolab.pe", "para": null, "categoria": "Hogar y reparaciones",
+    "titulo": "Reparación de caño de cocina que gotea",
+    "descripcion": "Gotea desde la semana pasada. Necesito que venga alguien con herramienta propia, de preferencia en la tarde.",
+    "modalidad": "PRESENCIAL", "distrito": "San Isidro", "latitud": -12.0977, "longitud": -77.0365,
+    "precio": 120, "dentroDeDias": 4, "haceHoras": 5
+  },
+  {
+    "clave": "guitarra-lucia", "autor": "lucia.huaman@kolab.pe", "para": "experto@kolab.pe", "categoria": "Música",
+    "titulo": "Clases de guitarra para mi hijo de 12 años",
+    "descripcion": "Vi tus reseñas y me gustaría que le enseñes a mi hijo. Serían los martes en la tarde, en casa, una hora.",
+    "modalidad": "PRESENCIAL", "distrito": "San Isidro", "latitud": -12.0977, "longitud": -77.0365,
+    "precio": 70, "dentroDeDias": 7, "haceHoras": 6
+  },
+  {
+    "clave": "cajon-hugo", "autor": "hugo.ochoa@kolab.pe", "para": null, "categoria": "Música",
+    "titulo": "Clases de cajón peruano para adulto",
+    "descripcion": "Quiero aprender cajón desde cero. Una vez por semana, fines de semana de preferencia.",
+    "modalidad": "PRESENCIAL", "distrito": "San Miguel", "latitud": -12.0776, "longitud": -77.0913,
+    "precio": 70, "dentroDeDias": 12, "haceHoras": 1
+  },
+  {
+    "clave": "ingles-paula", "autor": "paula.lizana@kolab.pe", "para": null, "categoria": "Idiomas",
+    "titulo": "Clases de inglés conversacional dos veces por semana",
+    "descripcion": "Busco practicar conversación para una entrevista de trabajo en dos meses.",
+    "modalidad": "VIRTUAL", "distrito": null, "latitud": null, "longitud": null,
+    "precio": 60, "dentroDeDias": 5, "haceHoras": 30
+  },
+  {
+    "clave": "logo-sofia", "autor": "sofia.bermudez@kolab.pe", "para": null, "categoria": "Diseño",
+    "titulo": "Diseño de logo para emprendimiento de postres",
+    "descripcion": "Emprendimiento de postres caseros. Quiero logo, tipografía y colores para el empaque.",
+    "modalidad": "VIRTUAL", "distrito": null, "latitud": null, "longitud": null,
+    "precio": 150, "dentroDeDias": 14, "haceHoras": 28
+  },
+  {
+    "clave": "camaras-nadia", "autor": "nadia.flores@kolab.pe", "para": null, "categoria": "Tecnología",
+    "titulo": "Instalación de tres cámaras de seguridad",
+    "descripcion": "Tres cámaras en la fachada y el garaje, con acceso desde el celular.",
+    "modalidad": "PRESENCIAL", "distrito": "Miraflores", "latitud": -12.1211, "longitud": -77.0297,
+    "precio": 200, "dentroDeDias": 6, "haceHoras": 50
+  },
+  {
+    "clave": "mate-carlos", "autor": "carlos.talavera@kolab.pe", "para": null, "categoria": "Clases escolares",
+    "titulo": "Clases de matemática para cuarto de secundaria",
+    "descripcion": "Mi hijo está jalando trigonometría y necesita reforzar antes de los exámenes.",
+    "modalidad": "VIRTUAL", "distrito": null, "latitud": null, "longitud": null,
+    "precio": 45, "dentroDeDias": 9, "haceHoras": 75
+  },
+  {
+    "clave": "maquillaje-maria", "autor": "maria.pineda@kolab.pe", "para": null, "categoria": "Belleza",
+    "titulo": "Maquillaje y peinado para una promoción",
+    "descripcion": "Es la promoción de mi hermana, somos tres en casa. Necesito que llegue tipo cuatro de la tarde porque la ceremonia es a las siete.",
+    "modalidad": "PRESENCIAL", "distrito": "Magdalena del Mar", "latitud": -12.0906, "longitud": -77.0722,
+    "precio": 180, "dentroDeDias": 8, "haceHoras": 5
+  },
+  {
+    "clave": "schnauzer-rosa", "autor": "rosa.salazar@kolab.pe", "para": null, "categoria": "Mascotas",
+    "titulo": "Baño y corte para un schnauzer",
+    "descripcion": "Es un schnauzer de seis años, tranquilo pero no le gusta el secador. Prefiero que sea a domicilio porque en la veterinaria se estresa.",
+    "modalidad": "PRESENCIAL", "distrito": "Lince", "latitud": -12.0855, "longitud": -77.0364,
+    "precio": 70, "dentroDeDias": 3, "haceHoras": 22
+  },
+  {
+    "clave": "televisor-diego", "autor": "diego.ynga@kolab.pe", "para": null, "categoria": "Hogar y reparaciones",
+    "titulo": "Colgar un televisor y armar dos repisas",
+    "descripcion": "Televisor de 55 pulgadas sobre pared de ladrillo, ya tengo el rack. Las repisas son de melamina y vienen con sus tarugos.",
+    "modalidad": "PRESENCIAL", "distrito": "Pueblo Libre", "latitud": -12.0742, "longitud": -77.0631,
+    "precio": 120, "dentroDeDias": 5, "haceHoras": 72
+  },
+  {
+    "clave": "mate-jorge", "autor": "jorge.vilchez@kolab.pe", "para": null, "categoria": "Clases escolares",
+    "titulo": "Reforzar matemática de tercero de secundaria",
+    "descripcion": "Mi hijo está jalando ecuaciones y factorización. Serían dos veces por semana en casa, una hora y media.",
+    "modalidad": "PRESENCIAL", "distrito": "San Isidro", "latitud": -12.0977, "longitud": -77.0365,
+    "precio": 60, "dentroDeDias": 6, "haceHoras": 96
+  },
+  {
+    "clave": "chapa-sofia", "autor": "sofia.bermudez@kolab.pe", "para": null, "categoria": "Hogar y reparaciones",
+    "titulo": "Cambio de chapa de la puerta principal",
+    "descripcion": "La chapa se trabó y no abre con la llave. Necesito que la cambien por una nueva.",
+    "modalidad": "PRESENCIAL", "distrito": "Lince", "latitud": -12.0855, "longitud": -77.0364,
+    "precio": 80, "dentroDeDias": -40, "haceHoras": 980
+  },
+  {
+    "clave": "logo-hugo", "autor": "hugo.ochoa@kolab.pe", "para": null, "categoria": "Diseño",
+    "titulo": "Logo para una bodega de barrio",
+    "descripcion": "Bodega familiar en San Miguel que quiere un logo sencillo para el letrero y las bolsas.",
+    "modalidad": "VIRTUAL", "distrito": null, "latitud": null, "longitud": null,
+    "precio": 150, "dentroDeDias": -48, "haceHoras": 1220
+  },
+  {
+    "clave": "tarjetas-nadia", "autor": "nadia.flores@kolab.pe", "para": null, "categoria": "Diseño",
+    "titulo": "Tarjetas y logo para una pastelería",
+    "descripcion": "Pastelería pequeña que abre el próximo mes. Necesito logo y tarjetas de presentación.",
+    "modalidad": "VIRTUAL", "distrito": null, "latitud": null, "longitud": null,
+    "precio": 180, "dentroDeDias": -35, "haceHoras": 900
+  },
+  {
+    "clave": "entrevista-diego", "autor": "diego.ynga@kolab.pe", "para": null, "categoria": "Idiomas",
+    "titulo": "Inglés para una entrevista de trabajo",
+    "descripcion": "Tengo una entrevista en inglés en dos meses y necesito practicar preguntas típicas.",
+    "modalidad": "VIRTUAL", "distrito": null, "latitud": null, "longitud": null,
+    "precio": 70, "dentroDeDias": -30, "haceHoras": 1400
+  },
+  {
+    "clave": "wifi-rosa", "autor": "rosa.salazar@kolab.pe", "para": null, "categoria": "Tecnología",
+    "titulo": "Configurar el wifi y dos cámaras",
+    "descripcion": "El wifi no llega al segundo piso y quiero dos cámaras en la entrada con acceso desde el celular.",
+    "modalidad": "PRESENCIAL", "distrito": "Lince", "latitud": -12.0880, "longitud": -77.0330,
+    "precio": 150, "dentroDeDias": -20, "haceHoras": 560
+  },
+  {
+    "clave": "algebra-maria", "autor": "maria.pineda@kolab.pe", "para": null, "categoria": "Clases escolares",
+    "titulo": "Reforzar álgebra de segundo de secundaria",
+    "descripcion": "Mi hijo necesita reforzar álgebra antes del examen bimestral. Dos clases por semana.",
+    "modalidad": "VIRTUAL", "distrito": null, "latitud": null, "longitud": null,
+    "precio": 50, "dentroDeDias": -45, "haceHoras": 1500
+  },
+  {
+    "clave": "sala-carlos", "autor": "carlos.talavera@kolab.pe", "para": null, "categoria": "Hogar y reparaciones",
+    "titulo": "Pintar la sala y el comedor",
+    "descripcion": "Sala y comedor de unos 30 metros cuadrados, color claro. Ya compré la pintura.",
+    "modalidad": "PRESENCIAL", "distrito": "Pueblo Libre", "latitud": -12.0768, "longitud": -77.0655,
+    "precio": 300, "dentroDeDias": -25, "haceHoras": 700
+  },
+  {
+    "clave": "criolla-ana", "autor": "ana.ramirez@kolab.pe", "para": null, "categoria": "Música",
+    "titulo": "Clases de guitarra criolla",
+    "descripcion": "Quiero aprender a acompañar valses criollos. Tengo algo de base, sé los acordes básicos.",
+    "modalidad": "PRESENCIAL", "distrito": "Santiago de Surco", "latitud": -12.1350, "longitud": -76.9836,
+    "precio": 60, "dentroDeDias": -50, "haceHoras": 1600
+  },
+  {
+    "clave": "guitarra-nadia", "autor": "nadia.flores@kolab.pe", "para": null, "categoria": "Música",
+    "titulo": "Clases de guitarra para mi hija",
+    "descripcion": "Mi hija de diez años quiere aprender guitarra acústica. Una vez por semana, en casa.",
+    "modalidad": "PRESENCIAL", "distrito": "Miraflores", "latitud": -12.1211, "longitud": -77.0297,
+    "precio": 70, "dentroDeDias": -38, "haceHoras": 1100
+  },
+  {
+    "clave": "terma-hugo", "autor": "hugo.ochoa@kolab.pe", "para": null, "categoria": "Hogar y reparaciones",
+    "titulo": "Arreglar la terma que no calienta",
+    "descripcion": "La terma eléctrica de 50 litros dejó de calentar de un día para otro.",
+    "modalidad": "PRESENCIAL", "distrito": "San Miguel", "latitud": -12.0776, "longitud": -77.0913,
+    "precio": 130, "dentroDeDias": -15, "haceHoras": 400
+  },
+  {
+    "clave": "viaje-paolo", "autor": "cliente@kolab.pe", "para": null, "categoria": "Idiomas",
+    "titulo": "Práctica de inglés antes de un viaje",
+    "descripcion": "Viajo por trabajo en tres semanas y quiero practicar conversaciones de aeropuerto, hotel y reuniones.",
+    "modalidad": "VIRTUAL", "distrito": null, "latitud": null, "longitud": null,
+    "precio": 50, "dentroDeDias": -22, "haceHoras": 620
+  },
+  {
+    "clave": "golden-lucia", "autor": "lucia.huaman@kolab.pe", "para": null, "categoria": "Mascotas",
+    "titulo": "Baño para un golden retriever",
+    "descripcion": "Golden de tres años, muy tranquilo. Baño completo y secado a domicilio.",
+    "modalidad": "PRESENCIAL", "distrito": "San Isidro", "latitud": -12.0977, "longitud": -77.0365,
+    "precio": 60, "dentroDeDias": -12, "haceHoras": 320
+  },
+  {
+    "clave": "ducha-diego", "autor": "diego.ynga@kolab.pe", "para": null, "categoria": "Hogar y reparaciones",
+    "titulo": "Instalar una ducha eléctrica",
+    "descripcion": "Ya compré la ducha eléctrica, falta instalarla con su llave térmica.",
+    "modalidad": "PRESENCIAL", "distrito": "Magdalena del Mar", "latitud": -12.0906, "longitud": -77.0722,
+    "precio": 140, "dentroDeDias": -33, "haceHoras": 850
+  }
+]
