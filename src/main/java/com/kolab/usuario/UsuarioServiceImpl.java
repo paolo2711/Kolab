@@ -68,4 +68,10 @@ public class UsuarioServiceImpl implements UsuarioService {
     private String vacioComoNulo(String texto) {
         return texto == null || texto.isBlank() ? null : texto.trim();
     }
+
+    @Override
+    @Transactional(readOnly = true)
+    public boolean estaSuspendida(Long idUsuario) {
+        return usuarioRepository.existsByIdAndEstado(idUsuario, EstadoUsuario.SUSPENDIDO);
+    }
 }

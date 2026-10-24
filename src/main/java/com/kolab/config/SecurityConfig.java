@@ -1,5 +1,6 @@
 package com.kolab.config;
 
+import com.kolab.common.BitacoraDeSeguridad;
 import com.kolab.usuario.DetallesUsuarioService;
 import com.kolab.usuario.Rol;
 import jakarta.servlet.http.HttpServletResponse;
@@ -9,6 +10,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
 import org.springframework.security.authentication.AuthenticationEventPublisher;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.authentication.ProviderManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -17,6 +19,8 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.access.intercept.AuthorizationFilter;
+import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.header.writers.ReferrerPolicyHeaderWriter.ReferrerPolicy;
 
 /**
@@ -52,11 +56,14 @@ public class SecurityConfig {
     @Bean
     @Order(1)
     public SecurityFilterChain panel(HttpSecurity http, DetallesUsuarioService detalles,
-                                     AuthenticationEventPublisher eventos) throws Exception {
+                                     AuthenticationEventPublisher eventos, BitacoraDeSeguridad bitacora)
+            throws Exception {
         cabeceras(http);
         http
                 .securityMatcher("/admin/**")
                 .authenticationManager(ingresoPara(Rol.ADMINISTRADOR, detalles, eventos))
+                .addFilterBefore(new SesionDeCuentaSuspendida(detalles, bitacora, "/admin/login"),
+                        AuthorizationFilter.class)
                 .authorizeHttpRequests(rutas -> rutas
                         .requestMatchers("/admin/login").permitAll()
                         .anyRequest().hasRole("ADMINISTRADOR"))
@@ -70,7 +77,7 @@ public class SecurityConfig {
                         .usernameParameter("email")
                         .passwordParameter("password")
                         .defaultSuccessUrl("/admin", true)
-                        .failureUrl("/admin/login?error")
+                        .failureHandler(rechazo("/admin/login"))
                         .permitAll())
                 .logout(salida -> salida
                         .logoutUrl("/admin/salir")
@@ -82,10 +89,13 @@ public class SecurityConfig {
     @Bean
     @Order(2)
     public SecurityFilterChain mercado(HttpSecurity http, DetallesUsuarioService detalles,
-                                       AuthenticationEventPublisher eventos) throws Exception {
+                                       AuthenticationEventPublisher eventos, BitacoraDeSeguridad bitacora)
+            throws Exception {
         cabeceras(http);
         http
                 .authenticationManager(ingresoPara(Rol.USUARIO, detalles, eventos))
+                .addFilterBefore(new SesionDeCuentaSuspendida(detalles, bitacora, "/login"),
+                        AuthorizationFilter.class)
                 .authorizeHttpRequests(rutas -> rutas
                         .requestMatchers("/", "/login", "/registro", "/recuperar", "/recuperar/**",
                                 "/css/**", "/js/**", "/img/**", "/error").permitAll()
@@ -108,7 +118,7 @@ public class SecurityConfig {
                         .usernameParameter("email")
                         .passwordParameter("password")
                         .defaultSuccessUrl("/", true)
-                        .failureUrl("/login?error")
+                        .failureHandler(rechazo("/login"))
                         .permitAll())
                 .logout(salida -> salida
                         .logoutUrl("/salir")
@@ -125,9 +135,21 @@ public class SecurityConfig {
                                               AuthenticationEventPublisher eventos) {
         DaoAuthenticationProvider proveedor = new DaoAuthenticationProvider(email -> detalles.cargar(email, rol));
         proveedor.setPasswordEncoder(passwordEncoder());
+        // la suspensión solo se dice con la clave correcta, así no revela qué correos existen
+        proveedor.setPreAuthenticationChecks(cuenta -> { });
+        proveedor.setPostAuthenticationChecks(cuenta -> {
+            if (!cuenta.isEnabled()) {
+                throw new DisabledException("Cuenta suspendida: " + cuenta.getUsername());
+            }
+        });
         ProviderManager ingreso = new ProviderManager(proveedor);
         ingreso.setAuthenticationEventPublisher(eventos);
         return ingreso;
+    }
+
+    private static AuthenticationFailureHandler rechazo(String ingreso) {
+        return (pedido, respuesta, e) -> respuesta.sendRedirect(pedido.getContextPath() + ingreso
+                + (e instanceof DisabledException ? "?suspendida" : "?error"));
     }
 
     private static boolean administra(Principal quien) {

@@ -3,6 +3,7 @@ package com.kolab.config;
 import com.kolab.common.BitacoraDeSeguridad;
 import com.kolab.usuario.ControlDeIntentos;
 import org.springframework.context.event.EventListener;
+import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.authentication.LockedException;
 import org.springframework.security.authentication.event.AbstractAuthenticationFailureEvent;
 import org.springframework.security.authentication.event.AuthenticationSuccessEvent;
@@ -37,8 +38,9 @@ class EventosDeIngreso {
         String email = evento.getAuthentication().getName();
         String ip = ipDe(evento.getAuthentication().getDetails());
         bitacora.ingresoFallido(email, ip, evento.getException().getClass().getSimpleName());
-        // el bloqueo ya existente vuelve a fallar aqui: solo se avisa cuando es este fallo el que bloquea
-        if (!(evento.getException() instanceof LockedException) && intentos.fallo(email)) {
+        // ni un bloqueo ya puesto ni una cuenta suspendida (que dio la clave bien) cuentan como intento
+        if (!(evento.getException() instanceof LockedException || evento.getException() instanceof DisabledException)
+                && intentos.fallo(email)) {
             bitacora.cuentaBloqueada(email, ip, intentos.minutosDeBloqueo());
         }
     }

@@ -22,4 +22,10 @@ public interface UsuarioService {
     Optional<Usuario> buscarPorEmail(String email);
 
     boolean emailDisponible(String email);
+
+    /**
+     * Si la cuenta está suspendida en este momento. Se pregunta en cada pedido con sesión, así que
+     * es una sola consulta por id.
+     */
+    boolean estaSuspendida(Long idUsuario);
 }

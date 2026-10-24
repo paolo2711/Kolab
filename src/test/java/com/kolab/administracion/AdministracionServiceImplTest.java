@@ -1,16 +1,22 @@
 package com.kolab.administracion;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
+import com.kolab.common.OperacionNoPermitidaException;
+import com.kolab.common.RecursoNoEncontradoException;
 import com.kolab.common.Tiempo;
 import com.kolab.servicio.EstadoServicio;
 import com.kolab.servicio.ServicioRepository;
 import com.kolab.solicitud.EstadoSolicitud;
 import com.kolab.solicitud.SolicitudRepository;
+import com.kolab.usuario.EstadoUsuario;
+import com.kolab.usuario.Usuario;
 import com.kolab.usuario.UsuarioRepository;
 import java.math.BigDecimal;
 import java.time.YearMonth;
 import java.util.List;
+import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -72,6 +78,47 @@ class AdministracionServiceImplTest {
     void lasCategoriasVanDeLaMasPedidaALaMenos() {
         assertThat(administracion.tablero().categorias())
                 .containsExactly(new Tablero.CategoriaPedida("Idiomas", 8), new Tablero.CategoriaPedida("Música", 5));
+    }
+
+    @Test
+    void suspenderDejaLaCuentaSinPoderIngresar() {
+        Usuario luis = cuenta(7L, "luis@kolab.pe");
+
+        assertThat(administracion.suspender(7L, 1L)).isEqualTo("luis@kolab.pe");
+        assertThat(luis.getEstado()).isEqualTo(EstadoUsuario.SUSPENDIDO);
+    }
+
+    @Test
+    void reactivarLaDejaComoEstaba() {
+        Usuario luis = cuenta(7L, "luis@kolab.pe");
+        luis.suspender();
+
+        administracion.reactivar(7L);
+
+        assertThat(luis.getEstado()).isEqualTo(EstadoUsuario.ACTIVO);
+    }
+
+    @Test
+    void nadieSeSuspendeASiMismo() {
+        cuenta(1L, "admin@kolab.pe");
+
+        assertThatThrownBy(() -> administracion.suspender(1L, 1L))
+                .isInstanceOf(OperacionNoPermitidaException.class);
+    }
+
+    @Test
+    void unaCuentaQueNoExisteEsUn404() {
+        assertThatThrownBy(() -> administracion.suspender(99L, 1L))
+                .isInstanceOf(RecursoNoEncontradoException.class);
+    }
+
+    private Usuario cuenta(Long id, String email) {
+        Usuario u = new Usuario();
+        u.setId(id);
+        u.setEmail(email);
+        u.setEstado(EstadoUsuario.ACTIVO);
+        Mockito.when(usuarios.findById(id)).thenReturn(Optional.of(u));
+        return u;
     }
 
     private static Object[] fila(YearMonth mes, long cuantas) {

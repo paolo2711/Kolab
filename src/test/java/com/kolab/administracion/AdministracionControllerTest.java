@@ -37,6 +37,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.context.annotation.Import;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
@@ -211,6 +212,109 @@ class AdministracionControllerTest {
                 .andExpect(redirectedUrl("/admin"));
         mockMvc.perform(post("/mensajes/1").with(csrf()).with(user(admin)))
                 .andExpect(redirectedUrl("/admin"));
+    }
+
+    @Test
+    void quienAdministraSuspendeUnaCuentaYVuelveALaMismaPagina() throws Exception {
+        Mockito.when(administracionService.suspender(7L, 1L)).thenReturn("luis@kolab.pe");
+
+        mockMvc.perform(post("/admin/cuentas/7/suspender").param("pagina", "2").with(csrf())
+                        .with(user(sesion(Rol.ADMINISTRADOR, "admin@kolab.pe"))))
+                .andExpect(redirectedUrl("/admin/cuentas?pagina=2"));
+
+        Mockito.verify(administracionService).suspender(7L, 1L);
+        Mockito.verify(bitacora).cuentaSuspendida(Mockito.eq("luis@kolab.pe"), Mockito.eq("admin@kolab.pe"), Mockito.any());
+    }
+
+    @Test
+    void quienAdministraReactivaUnaCuenta() throws Exception {
+        Mockito.when(administracionService.reactivar(7L)).thenReturn("luis@kolab.pe");
+
+        mockMvc.perform(post("/admin/cuentas/7/reactivar").with(csrf())
+                        .with(user(sesion(Rol.ADMINISTRADOR, "admin@kolab.pe"))))
+                .andExpect(redirectedUrl("/admin/cuentas"));
+
+        Mockito.verify(administracionService).reactivar(7L);
+    }
+
+    @Test
+    void unaCuentaDelMercadoNoSuspendeANadie() throws Exception {
+        mockMvc.perform(post("/admin/cuentas/7/suspender").with(csrf())
+                        .with(user(sesion(Rol.USUARIO, "experto@kolab.pe"))))
+                .andExpect(status().isNotFound());
+
+        Mockito.verifyNoInteractions(administracionService);
+    }
+
+    @Test
+    void laListaNoOfreceSuspenderLaPropiaCuenta() throws Exception {
+        Mockito.when(administracionService.cuentas(Mockito.any())).thenReturn(new PageImpl<>(List.of(
+                new CuentaResumen(1L, "Equipo KOLAB", "admin@kolab.pe", "01/10/2026", true),
+                new CuentaResumen(7L, "Luis Mendoza", "luis@kolab.pe", "02/10/2026", true))));
+
+        mockMvc.perform(get("/admin/cuentas").with(user(sesion(Rol.ADMINISTRADOR, "admin@kolab.pe"))))
+                .andExpect(content().string(containsString("/admin/cuentas/7/suspender")))
+                .andExpect(content().string(not(containsString("/admin/cuentas/1/suspender"))))
+                .andExpect(content().string(containsString("Tu cuenta")));
+    }
+
+    @Test
+    void unaCuentaSuspendidaConLaClaveCorrectaVeElMotivo() throws Exception {
+        Mockito.when(detallesUsuarioService.cargar("luis@kolab.pe", Rol.USUARIO))
+                .thenReturn(suspendida(Rol.USUARIO, "luis@kolab.pe"));
+
+        mockMvc.perform(formLogin("/login").userParameter("email").user("luis@kolab.pe").password(CLAVE))
+                .andExpect(redirectedUrl("/login?suspendida"));
+    }
+
+    @Test
+    void conLaClaveEquivocadaNoSeDiceQueEstaSuspendida() throws Exception {
+        Mockito.when(detallesUsuarioService.cargar("luis@kolab.pe", Rol.USUARIO))
+                .thenReturn(suspendida(Rol.USUARIO, "luis@kolab.pe"));
+
+        mockMvc.perform(formLogin("/login").userParameter("email").user("luis@kolab.pe").password("otra"))
+                .andExpect(redirectedUrl("/login?error"));
+    }
+
+    @Test
+    void elPanelTambienRechazaUnaCuentaSuspendida() throws Exception {
+        Mockito.when(detallesUsuarioService.cargar("admin@kolab.pe", Rol.ADMINISTRADOR))
+                .thenReturn(suspendida(Rol.ADMINISTRADOR, "admin@kolab.pe"));
+
+        mockMvc.perform(formLogin("/admin/login").userParameter("email").user("admin@kolab.pe").password(CLAVE))
+                .andExpect(redirectedUrl("/admin/login?suspendida"));
+    }
+
+    @Test
+    void siLaSuspendenConLaSesionAbiertaLaPierdeEnElSiguientePedido() throws Exception {
+        UsuarioAutenticado luis = sesion(Rol.USUARIO, "luis@kolab.pe");
+        Mockito.when(detallesUsuarioService.suspendida(luis.getIdUsuario())).thenReturn(true);
+
+        mockMvc.perform(get("/").with(user(luis)))
+                .andExpect(redirectedUrl("/login?suspendida"));
+        Mockito.verify(bitacora).sesionCortada(Mockito.eq("luis@kolab.pe"), Mockito.any());
+    }
+
+    @Test
+    void enElPanelPasaLoMismo() throws Exception {
+        UsuarioAutenticado admin = sesion(Rol.ADMINISTRADOR, "admin@kolab.pe");
+        Mockito.when(detallesUsuarioService.suspendida(admin.getIdUsuario())).thenReturn(true);
+
+        mockMvc.perform(get("/admin").with(user(admin)))
+                .andExpect(redirectedUrl("/admin/login?suspendida"));
+        Mockito.verifyNoInteractions(administracionService);
+    }
+
+    private UsuarioAutenticado suspendida(Rol rol, String email) {
+        Usuario usuario = new Usuario();
+        usuario.setId(7L);
+        usuario.setNombre("Luis");
+        usuario.setApellidos("Mendoza");
+        usuario.setEmail(email);
+        usuario.setPasswordHash(passwordEncoder.encode(CLAVE));
+        usuario.setEstado(EstadoUsuario.SUSPENDIDO);
+        usuario.setRol(rol);
+        return new UsuarioAutenticado(usuario, false, null);
     }
 
     private Tablero unTablero() {
