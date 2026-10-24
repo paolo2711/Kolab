@@ -6,15 +6,78 @@
 </head>
 <body>
 
-<main class="k-total">
-    <div class="k-encabezado">
+<main class="k-total" th:with="t=${tablero}">
+    <div class="k-titulo-fila k-panel-cima">
         <h1>Panel</h1>
+        <a class="k-btn" th:href="@{/admin/excel}"><i class="bi bi-file-earmark-excel"></i> Descargar Excel</a>
     </div>
 
-    <a class="k-tarjeta k-panel-acceso" th:href="@{/admin/cuentas}">
-        <span class="k-panel-cifra" th:text="${cuentasRegistradas}">15</span>
-        <span>cuentas registradas</span>
-    </a>
+    <section class="k-bloque">
+        <div class="k-metricas k-metricas-cuatro">
+            <div class="k-metrica">
+                <div class="k-metrica-valor" th:text="${t.cuentas}">15</div>
+                <div class="k-metrica-nombre">Cuentas registradas</div>
+            </div>
+            <div class="k-metrica">
+                <div class="k-metrica-valor" th:text="${t.solicitudesAbiertas}">12</div>
+                <div class="k-metrica-nombre">Solicitudes abiertas</div>
+            </div>
+            <div class="k-metrica">
+                <div class="k-metrica-valor" th:text="${t.serviciosCerrados}">9</div>
+                <div class="k-metrica-nombre">Servicios cerrados</div>
+            </div>
+            <div class="k-metrica">
+                <div class="k-metrica-valor">
+                    <span th:replace="~{fragmentos/componentes :: precio(${t.comisionDelMes}, '')}"></span></div>
+                <div class="k-metrica-nombre">Comisión del mes</div>
+            </div>
+        </div>
+    </section>
+
+    <section class="k-bloque">
+        <div class="k-dos-graficos">
+            <div class="k-tarjeta">
+                <h2 class="k-tarjeta-titulo" th:text="'Últimos ' + ${#lists.size(t.meses)} + ' meses'">Últimos 6 meses</h2>
+                <table class="k-tabla">
+                    <thead>
+                    <tr>
+                        <th>Mes</th>
+                        <th>Solicitudes</th>
+                        <th>Servicios cerrados</th>
+                        <th>Comisión</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="m : ${t.meses}">
+                        <td th:text="${m.nombre}">octubre de 2026</td>
+                        <td th:text="${m.solicitudes}">4</td>
+                        <td th:text="${m.serviciosCerrados}">2</td>
+                        <td><span th:replace="~{fragmentos/componentes :: precio(${m.comision}, '')}"></span></td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="k-tarjeta">
+                <h2 class="k-tarjeta-titulo">Categorías más pedidas</h2>
+                <p class="k-vacio" th:if="${#lists.isEmpty(t.categorias)}">Todavía no hay solicitudes.</p>
+                <table class="k-tabla" th:unless="${#lists.isEmpty(t.categorias)}">
+                    <thead>
+                    <tr>
+                        <th>Categoría</th>
+                        <th>Solicitudes</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="c : ${t.categorias}">
+                        <td th:text="${c.nombre}">Idiomas</td>
+                        <td th:text="${c.solicitudes}">8</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </section>
 </main>
 
 </body>

@@ -1,6 +1,8 @@
 package com.kolab.administracion;
 
+import com.kolab.reporte.DescargaExcel;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -15,9 +17,11 @@ public class AdministracionController {
     private static final int POR_PAGINA = 25;
 
     private final AdministracionService administracionService;
+    private final TableroEnExcel enExcel;
 
-    public AdministracionController(AdministracionService administracionService) {
+    public AdministracionController(AdministracionService administracionService, TableroEnExcel enExcel) {
         this.administracionService = administracionService;
+        this.enExcel = enExcel;
     }
 
     // el ingreso del panel usa la misma pantalla que el del mercado; la plantilla cambia lo que hace falta
@@ -29,8 +33,13 @@ public class AdministracionController {
     @GetMapping
     public String panel(Model model) {
         model.addAttribute("seccion", "panel");
-        model.addAttribute("cuentasRegistradas", administracionService.cuentasRegistradas());
+        model.addAttribute("tablero", administracionService.tablero());
         return "administracion/panel";
+    }
+
+    @GetMapping("/excel")
+    public ResponseEntity<byte[]> excel() {
+        return DescargaExcel.de("panel-kolab.xlsx", enExcel.de(administracionService.tablero()));
     }
 
     @GetMapping("/cuentas")

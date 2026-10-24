@@ -8,6 +8,7 @@ import static org.springframework.security.test.web.servlet.request.SecurityMock
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrl;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrlPattern;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -28,6 +29,8 @@ import com.kolab.usuario.EstadoUsuario;
 import com.kolab.usuario.Rol;
 import com.kolab.usuario.Usuario;
 import com.kolab.usuario.UsuarioAutenticado;
+import java.math.BigDecimal;
+import java.util.List;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -53,6 +56,9 @@ class AdministracionControllerTest {
 
     @MockitoBean
     private AdministracionService administracionService;
+
+    @MockitoBean
+    private TableroEnExcel tableroEnExcel;
 
     @MockitoBean
     private DetallesUsuarioService detallesUsuarioService;
@@ -135,6 +141,8 @@ class AdministracionControllerTest {
 
     @Test
     void elPanelTieneSuMenuYNoElDelMercado() throws Exception {
+        Mockito.when(administracionService.tablero()).thenReturn(unTablero());
+
         mockMvc.perform(get("/admin").with(user(sesion(Rol.ADMINISTRADOR, "admin@kolab.pe"))))
                 .andExpect(status().isOk())
                 .andExpect(view().name("administracion/panel"))
@@ -142,6 +150,38 @@ class AdministracionControllerTest {
                 .andExpect(content().string(not(containsString("Explorar"))))
                 .andExpect(content().string(not(containsString("Publicar"))))
                 .andExpect(content().string(not(containsString("Mensajes"))));
+    }
+
+    @Test
+    void laPortadaMuestraLasCifrasYLasDosTablas() throws Exception {
+        Mockito.when(administracionService.tablero()).thenReturn(unTablero());
+
+        mockMvc.perform(get("/admin").with(user(sesion(Rol.ADMINISTRADOR, "admin@kolab.pe"))))
+                .andExpect(status().isOk())
+                .andExpect(content().string(containsString("Comisión del mes")))
+                .andExpect(content().string(containsString("octubre de 2026")))
+                .andExpect(content().string(containsString("Idiomas")))
+                .andExpect(content().string(containsString("/admin/excel")));
+    }
+
+    @Test
+    void quienAdministraBajaElPanelEnExcel() throws Exception {
+        Mockito.when(administracionService.tablero()).thenReturn(unTablero());
+        Mockito.when(tableroEnExcel.de(Mockito.any())).thenReturn(new byte[] {1, 2, 3});
+
+        mockMvc.perform(get("/admin/excel").with(user(sesion(Rol.ADMINISTRADOR, "admin@kolab.pe"))))
+                .andExpect(status().isOk())
+                .andExpect(header().string("Content-Disposition", containsString("panel-kolab.xlsx")))
+                .andExpect(content().contentType(
+                        "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"));
+    }
+
+    @Test
+    void elExcelDelPanelNoLoBajaQuienNoAdministra() throws Exception {
+        mockMvc.perform(get("/admin/excel").with(user(sesion(Rol.USUARIO, "experto@kolab.pe"))))
+                .andExpect(status().isNotFound());
+
+        Mockito.verifyNoInteractions(tableroEnExcel);
     }
 
     @Test
@@ -171,6 +211,12 @@ class AdministracionControllerTest {
                 .andExpect(redirectedUrl("/admin"));
         mockMvc.perform(post("/mensajes/1").with(csrf()).with(user(admin)))
                 .andExpect(redirectedUrl("/admin"));
+    }
+
+    private Tablero unTablero() {
+        return new Tablero(15, 12, 9, new BigDecimal("8.50"),
+                List.of(new Tablero.Mes("octubre de 2026", 5, 2, new BigDecimal("8.50"))),
+                List.of(new Tablero.CategoriaPedida("Idiomas", 8)));
     }
 
     private UsuarioAutenticado sesion(Rol rol, String email) {

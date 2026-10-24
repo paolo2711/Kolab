@@ -13,5 +13,8 @@ public interface AdministracionService {
      */
     Page<CuentaResumen> cuentas(Pageable pagina);
 
-    long cuentasRegistradas();
+    /**
+     * Las cifras del panel. Todo se calcula al consultar: no hay tabla de reportes.
+     */
+    Tablero tablero();
 }
