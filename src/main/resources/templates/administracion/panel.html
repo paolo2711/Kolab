@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layout :: base(~{::title}, ~{::main})}">
+<head>
+    <title>Panel · KOLAB</title>
+</head>
+<body>
+
+<main class="k-total">
+    <div class="k-encabezado">
+        <h1>Panel</h1>
+    </div>
+
+    <a class="k-tarjeta k-panel-acceso" th:href="@{/admin/cuentas}">
+        <span class="k-panel-cifra" th:text="${cuentasRegistradas}">15</span>
+        <span>cuentas registradas</span>
+    </a>
+</main>
+
+</body>
+</html>
