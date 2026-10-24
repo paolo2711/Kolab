@@ -4,6 +4,18 @@ Plataforma para intercambiar habilidades y servicios en la que quien pide pone e
 lo que necesitas con el monto que quieres pagar, y quien sabe hacerlo lo acepta o te propone otro.
 Una misma cuenta sirve para pedir y para ofrecer.
 
+Proyecto del curso Integrador I: Sistemas - Software, Universidad Tecnológica del Perú, 2026.
+
+## Equipo
+
+| Integrante | Rol | GitHub |
+|---|---|---|
+| Marco Antonio Campos Llanos | Director del proyecto | [@marcocll159-bot](https://github.com/marcocll159-bot) |
+| Paolo Rodríguez Paredes | Líder técnico y responsable del repositorio | [@paolo2711](https://github.com/paolo2711) |
+| Erick Alexander Marcos Laupa | Requisitos y desarrollo | [@erickmarcoslaupa-lgtm](https://github.com/erickmarcoslaupa-lgtm) |
+| Walter Huete Castillo | Interfaz y experiencia de usuario | [@huetecastillowalter-cloud](https://github.com/huetecastillowalter-cloud) |
+| Juan Enrique Carhuallanqui Osorio | Base de datos y pruebas | [@JuanCOutp](https://github.com/JuanCOutp) |
+
 ## Capturas
 
 Portada, para quien todavía no tiene cuenta:
@@ -80,3 +92,22 @@ Corren contra H2 en memoria con las mismas migraciones, así que no necesitan Po
 
 Java 21, Spring Boot 3.5, Thymeleaf, Spring Security, Spring Data JPA, PostgreSQL, Flyway y Maven.
 CSS propio.
+
+## Cómo trabaja el equipo
+
+Ramas:
+
+    main                versiones publicadas, con su etiqueta
+    develop             lo que ya está terminado y se integra
+    feature/<tarea>     una por Issue, sale de develop
+    release/<versión>   para cerrar una versión
+
+Nadie sube directo a `main` ni a `develop`. Cada tarea es un Issue, su rama sale de `develop` y
+vuelve por Pull Request con al menos una aprobación. Las fusiones se hacen con commit de fusión,
+para que el historial muestre qué entró junto.
+
+Las pruebas corren solas en cada Pull Request (`.github/workflows/pruebas.yml`); si fallan, no se
+fusiona.
+
+Las versiones siguen el versionado semántico y cada una se anota en
+[CHANGELOG.md](CHANGELOG.md).
