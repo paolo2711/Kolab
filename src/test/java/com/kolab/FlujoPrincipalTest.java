@@ -23,7 +23,9 @@ import com.kolab.solicitud.Modalidad;
 import com.kolab.solicitud.SolicitudForm;
 import com.kolab.solicitud.SolicitudResumen;
 import com.kolab.solicitud.SolicitudService;
+import com.kolab.usuario.DetallesUsuarioService;
 import com.kolab.usuario.RegistroForm;
+import com.kolab.usuario.Rol;
 import com.kolab.usuario.UsuarioService;
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -52,6 +54,7 @@ class FlujoPrincipalTest {
     @Autowired private MensajeService mensajeService;
     @Autowired private ReputacionService reputacionService;
     @Autowired private AdministracionService administracionService;
+    @Autowired private DetallesUsuarioService detallesUsuarioService;
 
     private Long pide;
     private Long ofrece;
@@ -173,6 +176,19 @@ class FlujoPrincipalTest {
         assertThat(despues.meses().get(5).solicitudes()).isEqualTo(antes.meses().get(5).solicitudes() + 1);
         assertThat(despues.meses().get(5).serviciosCerrados()).isEqualTo(antes.meses().get(5).serviciosCerrados() + 1);
         assertThat(despues.categorias()).extracting(Tablero.CategoriaPedida::nombre).contains("Música");
+    }
+
+    @Test
+    void unaCuentaSuspendidaNoIngresaHastaQueLaReactivan() {
+        administracionService.suspender(ofrece, pide);
+
+        assertThat(usuarioService.estaSuspendida(ofrece)).isTrue();
+        assertThat(detallesUsuarioService.cargar("luis@kolab.pe", Rol.USUARIO).isEnabled()).isFalse();
+
+        administracionService.reactivar(ofrece);
+
+        assertThat(usuarioService.estaSuspendida(ofrece)).isFalse();
+        assertThat(detallesUsuarioService.cargar("luis@kolab.pe", Rol.USUARIO).isEnabled()).isTrue();
     }
 
     @Test
