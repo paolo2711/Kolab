@@ -55,6 +55,10 @@ public class Usuario {
     @Column(nullable = false, length = 20)
     private EstadoUsuario estado;
 
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false, length = 20)
+    private Rol rol = Rol.USUARIO;
+
     /**
      * Nombre y apellidos juntos, que es como se muestra en toda la aplicación.
      */
@@ -155,5 +159,17 @@ public class Usuario {
 
     public void setEstado(EstadoUsuario estado) {
         this.estado = estado;
+    }
+
+    public Rol getRol() {
+        return rol;
+    }
+
+    public void setRol(Rol rol) {
+        this.rol = rol;
+    }
+
+    public boolean esAdministrador() {
+        return rol == Rol.ADMINISTRADOR;
     }
 }
