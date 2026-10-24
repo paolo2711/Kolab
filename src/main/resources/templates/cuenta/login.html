@@ -20,6 +20,9 @@
             <div class="k-aviso k-aviso-error" th:if="${param.error}">
                 El correo o la contraseña no coinciden.
             </div>
+            <div class="k-aviso k-aviso-error" th:if="${param.suspendida}">
+                Tu cuenta está suspendida, así que no puedes ingresar.
+            </div>
 
             <form th:action="${panel} ? @{/admin/login} : @{/login}" method="post">
                 <div class="k-campos k-campos-una">
