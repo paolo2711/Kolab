@@ -16,6 +16,7 @@ import com.kolab.oferta.OfertaService;
 import com.kolab.perfil.DirectorioService;
 import com.kolab.solicitud.CatalogoService;
 import com.kolab.solicitud.SolicitudService;
+import com.kolab.usuario.DetallesUsuarioService;
 import com.kolab.usuario.EstadoUsuario;
 import com.kolab.usuario.Usuario;
 import com.kolab.usuario.UsuarioAutenticado;
@@ -35,6 +36,9 @@ class InicioControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
+
+    @MockitoBean
+    private DetallesUsuarioService detallesUsuarioService;
 
     @MockitoBean
     private BitacoraDeSeguridad bitacora;

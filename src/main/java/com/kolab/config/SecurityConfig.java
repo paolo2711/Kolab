@@ -1,22 +1,31 @@
 package com.kolab.config;
 
+import com.kolab.usuario.DetallesUsuarioService;
+import com.kolab.usuario.Rol;
+import jakarta.servlet.http.HttpServletResponse;
+import java.security.Principal;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.annotation.Order;
+import org.springframework.security.authentication.AuthenticationEventPublisher;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.ProviderManager;
+import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.header.writers.ReferrerPolicyHeaderWriter.ReferrerPolicy;
 
+/**
+ * Dos puertas: el panel en {@code /admin/**} y el mercado en todo lo demás. Cada una tiene su
+ * ingreso y solo deja pasar cuentas de su rol.
+ */
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
-
-    @Bean
-    public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
-    }
 
     /**
      * Lo único que se carga de afuera son la tipografía de Google Fonts, los íconos de Bootstrap y
@@ -36,24 +45,63 @@ public class SecurityConfig {
             "base-uri 'self'");
 
     @Bean
-    public SecurityFilterChain filtros(HttpSecurity http) throws Exception {
+    public PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
+    }
+
+    @Bean
+    @Order(1)
+    public SecurityFilterChain panel(HttpSecurity http, DetallesUsuarioService detalles,
+                                     AuthenticationEventPublisher eventos) throws Exception {
+        cabeceras(http);
         http
-                .headers(cabeceras -> cabeceras
-                        .contentSecurityPolicy(csp -> csp.policyDirectives(POLITICA_DE_CONTENIDO))
-                        .frameOptions(marcos -> marcos.deny())
-                        .referrerPolicy(remitente -> remitente.policy(
-                                ReferrerPolicy.STRICT_ORIGIN_WHEN_CROSS_ORIGIN))
-                        // el navegador solo la respeta por https, asi que en local no estorba
-                        .httpStrictTransportSecurity(hsts -> hsts
-                                .includeSubDomains(true)
-                                .maxAgeInSeconds(31536000)))
+                .securityMatcher("/admin/**")
+                .authenticationManager(ingresoPara(Rol.ADMINISTRADOR, detalles, eventos))
+                .authorizeHttpRequests(rutas -> rutas
+                        .requestMatchers("/admin/login").permitAll()
+                        .anyRequest().hasRole("ADMINISTRADOR"))
+                // a quien no administra, el panel le responde igual que una ruta que no existe
+                .exceptionHandling(errores -> errores
+                        .accessDeniedHandler((pedido, respuesta, e) ->
+                                respuesta.sendError(HttpServletResponse.SC_NOT_FOUND)))
+                .formLogin(login -> login
+                        .loginPage("/admin/login")
+                        .loginProcessingUrl("/admin/login")
+                        .usernameParameter("email")
+                        .passwordParameter("password")
+                        .defaultSuccessUrl("/admin", true)
+                        .failureUrl("/admin/login?error")
+                        .permitAll())
+                .logout(salida -> salida
+                        .logoutUrl("/admin/salir")
+                        .logoutSuccessUrl("/admin/login?cerrada")
+                        .deleteCookies("JSESSIONID"));
+        return http.build();
+    }
+
+    @Bean
+    @Order(2)
+    public SecurityFilterChain mercado(HttpSecurity http, DetallesUsuarioService detalles,
+                                       AuthenticationEventPublisher eventos) throws Exception {
+        cabeceras(http);
+        http
+                .authenticationManager(ingresoPara(Rol.USUARIO, detalles, eventos))
                 .authorizeHttpRequests(rutas -> rutas
                         .requestMatchers("/", "/login", "/registro", "/recuperar", "/recuperar/**",
                                 "/css/**", "/js/**", "/img/**", "/error").permitAll()
                         // estas rutas solo existen con kolab.desarrollo=true; fuera de eso dan 404
                         .requestMatchers("/desarrollo/**").permitAll()
                         .requestMatchers("/actuator/health").permitAll()
-                        .anyRequest().authenticated())
+                        .anyRequest().hasRole("USUARIO"))
+                // quien administra vuelve a su panel; el resto, como un formulario sin token, es un 403
+                .exceptionHandling(errores -> errores
+                        .accessDeniedHandler((pedido, respuesta, e) -> {
+                            if (administra(pedido.getUserPrincipal())) {
+                                respuesta.sendRedirect(pedido.getContextPath() + "/admin");
+                            } else {
+                                respuesta.sendError(HttpServletResponse.SC_FORBIDDEN);
+                            }
+                        }))
                 .formLogin(login -> login
                         .loginPage("/login")
                         .loginProcessingUrl("/login")
@@ -67,5 +115,34 @@ public class SecurityConfig {
                         .logoutSuccessUrl("/login?cerrada")
                         .deleteCookies("JSESSIONID"));
         return http.build();
+    }
+
+    /**
+     * Un ingreso que solo reconoce cuentas de un rol. Publica sus eventos como cualquier otro, así
+     * el bloqueo por intentos y la bitácora valen igual en las dos puertas.
+     */
+    private AuthenticationManager ingresoPara(Rol rol, DetallesUsuarioService detalles,
+                                              AuthenticationEventPublisher eventos) {
+        DaoAuthenticationProvider proveedor = new DaoAuthenticationProvider(email -> detalles.cargar(email, rol));
+        proveedor.setPasswordEncoder(passwordEncoder());
+        ProviderManager ingreso = new ProviderManager(proveedor);
+        ingreso.setAuthenticationEventPublisher(eventos);
+        return ingreso;
+    }
+
+    private static boolean administra(Principal quien) {
+        return quien instanceof Authentication autenticado && autenticado.getAuthorities().stream()
+                .anyMatch(permiso -> "ROLE_ADMINISTRADOR".equals(permiso.getAuthority()));
+    }
+
+    private void cabeceras(HttpSecurity http) throws Exception {
+        http.headers(cabeceras -> cabeceras
+                .contentSecurityPolicy(csp -> csp.policyDirectives(POLITICA_DE_CONTENIDO))
+                .frameOptions(marcos -> marcos.deny())
+                .referrerPolicy(remitente -> remitente.policy(ReferrerPolicy.STRICT_ORIGIN_WHEN_CROSS_ORIGIN))
+                // el navegador solo la respeta por https, asi que en local no estorba
+                .httpStrictTransportSecurity(hsts -> hsts
+                        .includeSubDomains(true)
+                        .maxAgeInSeconds(31536000)));
     }
 }
