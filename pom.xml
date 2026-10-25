@@ -13,7 +13,7 @@
 
     <groupId>com.kolab</groupId>
     <artifactId>kolab</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+    <version>0.3.0</version>
     <name>KOLAB</name>
     <description>Plataforma de servicios y ensenanza con precio propuesto por el cliente</description>
 
