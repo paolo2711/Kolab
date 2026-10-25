@@ -2571,7 +2571,8 @@ button:focus-visible,
 
 /* marca de propuesta directa dentro de la fila */
 
-.k-para-ti {
+/* insignias cortas al lado del titulo de una fila: «Para ti», «Nuevo» */
+.k-insignia {
     margin-left: 0.5rem;
     font-size: 0.74rem;
     font-weight: 600;
@@ -2580,6 +2581,10 @@ button:focus-visible,
     border-radius: var(--r-chico);
     padding: 0.05rem 0.4rem;
     vertical-align: 0.12em;
+}
+
+.k-insignia + .k-insignia {
+    margin-left: 0.3rem;
 }
 
 /* paginacion de las listas */

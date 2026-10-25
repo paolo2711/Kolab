@@ -9,6 +9,7 @@ import com.kolab.perfil.Persona;
 import com.kolab.perfil.Personas;
 import com.kolab.usuario.Usuario;
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -53,7 +54,8 @@ class ResumenesDeSolicitud {
         return new SolicitudResumen(s.getId(), s.getTitulo(), s.getCategoria().getId(), categoria,
                 s.getCategoria().getIcono(), fotos.deCategoria(categoria), s.getModalidad(),
                 s.getDistrito(), s.getPrecioPropuesto(), mejor, quienes,
-                Tiempo.hace(s.getFechaPublicacion()), s.esPropuestaDirecta(), kilometros(desde, s));
+                Tiempo.hace(s.getFechaPublicacion()), s.esPropuestaDirecta(), s.esNueva(LocalDateTime.now()),
+                kilometros(desde, s));
     }
 
     static Double kilometros(Usuario desde, Solicitud s) {

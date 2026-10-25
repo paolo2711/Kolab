@@ -153,7 +153,8 @@
     <div class="k-solicitud-cuerpo">
         <span class="k-solicitud-titulo">
             <span th:text="${s.titulo}">Título</span>
-            <span class="k-para-ti" th:if="${s.directa}">Para ti</span>
+            <span class="k-insignia" th:if="${s.directa}">Para ti</span>
+            <span class="k-insignia" th:if="${s.nueva}">Nuevo</span>
         </span>
         <div class="k-solicitud-meta">
             <span th:text="${s.categoria}">Categoría</span> ·

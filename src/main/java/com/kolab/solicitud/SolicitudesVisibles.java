@@ -1,6 +1,9 @@
 package com.kolab.solicitud;
 
+import com.kolab.oferta.Oferta;
 import jakarta.persistence.criteria.JoinType;
+import jakarta.persistence.criteria.Root;
+import jakarta.persistence.criteria.Subquery;
 import java.util.Collection;
 import org.springframework.data.jpa.domain.Specification;
 
@@ -23,6 +26,24 @@ final class SolicitudesVisibles {
                 cb.notEqual(s.get("autor").get("id"), idUsuario),
                 cb.or(cb.isNull(s.get("destinatario")),
                         cb.equal(s.join("destinatario", JoinType.LEFT).get("id"), idUsuario)));
+    }
+
+    /**
+     * Las propuestas directas abiertas que le hicieron a esta persona y que todavía no respondió con
+     * una oferta. Las que ya ofertó siguen en Lo que ofrezco.
+     */
+    static Specification<Solicitud> propuestasSinResponderA(Long idUsuario) {
+        return (s, consulta, cb) -> {
+            Subquery<Long> suyas = consulta.subquery(Long.class);
+            Root<Oferta> oferta = suyas.from(Oferta.class);
+            suyas.select(oferta.get("id")).where(
+                    cb.equal(oferta.get("solicitud"), s),
+                    cb.equal(oferta.get("usuario").get("id"), idUsuario));
+            return cb.and(
+                    cb.equal(s.get("estado"), EstadoSolicitud.ABIERTA),
+                    cb.equal(s.get("destinatario").get("id"), idUsuario),
+                    cb.not(cb.exists(suyas)));
+        };
     }
 
     // lo que se muestra a quien todavía no entró
