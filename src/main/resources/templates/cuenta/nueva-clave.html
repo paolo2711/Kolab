@@ -15,7 +15,7 @@
     <div class="k-dos-columnas">
         <div class="k-tarjeta" th:unless="${valido}">
             <h2 class="k-tarjeta-titulo">Este enlace ya no sirve</h2>
-            <p style="margin:0 0 1.4rem; color:var(--tinta-2);">Venció o ya se usó. Pide uno nuevo y
+            <p class="k-sin-margen k-mb-14 k-texto-suave">Venció o ya se usó. Pide uno nuevo y
                 úsalo dentro de los 30 minutos.</p>
             <a class="k-btn k-btn-principal" th:href="@{/recuperar}">Pedir otro enlace</a>
         </div>

@@ -40,9 +40,7 @@ public class SecurityConfig {
     private static final String POLITICA_DE_CONTENIDO = String.join("; ",
             "default-src 'self'",
             "script-src 'self' https://cdn.jsdelivr.net",
-            // 'unsafe-inline' esta solo por los atributos style= que quedan en las plantillas;
-            // cuando esos pasen a clases k-, se quita y la politica queda cerrada del todo
-            "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdn.jsdelivr.net",
+            "style-src 'self' https://fonts.googleapis.com https://cdn.jsdelivr.net",
             "font-src 'self' https://fonts.gstatic.com https://cdn.jsdelivr.net",
             "img-src 'self' data:",
             "form-action 'self'",

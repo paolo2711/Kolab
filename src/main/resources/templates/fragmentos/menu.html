@@ -36,7 +36,7 @@
             <summary>
                 <img class="k-cuenta-foto" th:if="${#authentication.principal.foto != null}"
                      th:src="@{${#authentication.principal.foto}}" alt="Tu foto">
-                <span class="k-inicial t0" style="width:2rem; height:2rem; font-size:0.72rem;"
+                <span class="k-inicial t0 k-inicial-menu"
                       th:unless="${#authentication.principal.foto != null}"
                       sec:authentication="principal.iniciales">PR</span>
                 <i class="bi bi-chevron-down"></i>

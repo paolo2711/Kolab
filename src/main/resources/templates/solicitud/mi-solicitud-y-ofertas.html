@@ -31,21 +31,21 @@
 
     <div class="k-dos-columnas k-principal-ancha">
         <div>
-            <div class="k-tarjeta" style="margin-bottom:1.5rem;">
+            <div class="k-tarjeta k-mb-15">
                 <div class="k-titulo-fila">
                     <span th:replace="~{fragmentos/componentes :: estado(${solicitud.estado})}"></span>
                     <a th:if="${solicitud.admiteOfertas()}"
                        th:href="@{/mis-solicitudes/{id}/editar(id=${solicitud.id})}">Editar o cancelar</a>
                 </div>
-                <p style="margin:0.9rem 0 0; color:var(--tinta-2);" th:text="${solicitud.descripcion}">Descripción</p>
+                <p class="k-sin-margen k-mt-09 k-texto-suave" th:text="${solicitud.descripcion}">Descripción</p>
             </div>
 
             <div class="k-tarjeta" th:if="${#lists.isEmpty(solicitud.ofertas)}">
                 <h2 class="k-tarjeta-titulo">Todavía sin ofertas</h2>
-                <p class="k-vacio" style="margin:0;" th:unless="${solicitud.esPropuestaDirecta()}">Quienes saben de
+                <p class="k-vacio k-sin-margen" th:unless="${solicitud.esPropuestaDirecta()}">Quienes saben de
                     <span th:text="${solicitud.categoria}">la categoría</span> ya ven tu solicitud.
                     Puede tardar unas horas o unos días. Cuando alguien oferte te aparece acá.</p>
-                <p class="k-vacio" style="margin:0;" th:if="${solicitud.esPropuestaDirecta()}">
+                <p class="k-vacio k-sin-margen" th:if="${solicitud.esPropuestaDirecta()}">
                     <span th:text="${solicitud.destinatario.nombre}">La persona</span> ya la ve. Cuando
                     responda, su oferta te aparece acá.</p>
             </div>
@@ -69,7 +69,7 @@
                                     <span th:if="${o.sinCalificar()}">Sin calificaciones aún ·</span>
                                     <span th:text="${o.servicios == 1} ? '1 servicio' : ${o.servicios} + ' servicios'">32 servicios</span>
                                 </div>
-                                <div class="k-oferta-meta" style="margin-top:0.25rem;" th:text="${o.mensaje}">Mensaje</div>
+                                <div class="k-oferta-meta k-mt-025" th:text="${o.mensaje}">Mensaje</div>
                             </div>
                             <span th:replace="~{fragmentos/componentes :: precio(${o.monto}, 'k-precio-g')}"></span>
 
@@ -101,7 +101,7 @@
                                     <span th:text="${m.contenido}">Mensaje</span>
                                     <span class="k-burbuja-hora" th:text="${m.hora}">10:12</span>
                                 </div>
-                                <p class="k-vacio" style="margin:0;" th:if="${#lists.isEmpty(hilos.get(o.id))}">
+                                <p class="k-vacio k-sin-margen" th:if="${#lists.isEmpty(hilos.get(o.id))}">
                                     Todavía no se han escrito.</p>
                             </div>
                             <form class="k-chat-envio" th:action="@{/mensajes/{id}(id=${o.id})}" method="post">
@@ -118,7 +118,7 @@
         <div class="k-tarjeta">
             <div class="k-etiqueta">Tu precio propuesto</div>
             <span th:replace="~{fragmentos/componentes :: precio(${solicitud.precioPropuesto}, 'k-precio-xl')}"></span>
-            <div class="k-solicitud-ofertas" style="margin-bottom:1.4rem;"
+            <div class="k-solicitud-ofertas k-mb-14"
                  th:text="'Publicada ' + ${solicitud.publicada}">Publicada hace 2 horas</div>
 
             <h2 class="k-tarjeta-titulo">En qué va</h2>

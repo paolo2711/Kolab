@@ -40,29 +40,29 @@
 
     <div class="k-dos-columnas k-principal-ancha">
         <div>
-            <div class="k-tarjeta" style="margin-bottom:1.5rem;" th:if="${perfil.descripcion != null or perfil.experiencia != null}">
+            <div class="k-tarjeta k-mb-15" th:if="${perfil.descripcion != null or perfil.experiencia != null}">
                 <h2 class="k-tarjeta-titulo">Sobre <span th:text="${perfil.persona.nombre}">esta persona</span></h2>
-                <p style="margin:0; color:var(--tinta-2);" th:if="${perfil.descripcion}" th:text="${perfil.descripcion}">Descripción</p>
+                <p class="k-sin-margen k-texto-suave" th:if="${perfil.descripcion}" th:text="${perfil.descripcion}">Descripción</p>
                 <th:block th:if="${perfil.experiencia}">
-                    <h2 class="k-tarjeta-titulo" style="margin-top:1.4rem;">Experiencia</h2>
-                    <p style="margin:0; color:var(--tinta-2);" th:text="${perfil.experiencia}">Experiencia</p>
+                    <h2 class="k-tarjeta-titulo k-mt-14">Experiencia</h2>
+                    <p class="k-sin-margen k-texto-suave" th:text="${perfil.experiencia}">Experiencia</p>
                 </th:block>
             </div>
 
-            <div class="k-tarjeta" style="margin-bottom:1.5rem;">
+            <div class="k-tarjeta k-mb-15">
                 <h2 class="k-tarjeta-titulo">En qué trabaja</h2>
 
                 <div class="k-chips" th:if="${perfil.ofrece()}">
                     <a class="k-chip" th:each="c : ${perfil.categorias}"
                        th:href="@{/categorias/{id}(id=${c.id})}" th:text="${c.nombre}">Categoría</a>
                 </div>
-                <p class="k-vacio" style="margin:0;" th:unless="${perfil.ofrece()}">
+                <p class="k-vacio k-sin-margen" th:unless="${perfil.ofrece()}">
                     Todavía no declaró categorías. Igual le puedes proponer un servicio.</p>
             </div>
 
             <div class="k-tarjeta">
                 <h2 class="k-tarjeta-titulo">Lo que dicen de <span th:text="${perfil.persona.nombre}">esta persona</span></h2>
-                <p class="k-vacio" style="margin:0;" th:if="${#lists.isEmpty(perfil.resenas)}">
+                <p class="k-vacio k-sin-margen" th:if="${#lists.isEmpty(perfil.resenas)}">
                     Todavía nadie la calificó.</p>
 
                 <div class="k-resena" th:each="r : ${perfil.resenas}">
@@ -104,10 +104,10 @@
 
             <div class="k-tarjeta">
                 <h2 class="k-tarjeta-titulo">Cómo funciona pedirle algo</h2>
-                <p style="margin:0; color:var(--tinta-2);">Publicas la solicitud con tu precio y le llega
+                <p class="k-sin-margen k-texto-suave">Publicas la solicitud con tu precio y le llega
                     solo a <span th:text="${perfil.persona.nombre}">esta persona</span>. Si el monto no le
                     acomoda, te propone otro y tú decides.</p>
-                <p class="k-oferta-meta" style="margin:0.9rem 0 0;"
+                <p class="k-oferta-meta k-sin-margen k-mt-09"
                    th:text="'En KOLAB desde ' + ${perfil.miembroDesde}">En KOLAB desde marzo de 2026</p>
             </div>
         </div>
