@@ -140,6 +140,6 @@ public class MensajeServiceImpl implements MensajeService {
 
     private MensajeResumen aResumen(Mensaje m, Long idUsuario) {
         return new MensajeResumen(m.getContenido(), m.getEmisor().getId().equals(idUsuario),
-                Tiempo.dia(m.getFechaEnvio()), Tiempo.minuto(m.getFechaEnvio()));
+                Tiempo.dia(m.getFechaEnvio()), Tiempo.minuto(m.getFechaEnvio()), m.isLeido());
     }
 }
