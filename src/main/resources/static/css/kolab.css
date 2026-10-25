@@ -3185,3 +3185,66 @@ body:has(.k-msj) .k-pie {
         grid-column: 1;
     }
 }
+
+/* ajustes sueltos que antes iban en un atributo style. Llevan !important para pesar lo mismo que
+   pesaban en linea, que le ganaba a cualquier otra regla: asi ninguna pantalla cambia de aspecto.
+   k-sin-margen va antes que los margenes de un lado, para que al combinarlos gane el lado */
+
+.k-sin-margen { margin: 0 !important; }
+
+.k-mt-025 { margin-top: 0.25rem !important; }
+.k-mt-055 { margin-top: 0.55rem !important; }
+.k-mt-09 { margin-top: 0.9rem !important; }
+.k-mt-14 { margin-top: 1.4rem !important; }
+.k-mt-15 { margin-top: 1.5rem !important; }
+.k-mt-175 { margin-top: 1.75rem !important; }
+.k-mt-2 { margin-top: 2rem !important; }
+.k-mt-25 { margin-top: 2.5rem !important; }
+
+.k-mb-04 { margin-bottom: 0.4rem !important; }
+.k-mb-1 { margin-bottom: 1rem !important; }
+.k-mb-12 { margin-bottom: 1.2rem !important; }
+.k-mb-125 { margin-bottom: 1.25rem !important; }
+.k-mb-14 { margin-bottom: 1.4rem !important; }
+.k-mb-15 { margin-bottom: 1.5rem !important; }
+
+.k-ml-075 { margin-left: 0.75rem !important; }
+
+.k-relleno-1 { padding: 1rem !important; }
+.k-pagina-error { padding: 4rem 0 !important; }
+
+.k-texto-suave { color: var(--tinta-2) !important; }
+.k-centrado { text-align: center !important; }
+.k-a-la-derecha { text-align: right !important; }
+.k-alinear-arriba { align-items: flex-start !important; }
+.k-foto-cubre { object-fit: cover !important; }
+
+.k-titulo-aclaracion {
+    font-size: 0.5em !important;
+    color: var(--tinta-2) !important;
+    font-weight: 500 !important;
+}
+
+.k-inicial-menu {
+    width: 2rem !important;
+    height: 2rem !important;
+    font-size: 0.72rem !important;
+}
+
+/* sin !important: pone display, y una regla asi no puede ganarle al atributo hidden */
+.k-fila-con-cara {
+    display: flex;
+    align-items: center;
+    gap: 0.9rem;
+}
+
+/* los tamanos de cara que usan las pantallas; el fragmento arma el nombre a partir del tamano */
+.k-cara-17 { --lado: 1.7rem; }
+.k-cara-19 { --lado: 1.9rem; }
+.k-cara-2 { --lado: 2rem; }
+.k-cara-21 { --lado: 2.1rem; }
+.k-cara-24 { --lado: 2.4rem; }
+.k-cara-26 { --lado: 2.6rem; }
+.k-cara-29 { --lado: 2.9rem; }
+.k-cara-32 { --lado: 3.2rem; }
+.k-cara-5 { --lado: 5rem; }

@@ -19,12 +19,12 @@
 
     <div class="k-dos-columnas k-principal-ancha">
         <div>
-            <div class="k-tarjeta" style="margin-bottom:1.5rem;">
+            <div class="k-tarjeta k-mb-15">
                 <span class="k-estado k-estado-espera" th:if="${servicio.puedoCerrar()}"><i class="bi bi-circle-half"></i>
                     <span>Al enviar tu nota, el servicio queda cerrado</span></span>
                 <span class="k-estado k-estado-bien" th:unless="${servicio.puedoCerrar()}"><i class="bi bi-check-circle-fill"></i>
                     <span>Servicio cerrado</span></span>
-                <h2 class="k-tarjeta-titulo" style="margin-top:0.9rem;" th:text="${servicio.titulo}">Servicio</h2>
+                <h2 class="k-tarjeta-titulo k-mt-09" th:text="${servicio.titulo}">Servicio</h2>
                 <dl class="k-datos">
                     <dt>Con</dt>
                     <dd th:text="${servicio.contraparte.nombre}">Luis Mendoza</dd>
@@ -55,7 +55,7 @@
                     </div>
                     <span class="k-error" th:if="${#fields.hasErrors('puntaje')}" th:errors="*{puntaje}"></span>
 
-                    <div class="k-campos k-campos-una" style="margin-top:1.4rem;">
+                    <div class="k-campos k-campos-una k-mt-14">
                         <div class="k-campo">
                             <label for="comentario">Comentario <span class="k-opcional">(opcional)</span></label>
                             <textarea id="comentario" th:field="*{comentario}"
@@ -75,7 +75,7 @@
         <div class="k-tarjeta">
             <h2 class="k-tarjeta-titulo">Con quién trabajaste</h2>
 
-            <div style="display:flex; align-items:center; gap:0.9rem; margin-bottom:1.25rem;">
+            <div class="k-fila-con-cara k-mb-125">
                 <span th:replace="~{fragmentos/componentes :: cara(${servicio.contraparte}, '2.6rem')}"></span>
                 <div>
                     <div class="k-oferta-nombre" th:text="${servicio.contraparte.nombre}">Luis Mendoza</div>
@@ -84,10 +84,10 @@
             </div>
 
             <div class="k-etiqueta">Calificación promedio</div>
-            <div class="k-precio k-precio-xl" style="margin-bottom:0.4rem;"
+            <div class="k-precio k-precio-xl k-mb-04"
                  th:unless="${servicio.reputacionContraparte.sinCalificar()}">
                 <span th:text="${servicio.reputacionContraparte.promedio}">4.8</span>
-                <span style="font-size:0.5em; color:var(--tinta-2); font-weight:500;">de 5</span>
+                <span class="k-titulo-aclaracion">de 5</span>
             </div>
             <p class="k-vacio" th:if="${servicio.reputacionContraparte.sinCalificar()}">Todavía nadie la calificó.
                 Tu nota va a ser la primera.</p>

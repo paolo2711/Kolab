@@ -40,8 +40,8 @@
 
     <section class="k-bloque">
         <div class="k-titulo-fila">
-            <h2 class="k-bloque-titulo" style="margin:0;">Explora por categoría</h2>
-            <span class="k-vacio" style="margin:0;">Con lo que se está pagando en cada una</span>
+            <h2 class="k-bloque-titulo k-sin-margen">Explora por categoría</h2>
+            <span class="k-vacio k-sin-margen">Con lo que se está pagando en cada una</span>
         </div>
 
         <div class="k-mosaico k-mosaico-grande">
@@ -65,7 +65,7 @@
 
     <section class="k-bloque" th:if="${!#lists.isEmpty(cercanas)}">
         <div class="k-titulo-fila">
-            <h2 class="k-bloque-titulo" style="margin:0;">Cerca de ti</h2>
+            <h2 class="k-bloque-titulo k-sin-margen">Cerca de ti</h2>
             <a th:href="@{/solicitudes(modalidad='PRESENCIAL')}">Ver todas las presenciales</a>
         </div>
         <p class="k-vacio">Presenciales, ordenadas por lo cerca que quedan de tu distrito.</p>
@@ -102,8 +102,8 @@
 
     <section class="k-bloque">
         <div class="k-titulo-fila">
-            <h2 class="k-bloque-titulo" style="margin:0;">Los mejor calificados</h2>
-            <span class="k-vacio" style="margin:0;">Puedes pedirles un servicio directo</span>
+            <h2 class="k-bloque-titulo k-sin-margen">Los mejor calificados</h2>
+            <span class="k-vacio k-sin-margen">Puedes pedirles un servicio directo</span>
         </div>
         <p class="k-vacio" th:if="${#lists.isEmpty(expertos)}">Cuando alguien reciba su primera
             calificación va a aparecer aquí.</p>
@@ -112,7 +112,7 @@
 
     <section class="k-bloque">
         <div class="k-titulo-fila">
-            <h2 class="k-bloque-titulo" style="margin:0;"
+            <h2 class="k-bloque-titulo k-sin-margen"
                 th:text="${filtradas} ? 'Abiertas en lo que sabes hacer' : 'Lo que se está pidiendo ahora'">Lo que se está pidiendo ahora</h2>
             <a th:href="@{/solicitudes}">Ver todas</a>
         </div>
