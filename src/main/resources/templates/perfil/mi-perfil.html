@@ -9,7 +9,9 @@
 <main class="k-medio">
     <div th:replace="~{fragmentos/componentes :: aviso}"></div>
 
-    <div class="k-perfil-cabecera">
+    <th:block th:with="portada=${misCategorias.isEmpty() ? null : misCategorias[0].foto}">
+    <img class="k-banner" th:if="${portada != null}" th:src="@{${portada}}" th:alt="${misCategorias[0].nombre}">
+    <div class="k-perfil-cabecera" th:classappend="${portada != null} ? 'k-cabecera-bajo-banner'">
         <img class="k-avatar k-foto-cubre" th:if="${usuario.foto != null}" th:src="@{${usuario.foto}}" alt="Tu foto">
         <span class="k-avatar" th:unless="${usuario.foto != null}" th:text="${usuario.iniciales}">PR</span>
 
@@ -31,6 +33,7 @@
 
         <a class="k-btn k-btn-linea k-btn-chico" th:href="@{/perfil/editar}">Editar perfil</a>
     </div>
+    </th:block>
 
     <div class="k-dos-columnas k-principal-ancha">
         <div>
