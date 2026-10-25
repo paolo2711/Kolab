@@ -27,6 +27,7 @@ import com.kolab.solicitud.SolicitudService;
 import com.kolab.usuario.DetallesUsuarioService;
 import com.kolab.usuario.RegistroForm;
 import com.kolab.usuario.Rol;
+import com.kolab.usuario.UsuarioRepository;
 import com.kolab.usuario.UsuarioService;
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -47,6 +48,7 @@ class FlujoPrincipalTest {
     private static final long MUSICA = 1L;
 
     @Autowired private UsuarioService usuarioService;
+    @Autowired private UsuarioRepository usuarioRepository;
     @Autowired private PerfilService perfilService;
     @Autowired private SolicitudService solicitudService;
     @Autowired private CatalogoService catalogoService;
@@ -283,7 +285,7 @@ class FlujoPrincipalTest {
         form.setDescripcion("Quiero aprender desde cero, los sábados en la mañana.");
         form.setFechaDeseada(LocalDate.now().plusDays(7));
         form.setPrecioPropuesto(new BigDecimal(precio));
-        form.setIdDestinatario(para);
+        form.setCodigoDestinatario(para == null ? null : usuarioRepository.findById(para).orElseThrow().getCodigo());
         return form;
     }
 

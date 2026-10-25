@@ -38,8 +38,8 @@ public class SolicitudForm {
     @DecimalMax(value = "9999.00", message = "El máximo es S/ 9999")
     private BigDecimal precioPropuesto;
 
-    // lleno cuando es una propuesta directa a una persona
-    private Long idDestinatario;
+    // el codigo publico de la persona cuando es una propuesta directa; el id no sale a la pagina
+    private String codigoDestinatario;
 
     // opcional; al editar, si no se sube otra se queda la que tenia
     private MultipartFile foto;
@@ -119,11 +119,11 @@ public class SolicitudForm {
         this.precioPropuesto = precioPropuesto;
     }
 
-    public Long getIdDestinatario() {
-        return idDestinatario;
+    public String getCodigoDestinatario() {
+        return codigoDestinatario;
     }
 
-    public void setIdDestinatario(Long idDestinatario) {
-        this.idDestinatario = idDestinatario;
+    public void setCodigoDestinatario(String codigoDestinatario) {
+        this.codigoDestinatario = codigoDestinatario == null || codigoDestinatario.isBlank() ? null : codigoDestinatario;
     }
 }

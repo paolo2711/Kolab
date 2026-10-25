@@ -15,5 +15,8 @@ public interface DirectorioService {
 
     List<ExpertoResumen> queOfrecen(Long idCategoria, int cuantos);
 
-    PerfilPublico publico(Long idUsuario);
+    /**
+     * El perfil que ven los demás, buscado por el código público de la persona y nunca por su id.
+     */
+    PerfilPublico publico(String codigo);
 }

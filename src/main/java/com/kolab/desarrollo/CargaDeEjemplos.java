@@ -106,7 +106,8 @@ class CargaDeEjemplos {
         form.setDescripcion(s.descripcion());
         form.setFechaDeseada(LocalDate.now().plusDays(s.dentroDeDias()));
         form.setPrecioPropuesto(s.precio());
-        form.setIdDestinatario(s.para() == null ? null : carga.persona(s.para()));
+        form.setCodigoDestinatario(s.para() == null ? null
+                : usuarioService.buscarPorEmail(s.para()).map(Usuario::getCodigo).orElseThrow());
 
         Long id = solicitudService.publicar(form, carga.persona(s.autor()));
         Solicitud publicada = solicitudRepository.getReferenceById(id);

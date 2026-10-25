@@ -72,7 +72,7 @@
                     <div class="k-resena-cab">
                         <span th:replace="~{fragmentos/componentes :: cara(${r.autor}, '2.1rem')}"></span>
                         <div>
-                            <a class="k-oferta-nombre k-enlace-limpio" th:href="@{/personas/{id}(id=${r.autor.id})}"
+                            <a class="k-oferta-nombre k-enlace-limpio" th:href="@{/personas/{codigo}(codigo=${r.autor.codigo})}"
                                th:text="${r.autor.nombre}">Luis Mendoza</a>
                             <div class="k-oferta-meta">
                                 <span th:replace="~{fragmentos/componentes :: nota(${r.puntaje})}"></span>

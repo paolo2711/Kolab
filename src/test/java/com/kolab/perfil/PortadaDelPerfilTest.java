@@ -13,6 +13,7 @@ import com.kolab.usuario.DetallesUsuarioService;
 import com.kolab.usuario.RegistroForm;
 import com.kolab.usuario.Rol;
 import com.kolab.usuario.UsuarioAutenticado;
+import com.kolab.usuario.UsuarioRepository;
 import com.kolab.usuario.UsuarioService;
 import java.util.List;
 import org.junit.jupiter.api.Test;
@@ -32,6 +33,7 @@ class PortadaDelPerfilTest {
 
     @Autowired private MockMvc mockMvc;
     @Autowired private UsuarioService usuarioService;
+    @Autowired private UsuarioRepository usuarioRepository;
     @Autowired private PerfilService perfilService;
     @Autowired private DetallesUsuarioService detalles;
 
@@ -45,7 +47,7 @@ class PortadaDelPerfilTest {
         mockMvc.perform(get("/perfil").with(user(yo)))
                 .andExpect(status().isOk())
                 .andExpect(content().string(allOf(containsString(franja), not(containsString("k-banner")))));
-        mockMvc.perform(get("/personas/{id}", id).with(user(otro())))
+        mockMvc.perform(get("/personas/{codigo}", usuarioRepository.findById(id).orElseThrow().getCodigo()).with(user(otro())))
                 .andExpect(status().isOk())
                 .andExpect(content().string(allOf(containsString(franja), not(containsString("k-banner")))));
     }

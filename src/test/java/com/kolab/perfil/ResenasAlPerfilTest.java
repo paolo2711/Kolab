@@ -16,6 +16,7 @@ import com.kolab.solicitud.SolicitudService;
 import com.kolab.usuario.DetallesUsuarioService;
 import com.kolab.usuario.RegistroForm;
 import com.kolab.usuario.Rol;
+import com.kolab.usuario.UsuarioRepository;
 import com.kolab.usuario.UsuarioService;
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -38,6 +39,7 @@ class ResenasAlPerfilTest {
 
     @Autowired private MockMvc mockMvc;
     @Autowired private UsuarioService usuarioService;
+    @Autowired private UsuarioRepository usuarioRepository;
     @Autowired private DetallesUsuarioService detalles;
     @Autowired private PerfilService perfilService;
     @Autowired private SolicitudService solicitudService;
@@ -64,7 +66,8 @@ class ResenasAlPerfilTest {
 
     @Test
     void enElPerfilQueVenLosDemas() throws Exception {
-        mockMvc.perform(get("/personas/{id}", ofrece).with(user(detalles.cargar("mira.resena@kolab.pe", Rol.USUARIO))))
+        mockMvc.perform(get("/personas/{codigo}", codigoDe(ofrece))
+                        .with(user(detalles.cargar("mira.resena@kolab.pe", Rol.USUARIO))))
                 .andExpect(status().isOk())
                 .andExpect(content().string(containsString(enlaceA(pide))));
     }
@@ -76,8 +79,12 @@ class ResenasAlPerfilTest {
                 .andExpect(content().string(containsString(enlaceA(pide))));
     }
 
-    private static String enlaceA(Long idUsuario) {
-        return "href=\"/personas/" + idUsuario + "\"";
+    private String codigoDe(Long idUsuario) {
+        return usuarioRepository.findById(idUsuario).orElseThrow().getCodigo();
+    }
+
+    private String enlaceA(Long idUsuario) {
+        return "href=\"/personas/" + codigoDe(idUsuario) + "\"";
     }
 
     private SolicitudForm solicitud() {

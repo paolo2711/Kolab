@@ -45,12 +45,13 @@ public class SolicitudServiceImpl implements SolicitudService {
         if (subioFoto(form)) {
             nueva.setFoto(fotos.guardar(form.getFoto()));
         }
-        if (form.getIdDestinatario() != null) {
-            if (form.getIdDestinatario().equals(idAutor)) {
+        if (form.getCodigoDestinatario() != null) {
+            Usuario destinatario = usuarioRepository.findByCodigo(form.getCodigoDestinatario())
+                    .orElseThrow(() -> new RecursoNoEncontradoException("persona " + form.getCodigoDestinatario()));
+            if (destinatario.getId().equals(idAutor)) {
                 throw new OperacionNoPermitidaException("No puedes proponerte un servicio a ti mismo.");
             }
-            nueva.setDestinatario(usuarioRepository.findById(form.getIdDestinatario())
-                    .orElseThrow(() -> new RecursoNoEncontradoException("persona", form.getIdDestinatario())));
+            nueva.setDestinatario(destinatario);
         }
         return solicitudRepository.save(nueva).getId();
     }

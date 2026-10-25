@@ -16,6 +16,7 @@ import com.kolab.usuario.DetallesUsuarioService;
 import com.kolab.usuario.RegistroForm;
 import com.kolab.usuario.Rol;
 import com.kolab.usuario.UsuarioAutenticado;
+import com.kolab.usuario.UsuarioRepository;
 import com.kolab.usuario.UsuarioService;
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -38,6 +39,7 @@ class EnlacesAlPerfilTest {
 
     @Autowired private MockMvc mockMvc;
     @Autowired private UsuarioService usuarioService;
+    @Autowired private UsuarioRepository usuarioRepository;
     @Autowired private DetallesUsuarioService detalles;
     @Autowired private PerfilService perfilService;
     @Autowired private SolicitudService solicitudService;
@@ -82,8 +84,8 @@ class EnlacesAlPerfilTest {
                 .andExpect(content().string(containsString(enlaceA(pide))));
     }
 
-    private static String enlaceA(Long idUsuario) {
-        return "href=\"/personas/" + idUsuario + "\"";
+    private String enlaceA(Long idUsuario) {
+        return "href=\"/personas/" + usuarioRepository.findById(idUsuario).orElseThrow().getCodigo() + "\"";
     }
 
     private UsuarioAutenticado cuenta(String email) {

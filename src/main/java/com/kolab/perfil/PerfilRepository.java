@@ -19,6 +19,9 @@ public interface PerfilRepository extends JpaRepository<Perfil, Long> {
     Optional<Perfil> findByUsuarioId(Long idUsuario);
 
     @EntityGraph(attributePaths = "usuario")
+    Optional<Perfil> findByUsuarioCodigo(String codigo);
+
+    @EntityGraph(attributePaths = "usuario")
     List<Perfil> findByUsuarioIdIn(Collection<Long> idsUsuario);
 
     // solo quien ofrece algo y ya tiene al menos una calificación

@@ -58,7 +58,7 @@
                     <i class="bi bi-arrow-left"></i></a>
                 <span th:replace="~{fragmentos/componentes :: cara(${conversacion.con}, '2.4rem')}"></span>
                 <span class="k-msj-cabecera-cuerpo">
-                    <a class="k-msj-cabecera-nombre k-enlace-limpio" th:href="@{/personas/{id}(id=${conversacion.con.id})}"
+                    <a class="k-msj-cabecera-nombre k-enlace-limpio" th:href="@{/personas/{codigo}(codigo=${conversacion.con.codigo})}"
                        th:text="${conversacion.con.nombre}">Luis Mendoza</a>
                     <a class="k-msj-cabecera-sobre" th:href="@{${conversacion.enlace}}"
                        th:text="${conversacion.solicitud}">Clases de guitarra</a>

@@ -17,7 +17,7 @@
             <b th:text="'Dirigida a ' + ${destinatario.nombre}">Dirigida a Luis Mendoza</b>
             Solo le llega a esta persona. Nadie más la ve en Explorar.
         </div>
-        <a class="k-enlace-suave" th:href="@{/personas/{id}(id=${destinatario.id})}">Ver su perfil</a>
+        <a class="k-enlace-suave" th:href="@{/personas/{codigo}(codigo=${destinatario.codigo})}">Ver su perfil</a>
     </div>
 
     <div class="k-encabezado">
@@ -29,7 +29,7 @@
         <div class="k-tarjeta">
             <form th:action="@{/mis-solicitudes}" th:object="${solicitudForm}" method="post" novalidate id="formSolicitud"
                   enctype="multipart/form-data">
-                <input type="hidden" th:field="*{idDestinatario}">
+                <input type="hidden" th:field="*{codigoDestinatario}">
 
                 <div class="k-campos">
                     <div class="k-campo k-campo-ancho">

@@ -17,14 +17,16 @@ public class PersonaController {
         this.directorioService = directorioService;
     }
 
-    @GetMapping("/personas/{id}")
-    public String publico(@PathVariable Long id, @AuthenticationPrincipal UsuarioAutenticado usuario,
+    // va por el codigo publico: un /personas/5 es un codigo que no existe y responde 404
+    @GetMapping("/personas/{codigo}")
+    public String publico(@PathVariable String codigo, @AuthenticationPrincipal UsuarioAutenticado usuario,
                           Model model) {
-        if (id.equals(usuario.getIdUsuario())) {
+        PerfilPublico perfil = directorioService.publico(codigo);
+        if (perfil.persona().id().equals(usuario.getIdUsuario())) {
             return "redirect:/perfil";
         }
         model.addAttribute("seccion", "explorar");
-        model.addAttribute("perfil", directorioService.publico(id));
+        model.addAttribute("perfil", perfil);
         return "perfil/persona";
     }
 }
