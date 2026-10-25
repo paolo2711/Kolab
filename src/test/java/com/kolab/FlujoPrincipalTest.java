@@ -107,6 +107,14 @@ class FlujoPrincipalTest {
     }
 
     @Test
+    void loRecienPublicadoSaleComoNuevo() {
+        Long id = publicar(null, "80");
+
+        assertThat(explorar(ofrece)).filteredOn(s -> s.id().equals(id)).singleElement()
+                .extracting(SolicitudResumen::nueva).isEqualTo(true);
+    }
+
+    @Test
     void unaPropuestaDirectaCanceladaYaNoLeLlega() {
         Long directa = publicar(ofrece, "80");
 

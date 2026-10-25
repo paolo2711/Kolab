@@ -58,7 +58,7 @@ class MisOfertasControllerTest {
         Mockito.when(catalogoService.propuestasSinResponder(Mockito.eq(1L), Mockito.anyInt())).thenReturn(List.of(
                 new SolicitudResumen(7L, "Clases de guitarra para mi hijo", 1L, "Música", "bi-music-note", null,
                         Modalidad.PRESENCIAL, "Jesús María", new BigDecimal("80"), null, List.of(),
-                        "hace 2 horas", true, null)));
+                        "hace 2 horas", true, true, null)));
 
         mockMvc.perform(get("/mis-ofertas").with(user(sesion())))
                 .andExpect(status().isOk())

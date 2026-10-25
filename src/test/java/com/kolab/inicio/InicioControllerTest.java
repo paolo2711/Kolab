@@ -94,10 +94,10 @@ class InicioControllerTest {
 
     @Test
     void quienRecibioUnaPropuestaLaVeArribaMarcadaParaEl() throws Exception {
-        SolicitudResumen propuesta = solicitud(7L, "Clases de guitarra para mi hijo", true);
+        SolicitudResumen propuesta = solicitud(7L, "Clases de guitarra para mi hijo", true, false);
         Mockito.when(catalogoService.propuestasSinResponder(Mockito.eq(1L), Mockito.anyInt())).thenReturn(List.of(propuesta));
         Mockito.when(catalogoService.enMisCategorias(Mockito.eq(1L), Mockito.anyInt()))
-                .thenReturn(List.of(propuesta, solicitud(8L, "Pintar la fachada", false)));
+                .thenReturn(List.of(propuesta, solicitud(8L, "Pintar la fachada", false, false)));
 
         String pagina = mockMvc.perform(inicioComo(true))
                 .andExpect(status().isOk())
@@ -110,6 +110,21 @@ class InicioControllerTest {
     }
 
     @Test
+    void unaFilaNuevaYParaTiLlevaLasDosInsignias() throws Exception {
+        Mockito.when(catalogoService.propuestasSinResponder(Mockito.eq(1L), Mockito.anyInt()))
+                .thenReturn(List.of(solicitud(7L, "Clases de guitarra para mi hijo", true, true)));
+        Mockito.when(catalogoService.enMisCategorias(Mockito.eq(1L), Mockito.anyInt()))
+                .thenReturn(List.of(solicitud(8L, "Pintar la fachada", false, false)));
+
+        String pagina = mockMvc.perform(inicioComo(true)).andReturn().getResponse().getContentAsString();
+
+        assertThat(pagina).contains("<span class=\"k-insignia\">Para ti</span>", "<span class=\"k-insignia\">Nuevo</span>");
+        // la vieja no lleva ninguna
+        String filaVieja = pagina.substring(pagina.indexOf("Pintar la fachada"));
+        assertThat(filaVieja.substring(0, filaVieja.indexOf("</span>") + 60)).doesNotContain("k-insignia");
+    }
+
+    @Test
     void sinPropuestasNoApareceLaSeccion() throws Exception {
         Mockito.when(catalogoService.enMisCategorias(Mockito.eq(1L), Mockito.anyInt())).thenReturn(List.of());
 
@@ -118,9 +133,9 @@ class InicioControllerTest {
                         org.hamcrest.Matchers.containsString("Te propusieron"))));
     }
 
-    private SolicitudResumen solicitud(Long id, String titulo, boolean directa) {
+    private SolicitudResumen solicitud(Long id, String titulo, boolean directa, boolean nueva) {
         return new SolicitudResumen(id, titulo, 1L, "Música", "bi-music-note", null, Modalidad.PRESENCIAL,
-                "Jesús María", new BigDecimal("80"), null, List.of(), "hace 2 horas", directa, null);
+                "Jesús María", new BigDecimal("80"), null, List.of(), "hace 2 horas", directa, nueva, null);
     }
 
     private MockHttpServletRequestBuilder inicioComo(boolean ofreceServicios) {
