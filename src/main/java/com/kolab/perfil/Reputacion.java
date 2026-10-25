@@ -8,8 +8,6 @@ import java.math.BigDecimal;
  */
 public record Reputacion(BigDecimal promedio, int calificaciones, long serviciosDados) {
 
-    public static final Reputacion NUEVA = new Reputacion(BigDecimal.ZERO, 0, 0);
-
     public boolean sinCalificar() {
         return calificaciones == 0;
     }

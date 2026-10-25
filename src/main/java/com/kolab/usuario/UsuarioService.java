@@ -10,7 +10,8 @@ public interface UsuarioService {
 
     /**
      * Crea la cuenta con la contraseña cifrada en BCrypt. El correo se guarda en minúsculas y sin
-     * espacios, si no el unique deja pasar el mismo correo dos veces.
+     * espacios, si no el unique deja pasar el mismo correo dos veces. El perfil se crea aquí mismo,
+     * vacío: es el único lugar donde nace.
      *
      * @throws EmailYaRegistradoException si ese correo ya tiene cuenta
      */
