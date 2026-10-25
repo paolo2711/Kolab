@@ -2,7 +2,8 @@ package com.kolab.mensaje;
 
 /**
  * Un mensaje como se ve en pantalla. {@code dia} agrupa la conversación por jornadas y
- * {@code minuto} es lo que lleva la burbuja, que no repite el día.
+ * {@code minuto} es lo que lleva la burbuja, que no repite el día. {@code leido} dice si quien lo
+ * recibió ya abrió la conversación, de ahí sale el «Visto».
  */
-public record MensajeResumen(String contenido, boolean mio, String dia, String minuto) {
+public record MensajeResumen(String contenido, boolean mio, String dia, String minuto, boolean leido) {
 }

@@ -127,6 +127,9 @@
             <span th:text="${m.contenido}">Mensaje</span>
             <span class="k-msj-hora" th:text="${m.minuto}">10:12</span>
         </div>
+
+        <!-- como en cualquier chat, solo bajo el ultimo mensaje y si es mio: si ya contesto, lo vio -->
+        <div class="k-msj-visto" th:if="${i.last and m.mio and m.leido}">Visto</div>
     </th:block>
 </th:block>
 

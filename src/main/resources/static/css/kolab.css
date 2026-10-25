@@ -2945,6 +2945,13 @@ button:focus-visible,
     color: rgba(255, 255, 255, 0.75);
 }
 
+.k-msj-visto {
+    margin-top: 0.2rem;
+    text-align: right;
+    font-size: 0.72rem;
+    color: var(--tinta-3);
+}
+
 .k-msj-escribir {
     display: flex;
     gap: 0.6rem;
