@@ -705,6 +705,13 @@ a.k-solicitud {
     margin-top: 0.35rem;
 }
 
+/* lo que esta pasando con una oferta propia, que es lo primero que se busca en la fila */
+.k-oferta-situacion {
+    font-size: 0.88rem;
+    font-weight: 600;
+    margin-top: 0.1rem;
+}
+
 .k-solicitud-derecha {
     display: flex;
     flex-direction: column;

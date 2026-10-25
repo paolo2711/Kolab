@@ -4,7 +4,7 @@ import java.math.BigDecimal;
 
 /**
  * Una oferta propia en la lista de Mi actividad: a qué solicitud fue, cuánto pedía el cliente,
- * cuánto propuse y cómo va.
+ * cuánto propuse y qué está pasando con ella.
  */
 public record OfertaEnviada(Long idOferta,
                             Long idSolicitud,
@@ -15,6 +15,7 @@ public record OfertaEnviada(Long idOferta,
                             BigDecimal precioDelCliente,
                             BigDecimal miMonto,
                             EstadoOferta estado,
+                            SituacionDeOferta situacion,
                             long mensajesSinLeer,
                             long cuantasOfertas,
                             String enviada) {
@@ -31,7 +32,8 @@ public record OfertaEnviada(Long idOferta,
         return mensajesSinLeer > 0;
     }
 
+    // la competencia solo importa mientras quien pidió todavía no elige
     public long getCompetidores() {
-        return Math.max(0, cuantasOfertas - 1);
+        return situacion == SituacionDeOferta.ESPERANDO ? Math.max(0, cuantasOfertas - 1) : 0;
     }
 }
