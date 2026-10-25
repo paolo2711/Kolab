@@ -13,8 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
- * Implementación de {@link DirectorioService}. Las tarjetas de una lista se arman con una consulta
- * por dato (categorías, reputación, comentarios), sin importar cuántas personas haya.
+ * las tarjetas se arman con una consulta por dato, no una por persona
  */
 @Service
 @Transactional(readOnly = true)
@@ -53,10 +52,11 @@ public class DirectorioServiceImpl implements DirectorioService {
     }
 
     @Override
-    public PerfilPublico publico(Long idUsuario) {
-        Perfil perfil = perfilRepository.findByUsuarioId(idUsuario)
-                .orElseThrow(() -> new RecursoNoEncontradoException("persona", idUsuario));
+    public PerfilPublico publico(String codigo) {
+        Perfil perfil = perfilRepository.findByUsuarioCodigo(codigo)
+                .orElseThrow(() -> new RecursoNoEncontradoException("persona " + codigo));
         Usuario u = perfil.getUsuario();
+        Long idUsuario = u.getId();
         List<Long> suyas = perfilCategoriaRepository.findByPerfilId(perfil.getId()).stream()
                 .map(PerfilCategoria::getIdCategoria).toList();
         return new PerfilPublico(personas.de(u), u.getDistrito(), Tiempo.mesYAnio(u.getFechaRegistro()),

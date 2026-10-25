@@ -12,9 +12,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-/**
- * Implementación de {@link UsuarioService}.
- */
 @Service
 public class UsuarioServiceImpl implements UsuarioService {
 
@@ -43,6 +40,7 @@ public class UsuarioServiceImpl implements UsuarioService {
         usuario.setNombre(form.getNombre().trim());
         usuario.setApellidos(form.getApellidos().trim());
         usuario.setEmail(email);
+        usuario.setCodigo(codigoLibre());
         usuario.setPasswordHash(passwordEncoder.encode(form.getPassword()));
         usuario.setTelefono(vacioComoNulo(form.getTelefono()));
         usuario.setFechaRegistro(LocalDateTime.now());
@@ -66,7 +64,16 @@ public class UsuarioServiceImpl implements UsuarioService {
         return !usuarioRepository.existsByEmail(normalizar(email));
     }
 
-    // el correo se guarda siempre igual, si no el unique deja pasar Pepe@x.com y pepe@x.com
+    // repetir es casi imposible con 36^10 pero el unique no perdona
+    private String codigoLibre() {
+        String codigo = CodigoPublico.nuevo();
+        while (usuarioRepository.existsByCodigo(codigo)) {
+            codigo = CodigoPublico.nuevo();
+        }
+        return codigo;
+    }
+
+    // el correo se guarda siempre igual o el unique deja pasar Pepe@x.com y pepe@x.com
     private String normalizar(String email) {
         return email == null ? "" : email.trim().toLowerCase(Locale.ROOT);
     }

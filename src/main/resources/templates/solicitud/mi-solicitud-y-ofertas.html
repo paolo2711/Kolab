@@ -60,7 +60,7 @@
                         <div class="k-oferta" th:classappend="${i.first and o.enJuego()} ? 'k-oferta-destacada'">
                             <span th:replace="~{fragmentos/componentes :: cara(${o.persona}, '2.6rem')}"></span>
                             <div class="k-oferta-datos">
-                                <a class="k-oferta-nombre k-enlace-limpio" th:href="@{/personas/{id}(id=${o.persona.id})}"
+                                <a class="k-oferta-nombre k-enlace-limpio" th:href="@{/personas/{codigo}(codigo=${o.persona.codigo})}"
                                    th:text="${o.persona.nombre}">Luis Mendoza</a>
                                 <div class="k-oferta-meta">
                                     <th:block th:unless="${o.sinCalificar()}">

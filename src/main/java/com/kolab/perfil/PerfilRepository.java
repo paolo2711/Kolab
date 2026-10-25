@@ -11,7 +11,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 /**
- * Acceso a {@link Perfil}. Es la capa DAO del perfil y de la reputación.
+ * capa DAO del perfil y la reputacion
  */
 public interface PerfilRepository extends JpaRepository<Perfil, Long> {
 
@@ -19,9 +19,12 @@ public interface PerfilRepository extends JpaRepository<Perfil, Long> {
     Optional<Perfil> findByUsuarioId(Long idUsuario);
 
     @EntityGraph(attributePaths = "usuario")
+    Optional<Perfil> findByUsuarioCodigo(String codigo);
+
+    @EntityGraph(attributePaths = "usuario")
     List<Perfil> findByUsuarioIdIn(Collection<Long> idsUsuario);
 
-    // solo quien ofrece algo y ya tiene al menos una calificación
+    // solo quien ofrece algo y ya tiene alguna calificacion
     @Query(value = """
             select p from Perfil p join fetch p.usuario
             where p.totalCalificaciones > 0

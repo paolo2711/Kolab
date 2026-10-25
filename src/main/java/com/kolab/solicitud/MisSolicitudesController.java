@@ -23,7 +23,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-// lo que cada quien hace con sus propias solicitudes: publicarlas, seguirlas y elegir oferta
+// publicar, seguir y elegir oferta en las solicitudes propias
 @Controller
 @RequestMapping("/mis-solicitudes")
 public class MisSolicitudesController {
@@ -62,12 +62,12 @@ public class MisSolicitudesController {
     @GetMapping("/nueva")
     public String formularioNueva(@RequestParam(required = false) String titulo,
                                   @RequestParam(required = false) Long idCategoria,
-                                  @RequestParam(required = false) Long idPersona,
+                                  @RequestParam(required = false) String persona,
                                   Model model) {
         SolicitudForm form = new SolicitudForm();
         form.setTitulo(titulo);
         form.setIdCategoria(idCategoria);
-        form.setIdDestinatario(idPersona);
+        form.setCodigoDestinatario(persona);
         model.addAttribute("solicitudForm", form);
         return formulario("solicitud/nueva", form, model);
     }
@@ -81,7 +81,7 @@ public class MisSolicitudesController {
             return formulario("solicitud/nueva", solicitudForm, model);
         }
         Long id = solicitudService.publicar(solicitudForm, usuario.getIdUsuario());
-        flash.addFlashAttribute("aviso", solicitudForm.getIdDestinatario() == null
+        flash.addFlashAttribute("aviso", solicitudForm.getCodigoDestinatario() == null
                 ? "Publicada. Quienes saben de esa categoría ya la ven."
                 : "Enviada. Solo le llega a la persona que elegiste.");
         return "redirect:/mis-solicitudes/" + id;
@@ -145,7 +145,7 @@ public class MisSolicitudesController {
         return "redirect:/mis-solicitudes/" + id;
     }
 
-    // lo que la vista previa muestra al cargar: la foto que ya tiene o la de la categoria elegida
+    // la vista previa al cargar: la foto que ya tiene o la de la categoria elegida
     private static String fotoPrevia(SolicitudForm form, List<CategoriaResumen> categorias) {
         if (form.getFotoActual() != null) {
             return form.getFotoActual();
@@ -154,7 +154,7 @@ public class MisSolicitudesController {
                 .findFirst().map(CategoriaResumen::foto).orElse(null);
     }
 
-    // el archivo no lo valida Bean Validation: hay que mirarlo por dentro
+    // el archivo no lo revisa bean validation, hay que mirarlo por dentro
     private void revisarFoto(SolicitudForm form, BindingResult errores) {
         fotos.problemaCon(form.getFoto()).ifPresent(problema -> errores.rejectValue("foto", "foto", problema));
     }
@@ -165,8 +165,8 @@ public class MisSolicitudesController {
         model.addAttribute("categorias", categorias);
         model.addAttribute("modalidades", Modalidad.values());
         model.addAttribute("fotoPrevia", fotoPrevia(form, categorias));
-        if (form.getIdDestinatario() != null) {
-            model.addAttribute("destinatario", directorioService.publico(form.getIdDestinatario()).persona());
+        if (form.getCodigoDestinatario() != null) {
+            model.addAttribute("destinatario", directorioService.publico(form.getCodigoDestinatario()).persona());
         }
         return vista;
     }

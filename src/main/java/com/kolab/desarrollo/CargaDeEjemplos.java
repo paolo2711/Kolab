@@ -23,8 +23,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
- * Llena una base vacía con los ejemplos de {@code resources/ejemplos}. Pasa por los mismos servicios
- * que usa la aplicación, así los ejemplos cumplen las mismas reglas que los datos de verdad.
+ * llena una base vacia con los ejemplos, por los mismos servicios que usa la app
  */
 @Component
 @ConditionalOnProperty(name = "kolab.desarrollo", havingValue = "true")
@@ -61,7 +60,7 @@ class CargaDeEjemplos {
     }
 
     /**
-     * @return {@code false} si la base ya tenía solicitudes y no se tocó nada
+     * @return false si la base ya tenia solicitudes y no se toco nada
      */
     @Transactional
     public boolean cargarSiVacia() {
@@ -106,7 +105,8 @@ class CargaDeEjemplos {
         form.setDescripcion(s.descripcion());
         form.setFechaDeseada(LocalDate.now().plusDays(s.dentroDeDias()));
         form.setPrecioPropuesto(s.precio());
-        form.setIdDestinatario(s.para() == null ? null : carga.persona(s.para()));
+        form.setCodigoDestinatario(s.para() == null ? null
+                : usuarioService.buscarPorEmail(s.para()).map(Usuario::getCodigo).orElseThrow());
 
         Long id = solicitudService.publicar(form, carga.persona(s.autor()));
         Solicitud publicada = solicitudRepository.getReferenceById(id);
@@ -118,7 +118,7 @@ class CargaDeEjemplos {
     }
 
     /**
-     * Deja creadas las cuentas de administración de los ejemplos aunque la base ya tenga datos.
+     * deja creadas las cuentas de admin de los ejemplos aunque la base ya tenga datos
      */
     @Transactional
     public void asegurarAdministradores() {

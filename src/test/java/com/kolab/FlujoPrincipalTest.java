@@ -27,6 +27,7 @@ import com.kolab.solicitud.SolicitudService;
 import com.kolab.usuario.DetallesUsuarioService;
 import com.kolab.usuario.RegistroForm;
 import com.kolab.usuario.Rol;
+import com.kolab.usuario.UsuarioRepository;
 import com.kolab.usuario.UsuarioService;
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -38,8 +39,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.transaction.annotation.Transactional;
 
-// el flujo de los cinco procesos contra la base de verdad (H2 con las mismas migraciones): publicar,
-// ofertar, aceptar, conversar, cerrar y calificar. cada prueba se deshace al terminar.
+// el flujo completo contra H2 con las mismas migraciones, cada prueba se deshace al terminar
 @SpringBootTest
 @Transactional
 class FlujoPrincipalTest {
@@ -47,6 +47,7 @@ class FlujoPrincipalTest {
     private static final long MUSICA = 1L;
 
     @Autowired private UsuarioService usuarioService;
+    @Autowired private UsuarioRepository usuarioRepository;
     @Autowired private PerfilService perfilService;
     @Autowired private SolicitudService solicitudService;
     @Autowired private CatalogoService catalogoService;
@@ -283,7 +284,7 @@ class FlujoPrincipalTest {
         form.setDescripcion("Quiero aprender desde cero, los sábados en la mañana.");
         form.setFechaDeseada(LocalDate.now().plusDays(7));
         form.setPrecioPropuesto(new BigDecimal(precio));
-        form.setIdDestinatario(para);
+        form.setCodigoDestinatario(para == null ? null : usuarioRepository.findById(para).orElseThrow().getCodigo());
         return form;
     }
 

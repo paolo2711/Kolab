@@ -26,7 +26,7 @@
             <div class="k-tarjeta k-mb-15">
                 <div class="k-titulo-fila">
                     <span th:replace="~{fragmentos/componentes :: estado(${solicitud.estado})}"></span>
-                    <a class="k-enlace-suave" th:href="@{/personas/{id}(id=${solicitud.autor.id})}"
+                    <a class="k-enlace-suave" th:href="@{/personas/{codigo}(codigo=${solicitud.autor.codigo})}"
                        th:text="'Publicada por ' + ${solicitud.autor.nombre}">Publicada por</a>
                 </div>
                 <p class="k-sin-margen k-mt-09 k-texto-suave" th:text="${solicitud.descripcion}">Descripción</p>

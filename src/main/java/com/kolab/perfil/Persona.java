@@ -1,7 +1,7 @@
 package com.kolab.perfil;
 
-// quien está del otro lado: el que ofertó, el que contrató, el que escribió
-public record Persona(Long id, String nombre, String iniciales, String foto) {
+// quien esta del otro lado: el que oferto, el que contrato, el que escribio
+public record Persona(Long id, String codigo, String nombre, String iniciales, String foto) {
 
     public boolean tieneFoto() {
         return foto != null;
@@ -15,7 +15,7 @@ public record Persona(Long id, String nombre, String iniciales, String foto) {
         return Personas.franjaDe(nombre);
     }
 
-    // sin esto una lista de gente sin foto es una fila de círculos idénticos
+    // sin esto una lista de gente sin foto son puros circulos iguales
     public int getTono() {
         return (int) (id % 5);
     }

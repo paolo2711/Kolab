@@ -13,6 +13,7 @@ import com.kolab.usuario.DetallesUsuarioService;
 import com.kolab.usuario.RegistroForm;
 import com.kolab.usuario.Rol;
 import com.kolab.usuario.UsuarioAutenticado;
+import com.kolab.usuario.UsuarioRepository;
 import com.kolab.usuario.UsuarioService;
 import java.util.List;
 import org.junit.jupiter.api.Test;
@@ -22,7 +23,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
 
-// el fondo de arriba del perfil es una franja de color que sale del nombre, no la foto de una categoria
+// arriba del perfil va una franja de color segun el nombre, no la foto de la categoria
 @SpringBootTest
 @AutoConfigureMockMvc
 @Transactional
@@ -32,6 +33,7 @@ class PortadaDelPerfilTest {
 
     @Autowired private MockMvc mockMvc;
     @Autowired private UsuarioService usuarioService;
+    @Autowired private UsuarioRepository usuarioRepository;
     @Autowired private PerfilService perfilService;
     @Autowired private DetallesUsuarioService detalles;
 
@@ -45,7 +47,7 @@ class PortadaDelPerfilTest {
         mockMvc.perform(get("/perfil").with(user(yo)))
                 .andExpect(status().isOk())
                 .andExpect(content().string(allOf(containsString(franja), not(containsString("k-banner")))));
-        mockMvc.perform(get("/personas/{id}", id).with(user(otro())))
+        mockMvc.perform(get("/personas/{codigo}", usuarioRepository.findById(id).orElseThrow().getCodigo()).with(user(otro())))
                 .andExpect(status().isOk())
                 .andExpect(content().string(allOf(containsString(franja), not(containsString("k-banner")))));
     }
@@ -57,7 +59,7 @@ class PortadaDelPerfilTest {
         assertThat(Personas.franjaDe(null)).isBetween(0, 5);
     }
 
-    // la propia ruta publica manda a mi perfil, asi que la ve otra cuenta
+    // la ruta publica propia manda a mi perfil, por eso la ve otra cuenta
     private UsuarioAutenticado otro() {
         registrar("mira.portada@kolab.pe");
         return detalles.cargar("mira.portada@kolab.pe", Rol.USUARIO);
