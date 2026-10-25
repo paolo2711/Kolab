@@ -9,9 +9,8 @@
 <main class="k-medio">
     <p class="k-migas"><a th:href="@{/solicitudes}">&larr; Explorar</a></p>
 
-    <th:block th:with="portada=${perfil.ofrece() ? perfil.categorias[0].foto : null}">
-    <img class="k-banner" th:if="${portada != null}" th:src="@{${portada}}" th:alt="${perfil.categorias[0].nombre}">
-    <div class="k-perfil-cabecera" th:classappend="${portada != null} ? 'k-cabecera-bajo-banner'">
+    <div class="k-franja" th:classappend="'f' + ${perfil.persona.franja}"></div>
+    <div class="k-perfil-cabecera k-cabecera-bajo-banner">
         <span th:replace="~{fragmentos/componentes :: cara(${perfil.persona}, '5rem')}"></span>
 
         <div class="k-perfil-datos">
@@ -36,7 +35,6 @@
         <a class="k-btn k-btn-principal"
            th:href="@{/mis-solicitudes/nueva(idPersona=${perfil.persona.id})}">Proponerle un servicio</a>
     </div>
-    </th:block>
 
     <div class="k-dos-columnas k-principal-ancha">
         <div>

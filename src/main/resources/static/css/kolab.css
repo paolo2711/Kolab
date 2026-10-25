@@ -2009,6 +2009,21 @@ img {
     background: var(--hueso);
 }
 
+/* arriba del perfil: un color que sale del nombre, claro para que no pese como un bloque oscuro */
+.k-franja {
+    height: 7rem;
+    border: 1px solid var(--linea);
+    border-bottom: 0;
+    border-radius: var(--r-grande) var(--r-grande) 0 0;
+}
+
+.k-franja.f0 { background: #dbe7f6; }
+.k-franja.f1 { background: #d7ece8; }
+.k-franja.f2 { background: #f3e3d7; }
+.k-franja.f3 { background: #e4def3; }
+.k-franja.f4 { background: #dcecdf; }
+.k-franja.f5 { background: #f4e9c9; }
+
 .k-cabecera-bajo-banner {
     margin-top: 0;
     border-top: 0;
