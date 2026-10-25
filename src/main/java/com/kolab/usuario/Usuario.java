@@ -42,6 +42,10 @@ public class Usuario {
     @Column(length = 20)
     private String telefono;
 
+    // la que subio, null si no subio ninguna
+    @Column(length = 40)
+    private String foto;
+
     @Column(length = 60)
     private String distrito;
 
@@ -146,6 +150,14 @@ public class Usuario {
 
     public void setTelefono(String telefono) {
         this.telefono = telefono;
+    }
+
+    public String getFoto() {
+        return foto;
+    }
+
+    public void setFoto(String foto) {
+        this.foto = foto;
     }
 
     public String getCodigo() {

@@ -45,7 +45,7 @@ public class DetallesUsuarioService implements UserDetailsService {
         return usuarioService.buscarPorEmail(email)
                 .filter(usuario -> usuario.getRol() == rol)
                 .map(usuario -> new UsuarioAutenticado(usuario, ofreceServicios(usuario),
-                        fotos.dePersona(usuario.getEmail())))
+                        fotos.dePersona(usuario.getFoto(), usuario.getEmail())))
                 .orElseThrow(() -> new UsernameNotFoundException("No hay cuenta " + rol + " con el correo " + email));
     }
 

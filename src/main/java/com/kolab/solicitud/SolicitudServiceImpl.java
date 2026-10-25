@@ -2,6 +2,7 @@ package com.kolab.solicitud;
 
 import com.kolab.categoria.Categoria;
 import com.kolab.categoria.CategoriaRepository;
+import com.kolab.common.FotosSubidas;
 import com.kolab.common.OperacionNoPermitidaException;
 import com.kolab.common.RecursoNoEncontradoException;
 import com.kolab.usuario.Usuario;
@@ -20,16 +21,18 @@ public class SolicitudServiceImpl implements SolicitudService {
     private final DetallesDeSolicitud detalles;
     private final MisSolicitudes misSolicitudes;
     private final FotosDeSolicitud fotos;
+    private final FotosSubidas subidas;
 
     public SolicitudServiceImpl(SolicitudRepository solicitudRepository, CategoriaRepository categoriaRepository,
                                 UsuarioRepository usuarioRepository, DetallesDeSolicitud detalles,
-                                MisSolicitudes misSolicitudes, FotosDeSolicitud fotos) {
+                                MisSolicitudes misSolicitudes, FotosDeSolicitud fotos, FotosSubidas subidas) {
         this.solicitudRepository = solicitudRepository;
         this.categoriaRepository = categoriaRepository;
         this.usuarioRepository = usuarioRepository;
         this.detalles = detalles;
         this.misSolicitudes = misSolicitudes;
         this.fotos = fotos;
+        this.subidas = subidas;
     }
 
     @Override
@@ -39,8 +42,8 @@ public class SolicitudServiceImpl implements SolicitudService {
         Solicitud nueva = new Solicitud(categoriaActiva(form.getIdCategoria()), autor, form.getTitulo().trim(),
                 form.getDescripcion().trim(), form.getModalidad(), form.getPrecioPropuesto());
         copiarDetalles(form, nueva);
-        if (subioFoto(form)) {
-            nueva.setFoto(fotos.guardar(form.getFoto()));
+        if (FotosSubidas.subio(form.getFoto())) {
+            nueva.setFoto(subidas.guardar(form.getFoto()));
         }
         if (form.getCodigoDestinatario() != null) {
             Usuario destinatario = usuarioRepository.findByCodigo(form.getCodigoDestinatario())
@@ -97,15 +100,11 @@ public class SolicitudServiceImpl implements SolicitudService {
         s.setDescripcion(form.getDescripcion().trim());
         s.setPrecioPropuesto(form.getPrecioPropuesto());
         copiarDetalles(form, s);
-        if (subioFoto(form)) {
+        if (FotosSubidas.subio(form.getFoto())) {
             String anterior = s.getFoto();
-            s.setFoto(fotos.guardar(form.getFoto()));
-            fotos.borrar(anterior);
+            s.setFoto(subidas.guardar(form.getFoto()));
+            subidas.borrar(anterior);
         }
-    }
-
-    private static boolean subioFoto(SolicitudForm form) {
-        return form.getFoto() != null && !form.getFoto().isEmpty();
     }
 
     @Override

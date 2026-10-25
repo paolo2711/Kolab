@@ -9,7 +9,7 @@
 <main class="k-medio">
     <p class="k-migas"><a th:href="@{/solicitudes}">&larr; Explorar</a></p>
 
-    <div class="k-franja" th:classappend="'f' + ${perfil.persona.franja}"></div>
+    <th:block th:replace="~{fragmentos/componentes :: arribaDelPerfil(${perfil.cabecera}, ${perfil.persona.franja})}"></th:block>
     <div class="k-perfil-cabecera k-cabecera-bajo-banner">
         <span th:replace="~{fragmentos/componentes :: cara(${perfil.persona}, '5rem')}"></span>
 
@@ -111,6 +111,7 @@
             </div>
         </div>
     </div>
+    <script th:src="@{/js/medidas.js}" defer></script>
 </main>
 
 </body>

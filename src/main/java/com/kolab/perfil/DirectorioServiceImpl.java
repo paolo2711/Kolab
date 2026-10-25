@@ -63,7 +63,8 @@ public class DirectorioServiceImpl implements DirectorioService {
                 perfil.getDescripcion(), perfil.getExperiencia(),
                 reputacionService.de(idUsuario),
                 categoriaService.activas().stream().filter(c -> suyas.contains(c.id())).toList(),
-                calificacionService.recibidas(idUsuario, PageRequest.of(0, RESENAS)).getContent());
+                calificacionService.recibidas(idUsuario, PageRequest.of(0, RESENAS)).getContent(),
+                CabeceraDePerfil.de(perfil));
     }
 
     private List<ExpertoResumen> tarjetas(List<Perfil> perfiles) {

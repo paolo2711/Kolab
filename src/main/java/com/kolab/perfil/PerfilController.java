@@ -1,6 +1,7 @@
 package com.kolab.perfil;
 
 import com.kolab.categoria.CategoriaService;
+import com.kolab.common.FotosSubidas;
 import com.kolab.usuario.SesionActual;
 import com.kolab.usuario.UsuarioAutenticado;
 import jakarta.servlet.http.HttpServletRequest;
@@ -22,11 +23,14 @@ public class PerfilController {
     private final PerfilService perfilService;
     private final CategoriaService categoriaService;
     private final SesionActual sesion;
+    private final FotosSubidas fotos;
 
-    public PerfilController(PerfilService perfilService, CategoriaService categoriaService, SesionActual sesion) {
+    public PerfilController(PerfilService perfilService, CategoriaService categoriaService, SesionActual sesion,
+                            FotosSubidas fotos) {
         this.perfilService = perfilService;
         this.categoriaService = categoriaService;
         this.sesion = sesion;
+        this.fotos = fotos;
     }
 
     @GetMapping("/perfil")
@@ -56,6 +60,8 @@ public class PerfilController {
                           RedirectAttributes flash,
                           HttpServletRequest pedido,
                           HttpServletResponse respuesta) {
+        fotos.problemaCon(perfilForm.getFoto()).ifPresent(p -> errores.rejectValue("foto", "foto", p));
+        fotos.problemaCon(perfilForm.getPortada()).ifPresent(p -> errores.rejectValue("portada", "portada", p));
         if (errores.hasErrors()) {
             model.addAttribute("seccion", "perfil");
             model.addAttribute("usuario", usuario);

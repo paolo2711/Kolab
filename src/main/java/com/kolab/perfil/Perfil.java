@@ -50,6 +50,14 @@ public class Perfil {
     @Column(name = "total_calificaciones", nullable = false)
     private int totalCalificaciones = 0;
 
+    // foto ancha de arriba del perfil, en la carpeta de fotos subidas
+    @Column(length = 40)
+    private String portada;
+
+    // color principal de la foto de la persona, para la franja si no hay portada
+    @Column(name = "color_foto", length = 7)
+    private String colorFoto;
+
     protected Perfil() {
     }
 
@@ -107,6 +115,22 @@ public class Perfil {
 
     public void setExperiencia(String experiencia) {
         this.experiencia = experiencia;
+    }
+
+    public String getPortada() {
+        return portada;
+    }
+
+    public void setPortada(String portada) {
+        this.portada = portada;
+    }
+
+    public String getColorFoto() {
+        return colorFoto;
+    }
+
+    public void setColorFoto(String colorFoto) {
+        this.colorFoto = colorFoto;
     }
 
     public BigDecimal getCalifPromedio() {

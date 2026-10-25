@@ -162,6 +162,13 @@
     </div>
 </div>
 
+<!-- arriba del perfil: la portada si la subio, si no la franja con el color de su foto o el del nombre -->
+<th:block th:fragment="arribaDelPerfil(cabecera, franja)">
+    <img class="k-banner" th:if="${cabecera.portada != null}" th:src="@{${cabecera.portada}}" alt="Portada del perfil">
+    <div class="k-franja" th:unless="${cabecera.portada != null}" th:classappend="'f' + ${franja}"
+         th:data-fondo="${cabecera.color}"></div>
+</th:block>
+
 <div th:fragment="servicios(lista, titulo, vacio)">
     <h2 class="k-bloque-titulo k-mt-25" th:text="${titulo}">Servicios</h2>
     <p class="k-vacio" th:if="${#lists.isEmpty(lista)}" th:text="${vacio}">Todavía nada.</p>

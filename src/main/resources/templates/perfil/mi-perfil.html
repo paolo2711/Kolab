@@ -9,7 +9,7 @@
 <main class="k-medio">
     <div th:replace="~{fragmentos/componentes :: aviso}"></div>
 
-    <div class="k-franja" th:classappend="'f' + ${usuario.franja}"></div>
+    <th:block th:replace="~{fragmentos/componentes :: arribaDelPerfil(${perfil.cabecera}, ${usuario.franja})}"></th:block>
     <div class="k-perfil-cabecera k-cabecera-bajo-banner">
         <img class="k-avatar k-foto-cubre" th:if="${usuario.foto != null}" th:src="@{${usuario.foto}}" alt="Tu foto">
         <span class="k-avatar" th:unless="${usuario.foto != null}" th:text="${usuario.iniciales}">PR</span>
@@ -120,6 +120,7 @@
             </div>
         </div>
     </div>
+    <script th:src="@{/js/medidas.js}" defer></script>
 </main>
 
 </body>

@@ -12,6 +12,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import com.kolab.common.FotosSubidas;
 import com.kolab.usuario.DetallesUsuarioService;
 import com.kolab.usuario.RegistroForm;
 import com.kolab.usuario.Rol;
@@ -47,7 +48,7 @@ class FotoDeSolicitudTest {
     @Autowired private UsuarioService usuarioService;
     @Autowired private DetallesUsuarioService detalles;
     @Autowired private SolicitudRepository solicitudRepository;
-    @Autowired private FotosDeSolicitud fotos;
+    @Autowired private FotosSubidas fotos;
 
     private UsuarioAutenticado yo;
 
@@ -71,12 +72,12 @@ class FotoDeSolicitudTest {
 
         String nombre = solicitudRepository.findById(id).orElseThrow().getFoto();
         assertThat(nombre).matches("[0-9a-f]{32}\\.png").doesNotContain("mi foto");
-        mockMvc.perform(get(FotosDeSolicitud.RUTA + nombre))
+        mockMvc.perform(get(FotosSubidas.RUTA + nombre))
                 .andExpect(status().isOk())
                 .andExpect(header().string("Content-Type", "image/png"))
                 .andExpect(content().bytes(png));
         mockMvc.perform(get("/mis-solicitudes/{id}", id).with(user(yo)))
-                .andExpect(content().string(containsString(FotosDeSolicitud.RUTA + nombre)));
+                .andExpect(content().string(containsString(FotosSubidas.RUTA + nombre)));
     }
 
     @Test
@@ -119,7 +120,7 @@ class FotoDeSolicitudTest {
 
     @Test
     void masDeDosMegasNoPasa() throws Exception {
-        byte[] pesada = Arrays.copyOf(imagen("png"), (int) FotosDeSolicitud.MAXIMO + 1);
+        byte[] pesada = Arrays.copyOf(imagen("png"), (int) FotosSubidas.MAXIMO + 1);
 
         rechazada(new MockMultipartFile("foto", "grande.png", "image/png", pesada), "La foto pesa más de 2 MB.");
     }
@@ -153,7 +154,7 @@ class FotoDeSolicitudTest {
     @Test
     void alEditarLaVistaPreviaArrancaConLaFotoQueYaTiene() throws Exception {
         Long id = publicar(new MockMultipartFile("foto", "a.png", "image/png", imagen("png")));
-        String propia = FotosDeSolicitud.RUTA + solicitudRepository.findById(id).orElseThrow().getFoto();
+        String propia = FotosSubidas.RUTA + solicitudRepository.findById(id).orElseThrow().getFoto();
 
         mockMvc.perform(get("/mis-solicitudes/{id}/editar", id).with(user(yo)))
                 .andExpect(status().isOk())
@@ -164,8 +165,8 @@ class FotoDeSolicitudTest {
 
     @Test
     void unNombreQueNoGeneroLaAplicacionNoLlegaAlDisco() throws Exception {
-        mockMvc.perform(get(FotosDeSolicitud.RUTA + "pom.xml")).andExpect(status().isNotFound());
-        mockMvc.perform(get(FotosDeSolicitud.RUTA + "no-existe.png")).andExpect(status().isNotFound());
+        mockMvc.perform(get(FotosSubidas.RUTA + "pom.xml")).andExpect(status().isNotFound());
+        mockMvc.perform(get(FotosSubidas.RUTA + "no-existe.png")).andExpect(status().isNotFound());
         assertThat(fotos.archivo("../../pom.xml")).isEmpty();
     }
 
