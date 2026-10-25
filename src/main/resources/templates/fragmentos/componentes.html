@@ -117,16 +117,19 @@
     <p class="k-vacio" th:if="${#lists.isEmpty(lista)}" th:text="${vacio}">Todavía nada.</p>
 
     <div class="k-tratos">
-        <a class="k-trato" th:each="v : ${lista}" th:href="@{/servicios/{id}(id=${v.id})}">
+        <!-- el titulo lleva al servicio y cubre toda la tarjeta; el nombre queda encima y lleva al perfil -->
+        <div class="k-trato" th:each="v : ${lista}">
             <span class="k-trato-cima">
-                <span class="k-trato-titulo" th:text="${v.titulo}">Clases de inglés conversacional</span>
+                <a class="k-trato-titulo k-trato-ir" th:href="@{/servicios/{id}(id=${v.id})}"
+                   th:text="${v.titulo}">Clases de inglés conversacional</a>
                 <span th:replace="~{fragmentos/componentes :: estado(${v.estado})}"></span>
             </span>
 
             <span class="k-trato-persona">
                 <span th:replace="~{fragmentos/componentes :: cara(${v.contraparte}, '1.7rem')}"></span>
                 <span th:text="${v.loDoy} ? 'te contrató' : 'lo contrataste'">lo contrataste</span>
-                <b th:text="${v.contraparte.nombre}">Luis Mendoza</b>
+                <a class="k-trato-quien k-enlace-limpio" th:href="@{/personas/{id}(id=${v.contraparte.id})}"
+                   th:text="${v.contraparte.nombre}">Luis Mendoza</a>
                 · <span th:text="${v.fecha}">empezó hace 4 días</span>
             </span>
 
@@ -144,7 +147,7 @@
                     <span th:replace="~{fragmentos/componentes :: precio(${v.neto}, 'k-precio-m')}"></span>
                 </span>
             </span>
-        </a>
+        </div>
     </div>
 </div>
 

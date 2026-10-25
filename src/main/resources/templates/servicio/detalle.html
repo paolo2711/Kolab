@@ -72,7 +72,8 @@
                 <div class="k-fila-con-cara">
                     <span th:replace="~{fragmentos/componentes :: cara(${servicio.contraparte}, '2.9rem')}"></span>
                     <div>
-                        <div class="k-oferta-nombre" th:text="${servicio.contraparte.nombre}">Luis Mendoza</div>
+                        <a class="k-oferta-nombre k-enlace-limpio" th:href="@{/personas/{id}(id=${servicio.contraparte.id})}"
+                           th:text="${servicio.contraparte.nombre}">Luis Mendoza</a>
                         <div class="k-oferta-meta">
                             <th:block th:unless="${servicio.reputacionContraparte.sinCalificar()}">
                                 <span th:replace="~{fragmentos/componentes :: nota(${servicio.reputacionContraparte.promedio})}"></span> ·
@@ -88,7 +89,8 @@
         <div class="k-chat">
             <div class="k-chat-cabecera">
                 <span th:replace="~{fragmentos/componentes :: cara(${servicio.contraparte}, '2rem')}"></span>
-                Mensajes con <span th:text="${servicio.contraparte.nombre}">Luis Mendoza</span>
+                Mensajes con <a class="k-enlace-limpio" th:href="@{/personas/{id}(id=${servicio.contraparte.id})}"
+                                th:text="${servicio.contraparte.nombre}">Luis Mendoza</a>
             </div>
             <div class="k-chat-hilo">
                 <div th:each="m : ${servicio.mensajes}" class="k-burbuja"
