@@ -14,7 +14,6 @@ public final class Tiempo {
     private static final Locale PERU = Locale.forLanguageTag("es-PE");
     private static final DateTimeFormatter DIA = DateTimeFormatter.ofPattern("dd/MM/yyyy");
     private static final DateTimeFormatter HORA = DateTimeFormatter.ofPattern("HH:mm");
-    private static final DateTimeFormatter DIA_CORTO = DateTimeFormatter.ofPattern("dd/MM");
     private static final DateTimeFormatter MES = DateTimeFormatter.ofPattern("MMMM 'de' yyyy", PERU);
     private static final DateTimeFormatter DIA_LARGO = DateTimeFormatter.ofPattern("d 'de' MMMM", PERU);
 
@@ -48,14 +47,6 @@ public final class Tiempo {
             return semanas == 1 ? "hace 1 semana" : "hace " + semanas + " semanas";
         }
         return "el " + cuando.format(DIA);
-    }
-
-    /**
-     * La hora si fue hoy, el día si fue antes. Es lo que muestra cada burbuja del chat.
-     */
-    public static String hora(LocalDateTime cuando) {
-        boolean hoy = cuando.toLocalDate().equals(LocalDateTime.now().toLocalDate());
-        return cuando.format(hoy ? HORA : DIA_CORTO);
     }
 
     /**

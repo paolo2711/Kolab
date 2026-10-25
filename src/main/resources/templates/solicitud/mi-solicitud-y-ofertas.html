@@ -95,19 +95,18 @@
                         </div>
 
                         <div class="k-hilo" th:id="'hilo-' + ${o.id}" hidden>
+                            <div class="k-chat-cabecera">
+                                <a class="k-chat-abrir" th:href="@{/mensajes/{id}(id=${o.id})}">Abrir en Mensajes</a>
+                            </div>
                             <div class="k-chat-hilo">
-                                <div th:each="m : ${hilos.get(o.id)}" class="k-burbuja"
-                                     th:classappend="${m.mio} ? 'k-burbuja-mio' : 'k-burbuja-otro'">
-                                    <span th:text="${m.contenido}">Mensaje</span>
-                                    <span class="k-burbuja-hora" th:text="${m.hora}">10:12</span>
-                                </div>
+                                <th:block th:replace="~{fragmentos/componentes :: burbujas(${hilos.get(o.id)})}"></th:block>
                                 <p class="k-vacio k-sin-margen" th:if="${#lists.isEmpty(hilos.get(o.id))}">
                                     Todavía no se han escrito.</p>
                             </div>
                             <form class="k-chat-envio" th:action="@{/mensajes/{id}(id=${o.id})}" method="post">
                                 <input type="hidden" name="volver" th:value="@{/mis-solicitudes/{id}(id=${solicitud.id})}">
                                 <input type="text" name="contenido" placeholder="Escribe un mensaje" autocomplete="off" required>
-                                <button type="submit" class="k-btn k-btn-oscuro">Enviar</button>
+                                <button type="submit" class="k-btn k-btn-principal">Enviar</button>
                             </form>
                         </div>
                     </div>
@@ -126,20 +125,7 @@
         </div>
     </div>
 
-    <script th:inline="none">
-        document.querySelectorAll('.k-chat-boton[data-hilo]').forEach(function (boton) {
-            boton.addEventListener('click', function () {
-                var hilo = document.getElementById('hilo-' + boton.dataset.hilo);
-                var abierto = !hilo.hidden;
-                document.querySelectorAll('.k-hilo').forEach(function (h) { h.hidden = true; });
-                document.querySelectorAll('.k-chat-boton').forEach(function (b) { b.classList.remove('activo'); });
-                if (!abierto) {
-                    hilo.hidden = false;
-                    boton.classList.add('activo');
-                }
-            });
-        });
-    </script>
+    <script th:src="@{/js/chats-de-ofertas.js}" defer></script>
 </main>
 
 </body>

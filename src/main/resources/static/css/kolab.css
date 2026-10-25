@@ -444,17 +444,6 @@ textarea.k-mal:focus {
     color: var(--tinta);
 }
 
-.k-btn-oscuro {
-    background: var(--tinta);
-    border-color: var(--tinta);
-    color: #fff;
-}
-
-.k-btn-oscuro:hover {
-    background: var(--tinta);
-    color: #fff;
-}
-
 .k-btn-chico {
     font-size: 0.85rem;
     padding: 0.45rem 0.9rem;
@@ -821,41 +810,19 @@ a.k-solicitud {
     font-size: 0.94rem;
 }
 
+/* el paso del chat chico a la conversacion completa, al otro extremo de la cabecera */
+.k-chat-abrir {
+    margin-left: auto;
+    font-size: 0.85rem;
+    font-weight: 500;
+    white-space: nowrap;
+}
+
 .k-chat-hilo {
     flex: 1;
-    display: flex;
-    flex-direction: column;
-    gap: 0.6rem;
-    padding: 1.1rem;
+    padding: 0.6rem 1.1rem 1.1rem;
     overflow-y: auto;
     background: var(--hueso);
-}
-
-.k-burbuja {
-    max-width: 78%;
-    padding: 0.55rem 0.85rem;
-    border-radius: var(--r);
-    font-size: 0.9rem;
-    line-height: 1.5;
-}
-
-.k-burbuja-otro {
-    align-self: flex-start;
-    background: var(--panel);
-    border: 1px solid var(--linea);
-}
-
-.k-burbuja-mio {
-    align-self: flex-end;
-    background: var(--acento-suave);
-    border: 1px solid #cfdff2;
-}
-
-.k-burbuja-hora {
-    display: block;
-    font-size: 0.72rem;
-    color: var(--tinta-3);
-    margin-top: 0.2rem;
 }
 
 .k-chat-envio input {
@@ -1805,6 +1772,12 @@ a.k-solicitud {
     border-radius: 0 0 var(--r) var(--r);
     background: var(--panel);
     margin-top: -1px;
+}
+
+/* con el chat abierto la tarjeta y el chat son una sola caja: mismo borde y sin esquinas abajo */
+.k-oferta-caja:has(.k-hilo:not([hidden])) .k-oferta {
+    border-color: var(--acento) var(--acento) var(--linea);
+    border-radius: var(--r) var(--r) 0 0;
 }
 
 .k-hilo .k-chat-hilo {

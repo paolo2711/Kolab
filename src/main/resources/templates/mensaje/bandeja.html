@@ -71,20 +71,7 @@
                 <p class="k-vacio k-msj-sin-nada" th:if="${#lists.isEmpty(conversacion.mensajes)}">
                     Todavía no se han escrito. Escribe el primero.</p>
 
-                <th:block th:each="m, i : ${conversacion.mensajes}">
-                    <div class="k-msj-dia"
-                         th:if="${i.first or m.dia != conversacion.mensajes[i.index - 1].dia}"
-                         th:text="${m.dia}">Hoy</div>
-
-                    <div class="k-msj-burbuja"
-                         th:classappend="${m.mio} ? 'k-msj-mio' : 'k-msj-suyo'"
-                         th:attrappend="data-seguido=${!i.first
-                             and m.mio == conversacion.mensajes[i.index - 1].mio
-                             and m.dia == conversacion.mensajes[i.index - 1].dia} ? 'si' : null">
-                        <span th:text="${m.contenido}">Mensaje</span>
-                        <span class="k-msj-hora" th:text="${m.minuto}">10:12</span>
-                    </div>
-                </th:block>
+                <th:block th:replace="~{fragmentos/componentes :: burbujas(${conversacion.mensajes})}"></th:block>
             </div>
 
             <form class="k-msj-escribir" th:action="@{/mensajes/{id}(id=${conversacion.idOferta})}" method="post">
