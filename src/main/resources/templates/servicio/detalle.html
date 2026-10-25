@@ -89,22 +89,19 @@
         <div class="k-chat">
             <div class="k-chat-cabecera">
                 <span th:replace="~{fragmentos/componentes :: cara(${servicio.contraparte}, '2rem')}"></span>
-                Mensajes con <a class="k-enlace-limpio" th:href="@{/personas/{id}(id=${servicio.contraparte.id})}"
-                                th:text="${servicio.contraparte.nombre}">Luis Mendoza</a>
+                <span>Mensajes con <a class="k-enlace-limpio" th:href="@{/personas/{id}(id=${servicio.contraparte.id})}"
+                                      th:text="${servicio.contraparte.nombre}">Luis Mendoza</a></span>
+                <a class="k-chat-abrir" th:href="@{/mensajes/{id}(id=${servicio.idOferta})}">Abrir en Mensajes</a>
             </div>
             <div class="k-chat-hilo">
-                <div th:each="m : ${servicio.mensajes}" class="k-burbuja"
-                     th:classappend="${m.mio} ? 'k-burbuja-mio' : 'k-burbuja-otro'">
-                    <span th:text="${m.contenido}">Mensaje</span>
-                    <span class="k-burbuja-hora" th:text="${m.hora}">10:12</span>
-                </div>
+                <th:block th:replace="~{fragmentos/componentes :: burbujas(${servicio.mensajes})}"></th:block>
             </div>
             <p class="k-vacio k-sin-margen k-relleno-1" th:if="${#lists.isEmpty(servicio.mensajes)}">
                 Todavía no se han escrito.</p>
             <form class="k-chat-envio" th:action="@{/mensajes/{id}(id=${servicio.idOferta})}" method="post">
                 <input type="hidden" name="volver" th:value="@{/servicios/{id}(id=${servicio.id})}">
                 <input type="text" name="contenido" placeholder="Escribe un mensaje" autocomplete="off" required>
-                <button type="submit" class="k-btn k-btn-oscuro">Enviar</button>
+                <button type="submit" class="k-btn k-btn-principal">Enviar</button>
             </form>
         </div>
     </div>

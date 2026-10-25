@@ -112,6 +112,24 @@
     </li>
 </ol>
 
+<!-- las burbujas de una conversacion con su separador por dia; las usan Mensajes y los chats chicos -->
+<th:block th:fragment="burbujas(mensajes)">
+    <th:block th:each="m, i : ${mensajes}">
+        <div class="k-msj-dia"
+             th:if="${i.first or m.dia != mensajes[i.index - 1].dia}"
+             th:text="${m.dia}">Hoy</div>
+
+        <div class="k-msj-burbuja"
+             th:classappend="${m.mio} ? 'k-msj-mio' : 'k-msj-suyo'"
+             th:attrappend="data-seguido=${!i.first
+                 and m.mio == mensajes[i.index - 1].mio
+                 and m.dia == mensajes[i.index - 1].dia} ? 'si' : null">
+            <span th:text="${m.contenido}">Mensaje</span>
+            <span class="k-msj-hora" th:text="${m.minuto}">10:12</span>
+        </div>
+    </th:block>
+</th:block>
+
 <div th:fragment="servicios(lista, titulo, vacio)">
     <h2 class="k-bloque-titulo k-mt-25" th:text="${titulo}">Servicios</h2>
     <p class="k-vacio" th:if="${#lists.isEmpty(lista)}" th:text="${vacio}">Todavía nada.</p>
