@@ -21,6 +21,8 @@
         <java.version>21</java.version>
         <!-- la que trae Spring Boot 3.5 no reconoce PostgreSQL 18 -->
         <flyway.version>11.20.3</flyway.version>
+        <!-- la ultima 10.1 que hay; la de Spring Boot 3.5.16 se queda en la 10.1.55 -->
+        <tomcat.version>10.1.61</tomcat.version>
     </properties>
 
     <dependencies>
