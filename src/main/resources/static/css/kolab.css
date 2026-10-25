@@ -2270,6 +2270,7 @@ button:focus-visible,
 }
 
 .k-trato {
+    position: relative;
     display: flex;
     flex-direction: column;
     gap: 0.3rem;
@@ -2313,7 +2314,21 @@ button:focus-visible,
     color: var(--tinta-2);
 }
 
-.k-trato-persona b {
+.k-trato-ir {
+    color: inherit;
+    text-decoration: none;
+}
+
+/* el enlace al servicio se estira sobre toda la tarjeta */
+.k-trato-ir::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+}
+
+.k-trato-quien {
+    position: relative;
+    z-index: 1;
     font-weight: 600;
     color: var(--tinta);
 }
