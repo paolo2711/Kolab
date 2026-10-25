@@ -101,47 +101,28 @@
             <h2 class="k-tarjeta-titulo">Vista previa</h2>
             <p class="k-vacio">Así la van a ver quienes pueden ofertar.</p>
 
-            <div class="k-solicitud k-alinear-arriba">
+            <!-- sale ya pintada con lo escrito, para cuando el formulario vuelve con un error -->
+            <div class="k-solicitud k-alinear-arriba" th:object="${solicitudForm}">
                 <div>
-                    <span class="k-solicitud-titulo k-vp-vacio" id="vpTitulo">Tu título va aquí</span>
+                    <span class="k-solicitud-titulo" id="vpTitulo"
+                          th:classappend="${#strings.isEmpty(solicitudForm.titulo)} ? 'k-vp-vacio'"
+                          th:text="${#strings.isEmpty(solicitudForm.titulo)} ? 'Tu título va aquí' : *{titulo}">Tu título va aquí</span>
                     <div class="k-solicitud-meta">
-                        <span id="vpCategoria">Categoría</span> · <span id="vpModalidad">Modalidad</span>
+                        <span id="vpCategoria"><th:block th:each="c : ${categorias}" th:if="${c.id == solicitudForm.idCategoria}"
+                                  th:text="${c.nombre}"></th:block><th:block
+                                  th:if="${solicitudForm.idCategoria == null}">Categoría</th:block></span> ·
+                        <span id="vpModalidad"
+                              th:text="*{modalidad} != null ? *{modalidad.etiqueta} : ${modalidades[0].etiqueta}">Modalidad</span>
                     </div>
                     <div class="k-solicitud-ofertas">Publicada recién · sin ofertas</div>
                 </div>
-                <span class="k-precio k-precio-g"><span class="k-moneda">S/</span><span id="vpPrecio">0.00</span></span>
+                <span class="k-precio k-precio-g"><span class="k-moneda">S/</span><span id="vpPrecio"
+                      th:text="*{precioPropuesto} != null ? ${#numbers.formatDecimal(solicitudForm.precioPropuesto, 1, 2, 'POINT')} : '0.00'">0.00</span></span>
             </div>
         </div>
     </div>
 
-    <script th:inline="none">
-        (function () {
-            var f = document.getElementById('formSolicitud');
-            if (!f) return;
-            var titulo = f.querySelector('#titulo');
-            var categoria = f.querySelector('#idCategoria');
-            var modalidad = f.querySelector('#modalidad');
-            var precio = f.querySelector('#precioPropuesto');
-
-            function pintar() {
-                var vpTitulo = document.getElementById('vpTitulo');
-                vpTitulo.textContent = titulo.value.trim() || 'Tu título va aquí';
-                vpTitulo.classList.toggle('k-vp-vacio', !titulo.value.trim());
-                document.getElementById('vpCategoria').textContent =
-                    categoria.selectedIndex > 0 ? categoria.options[categoria.selectedIndex].text : 'Categoría';
-                document.getElementById('vpModalidad').textContent =
-                    modalidad.options[modalidad.selectedIndex].text;
-                document.getElementById('vpPrecio').textContent =
-                    precio.value ? Number(precio.value).toFixed(2) : '0.00';
-            }
-
-            [titulo, categoria, modalidad, precio].forEach(function (campo) {
-                campo.addEventListener('input', pintar);
-                campo.addEventListener('change', pintar);
-            });
-            pintar();
-        })();
-    </script>
+    <script th:src="@{/js/vista-previa.js}" defer></script>
 </main>
 
 </body>
