@@ -47,6 +47,7 @@ class SesionDeCuentaSuspendida extends OncePerRequestFilter {
     @Override
     protected boolean shouldNotFilter(HttpServletRequest pedido) {
         String ruta = pedido.getRequestURI().substring(pedido.getContextPath().length());
-        return ruta.startsWith("/css/") || ruta.startsWith("/js/") || ruta.startsWith("/img/") || ruta.equals("/error");
+        return ruta.startsWith("/css/") || ruta.startsWith("/js/") || ruta.startsWith("/img/")
+                || ruta.startsWith("/fotos/") || ruta.equals("/error");
     }
 }

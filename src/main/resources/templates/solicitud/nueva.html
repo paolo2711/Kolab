@@ -27,7 +27,8 @@
 
     <div class="k-dos-columnas k-principal-ancha">
         <div class="k-tarjeta">
-            <form th:action="@{/mis-solicitudes}" th:object="${solicitudForm}" method="post" novalidate id="formSolicitud">
+            <form th:action="@{/mis-solicitudes}" th:object="${solicitudForm}" method="post" novalidate id="formSolicitud"
+                  enctype="multipart/form-data">
                 <input type="hidden" th:field="*{idDestinatario}">
 
                 <div class="k-campos">
@@ -44,7 +45,8 @@
                         <select id="idCategoria" th:field="*{idCategoria}"
                                 th:classappend="${#fields.hasErrors('idCategoria')} ? 'k-mal'">
                             <option value="">Elige una</option>
-                            <option th:each="c : ${categorias}" th:value="${c.id}" th:text="${c.nombre}">Categoría</option>
+                            <option th:each="c : ${categorias}" th:value="${c.id}" th:text="${c.nombre}"
+                                    th:data-foto="${c.foto != null} ? @{${c.foto}}">Categoría</option>
                         </select>
                         <span class="k-error" th:if="${#fields.hasErrors('idCategoria')}" th:errors="*{idCategoria}"></span>
                     </div>
@@ -87,6 +89,14 @@
                         <span class="k-error" th:if="${#fields.hasErrors('precioPropuesto')}" th:errors="*{precioPropuesto}"></span>
                         <span class="k-pista" th:unless="${#fields.hasErrors('precioPropuesto')}">Pueden aceptarlo o proponerte otro.</span>
                     </div>
+
+                    <div class="k-campo k-campo-ancho">
+                        <label for="foto">Foto <span class="k-opcional">(opcional)</span></label>
+                        <input type="file" id="foto" name="foto" accept="image/jpeg,image/png"
+                               th:classappend="${#fields.hasErrors('foto')} ? 'k-mal'">
+                        <span class="k-error" th:if="${#fields.hasErrors('foto')}" th:errors="*{foto}"></span>
+                        <span class="k-pista" th:unless="${#fields.hasErrors('foto')}">JPG o PNG, hasta 2 MB. Si no subes una, va la foto de la categoría.</span>
+                    </div>
                 </div>
 
                 <div class="k-acciones">
@@ -97,29 +107,7 @@
             </form>
         </div>
 
-        <div class="k-tarjeta">
-            <h2 class="k-tarjeta-titulo">Vista previa</h2>
-            <p class="k-vacio">Así la van a ver quienes pueden ofertar.</p>
-
-            <!-- sale ya pintada con lo escrito, para cuando el formulario vuelve con un error -->
-            <div class="k-solicitud k-alinear-arriba" th:object="${solicitudForm}">
-                <div>
-                    <span class="k-solicitud-titulo" id="vpTitulo"
-                          th:classappend="${#strings.isEmpty(solicitudForm.titulo)} ? 'k-vp-vacio'"
-                          th:text="${#strings.isEmpty(solicitudForm.titulo)} ? 'Tu título va aquí' : *{titulo}">Tu título va aquí</span>
-                    <div class="k-solicitud-meta">
-                        <span id="vpCategoria"><th:block th:each="c : ${categorias}" th:if="${c.id == solicitudForm.idCategoria}"
-                                  th:text="${c.nombre}"></th:block><th:block
-                                  th:if="${solicitudForm.idCategoria == null}">Categoría</th:block></span> ·
-                        <span id="vpModalidad"
-                              th:text="*{modalidad} != null ? *{modalidad.etiqueta} : ${modalidades[0].etiqueta}">Modalidad</span>
-                    </div>
-                    <div class="k-solicitud-ofertas">Publicada recién · sin ofertas</div>
-                </div>
-                <span class="k-precio k-precio-g"><span class="k-moneda">S/</span><span id="vpPrecio"
-                      th:text="*{precioPropuesto} != null ? ${#numbers.formatDecimal(solicitudForm.precioPropuesto, 1, 2, 'POINT')} : '0.00'">0.00</span></span>
-            </div>
-        </div>
+        <div th:replace="~{fragmentos/componentes :: vistaPrevia}"></div>
     </div>
 
     <script th:src="@{/js/vista-previa.js}" defer></script>

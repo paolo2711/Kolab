@@ -79,6 +79,10 @@ public class Solicitud {
     @Column(name = "fecha_publicacion", nullable = false)
     private LocalDateTime fechaPublicacion = LocalDateTime.now();
 
+    // el nombre del archivo en la carpeta de fotos subidas; null si usa la de su categoria
+    @Column(length = 40)
+    private String foto;
+
     protected Solicitud() {
     }
 
@@ -166,6 +170,14 @@ public class Solicitud {
 
     public Usuario getAutor() {
         return autor;
+    }
+
+    public String getFoto() {
+        return foto;
+    }
+
+    public void setFoto(String foto) {
+        this.foto = foto;
     }
 
     public Usuario getDestinatario() {

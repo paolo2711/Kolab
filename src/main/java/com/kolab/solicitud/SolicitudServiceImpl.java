@@ -22,15 +22,17 @@ public class SolicitudServiceImpl implements SolicitudService {
     private final UsuarioRepository usuarioRepository;
     private final DetallesDeSolicitud detalles;
     private final MisSolicitudes misSolicitudes;
+    private final FotosDeSolicitud fotos;
 
     public SolicitudServiceImpl(SolicitudRepository solicitudRepository, CategoriaRepository categoriaRepository,
                                 UsuarioRepository usuarioRepository, DetallesDeSolicitud detalles,
-                                MisSolicitudes misSolicitudes) {
+                                MisSolicitudes misSolicitudes, FotosDeSolicitud fotos) {
         this.solicitudRepository = solicitudRepository;
         this.categoriaRepository = categoriaRepository;
         this.usuarioRepository = usuarioRepository;
         this.detalles = detalles;
         this.misSolicitudes = misSolicitudes;
+        this.fotos = fotos;
     }
 
     @Override
@@ -40,6 +42,9 @@ public class SolicitudServiceImpl implements SolicitudService {
         Solicitud nueva = new Solicitud(categoriaActiva(form.getIdCategoria()), autor, form.getTitulo().trim(),
                 form.getDescripcion().trim(), form.getModalidad(), form.getPrecioPropuesto());
         copiarDetalles(form, nueva);
+        if (subioFoto(form)) {
+            nueva.setFoto(fotos.guardar(form.getFoto()));
+        }
         if (form.getIdDestinatario() != null) {
             if (form.getIdDestinatario().equals(idAutor)) {
                 throw new OperacionNoPermitidaException("No puedes proponerte un servicio a ti mismo.");
@@ -80,6 +85,7 @@ public class SolicitudServiceImpl implements SolicitudService {
         form.setDescripcion(s.getDescripcion());
         form.setFechaDeseada(s.getFechaDeseada());
         form.setPrecioPropuesto(s.getPrecioPropuesto());
+        form.setFotoActual(fotos.propia(s));
         return form;
     }
 
@@ -93,6 +99,15 @@ public class SolicitudServiceImpl implements SolicitudService {
         s.setDescripcion(form.getDescripcion().trim());
         s.setPrecioPropuesto(form.getPrecioPropuesto());
         copiarDetalles(form, s);
+        if (subioFoto(form)) {
+            String anterior = s.getFoto();
+            s.setFoto(fotos.guardar(form.getFoto()));
+            fotos.borrar(anterior);
+        }
+    }
+
+    private static boolean subioFoto(SolicitudForm form) {
+        return form.getFoto() != null && !form.getFoto().isEmpty();
     }
 
     @Override

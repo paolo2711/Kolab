@@ -7,6 +7,8 @@
 <body>
 
 <main class="k-medio">
+    <div th:replace="~{fragmentos/componentes :: aviso}"></div>
+
     <p class="k-migas">
         <a th:href="@{/mis-solicitudes/{id}(id=${idSolicitud})}">&larr; Volver a la solicitud</a>
     </p>
@@ -20,7 +22,8 @@
     <div class="k-dos-columnas k-principal-ancha">
         <div class="k-tarjeta">
             <form th:action="@{/mis-solicitudes/{id}/editar(id=${idSolicitud})}"
-                  th:object="${solicitudForm}" method="post">
+                  th:object="${solicitudForm}" method="post" enctype="multipart/form-data" id="formSolicitud">
+                <input type="hidden" th:field="*{fotoActual}">
                 <div class="k-campos">
                     <div class="k-campo k-campo-ancho">
                         <label for="titulo">Qué necesitas</label>
@@ -34,7 +37,8 @@
                         <select id="idCategoria" th:field="*{idCategoria}"
                                 th:classappend="${#fields.hasErrors('idCategoria')} ? 'k-mal'">
                             <option value="">Elige una</option>
-                            <option th:each="c : ${categorias}" th:value="${c.id}" th:text="${c.nombre}">Categoría</option>
+                            <option th:each="c : ${categorias}" th:value="${c.id}" th:text="${c.nombre}"
+                                    th:data-foto="${c.foto != null} ? @{${c.foto}}">Categoría</option>
                         </select>
                         <span class="k-error" th:if="${#fields.hasErrors('idCategoria')}" th:errors="*{idCategoria}"></span>
                     </div>
@@ -76,6 +80,14 @@
                                   th:classappend="${#fields.hasErrors('descripcion')} ? 'k-mal'"></textarea>
                         <span class="k-error" th:if="${#fields.hasErrors('descripcion')}" th:errors="*{descripcion}"></span>
                     </div>
+
+                    <div class="k-campo k-campo-ancho">
+                        <label for="foto">Foto <span class="k-opcional">(opcional)</span></label>
+                        <input type="file" id="foto" name="foto" accept="image/jpeg,image/png"
+                               th:classappend="${#fields.hasErrors('foto')} ? 'k-mal'">
+                        <span class="k-error" th:if="${#fields.hasErrors('foto')}" th:errors="*{foto}"></span>
+                        <span class="k-pista" th:unless="${#fields.hasErrors('foto')}">JPG o PNG, hasta 2 MB. Si subes otra, reemplaza la que tiene.</span>
+                    </div>
                 </div>
 
                 <div class="k-acciones">
@@ -86,7 +98,9 @@
         </div>
 
         <div>
-            <div class="k-tarjeta k-peligro">
+            <div th:replace="~{fragmentos/componentes :: vistaPrevia}"></div>
+
+            <div class="k-tarjeta k-peligro k-mt-15">
                 <h2 class="k-tarjeta-titulo">Cancelar la solicitud</h2>
                 <p class="k-sin-margen k-mb-12 k-texto-suave">Deja de aparecer en Explorar y
                     quien ofertó recibe el aviso. No se puede deshacer.</p>
@@ -97,6 +111,8 @@
             </div>
         </div>
     </div>
+
+    <script th:src="@{/js/vista-previa.js}" defer></script>
 </main>
 
 </body>
