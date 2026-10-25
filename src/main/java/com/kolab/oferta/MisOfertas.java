@@ -46,7 +46,7 @@ class MisOfertas {
         String categoria = s.getCategoria().getNombre();
         return new OfertaEnviada(o.getId(), s.getId(), s.getTitulo(), categoria, s.getCategoria().getIcono(),
                 fotos.deCategoria(categoria), s.getPrecioPropuesto(), o.getMontoPropuesto(), o.getEstado(),
-                sinLeer, cuantas, Tiempo.hace(o.getFechaOferta()));
+                SituacionDeOferta.de(o.getEstado(), s.getEstado()), sinLeer, cuantas, Tiempo.hace(o.getFechaOferta()));
     }
 
     private static Map<Long, Long> contar(List<Object[]> filas) {

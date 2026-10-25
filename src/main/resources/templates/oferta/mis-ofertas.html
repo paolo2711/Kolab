@@ -25,7 +25,7 @@
         </div>
     </section>
 
-    <p class="k-pestana-nota">Ofertaste y estás esperando. Aquí decide quien publicó, no tú.</p>
+    <p class="k-pestana-nota">Aquí decide quien publicó, no tú.</p>
 
     <p class="k-vacio" th:if="${ofertas.isEmpty()}">Todavía no ofertaste en ninguna solicitud.
         <a th:href="@{/solicitudes}">Mira lo que se está pidiendo</a>.</p>
@@ -36,6 +36,7 @@
             <th:block th:replace="~{fragmentos/componentes :: miniatura(${o.foto}, ${o.icono}, ${o.categoria})}"></th:block>
             <div class="k-solicitud-cuerpo">
                 <span class="k-solicitud-titulo" th:text="${o.solicitud}">Solicitud</span>
+                <div class="k-oferta-situacion" th:text="${o.situacion.texto}">Esperando que quien pidió elija</div>
                 <div class="k-solicitud-meta">
                     <span th:text="${o.categoria}">Categoría</span> ·
                     enviada <span th:text="${o.enviada}">hace 1 hora</span>

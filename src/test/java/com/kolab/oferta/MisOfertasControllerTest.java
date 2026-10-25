@@ -29,6 +29,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.context.annotation.Import;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 
@@ -64,6 +65,38 @@ class MisOfertasControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(content().string(containsString("Te propusieron")))
                 .andExpect(content().string(containsString("Clases de guitarra para mi hijo")));
+    }
+
+    @Test
+    void cadaOfertaDiceLoQuePasaConEllaYNoSiempreQueEspera() throws Exception {
+        Mockito.when(ofertaService.mias(Mockito.eq(1L), Mockito.any())).thenReturn(new PageImpl<>(List.of(
+                enviada(1L, "Clases de guitarra", EstadoOferta.ENVIADA, SituacionDeOferta.ESPERANDO),
+                enviada(2L, "Pintar la fachada", EstadoOferta.ACEPTADA, SituacionDeOferta.EN_CURSO),
+                enviada(3L, "Clases de inglés", EstadoOferta.ACEPTADA, SituacionDeOferta.CERRADO),
+                enviada(4L, "Reparar el caño", EstadoOferta.RECHAZADA, SituacionDeOferta.NO_ELEGIDA),
+                enviada(5L, "Diseño de un logo", EstadoOferta.ENVIADA, SituacionDeOferta.CANCELADA))));
+
+        mockMvc.perform(get("/mis-ofertas").with(user(sesion())))
+                .andExpect(content().string(containsString("Esperando que quien pidió elija")))
+                .andExpect(content().string(containsString("Te eligieron, el servicio está en curso")))
+                .andExpect(content().string(containsString("Te eligieron y el servicio ya se cerró")))
+                .andExpect(content().string(containsString("No te eligieron")))
+                .andExpect(content().string(containsString("Quien pidió canceló la solicitud")))
+                .andExpect(content().string(not(containsString("Ofertaste y estás esperando"))));
+    }
+
+    @Test
+    void laCompetenciaSoloSeMuestraMientrasEspera() throws Exception {
+        Mockito.when(ofertaService.mias(Mockito.eq(1L), Mockito.any())).thenReturn(new PageImpl<>(List.of(
+                enviada(5L, "Diseño de un logo", EstadoOferta.ENVIADA, SituacionDeOferta.CANCELADA))));
+
+        mockMvc.perform(get("/mis-ofertas").with(user(sesion())))
+                .andExpect(content().string(not(containsString("compites con"))));
+    }
+
+    private OfertaEnviada enviada(Long id, String titulo, EstadoOferta estado, SituacionDeOferta situacion) {
+        return new OfertaEnviada(id, id, titulo, "Música", "bi-music-note", null, new BigDecimal("80"),
+                new BigDecimal("75"), estado, situacion, 0, 3, "hace 2 horas");
     }
 
     @Test

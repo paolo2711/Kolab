@@ -12,6 +12,7 @@ import com.kolab.mensaje.MensajeService;
 import com.kolab.oferta.EstadoOferta;
 import com.kolab.oferta.OfertaForm;
 import com.kolab.oferta.OfertaService;
+import com.kolab.oferta.SituacionDeOferta;
 import com.kolab.perfil.PerfilService;
 import com.kolab.perfil.ReputacionService;
 import com.kolab.servicio.ServicioDetalle;
@@ -121,6 +122,36 @@ class FlujoPrincipalTest {
         solicitudService.cancelar(directa, pide);
 
         assertThat(catalogoService.propuestasSinResponder(ofrece, 5)).isEmpty();
+    }
+
+    @Test
+    void loQueOfrezcoDiceLoQuePasaConCadaOferta() {
+        Long elegida = publicar(null, "80");
+        Long idElegida = ofertaService.ofertar(elegida, oferta("80"), ofrece);
+        Long laQueGanoOtro = publicar(null, "90");
+        ofertaService.ofertar(laQueGanoOtro, oferta("90"), ofrece);
+        Long cancelada = publicar(null, "70");
+        ofertaService.ofertar(cancelada, oferta("70"), ofrece);
+
+        assertThat(situacionEn(elegida)).isEqualTo(SituacionDeOferta.ESPERANDO);
+
+        Long idServicio = ofertaService.aceptar(idElegida, pide);
+        ofertaService.aceptar(ofertaService.ofertar(laQueGanoOtro, oferta("85"), otro), pide);
+        solicitudService.cancelar(cancelada, pide);
+
+        assertThat(situacionEn(elegida)).isEqualTo(SituacionDeOferta.EN_CURSO);
+        assertThat(situacionEn(laQueGanoOtro)).isEqualTo(SituacionDeOferta.NO_ELEGIDA);
+        assertThat(situacionEn(cancelada)).isEqualTo(SituacionDeOferta.CANCELADA);
+
+        servicioService.cerrarYCalificar(idServicio, nota(5), pide);
+
+        assertThat(situacionEn(elegida)).isEqualTo(SituacionDeOferta.CERRADO);
+    }
+
+    private SituacionDeOferta situacionEn(Long idSolicitud) {
+        return ofertaService.mias(ofrece, PageRequest.of(0, 20)).getContent().stream()
+                .filter(o -> o.idSolicitud().equals(idSolicitud))
+                .findFirst().orElseThrow().situacion();
     }
 
     @Test
