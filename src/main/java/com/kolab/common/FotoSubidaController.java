@@ -1,4 +1,4 @@
-package com.kolab.solicitud;
+package com.kolab.common;
 
 import java.time.Duration;
 import org.springframework.core.io.FileSystemResource;
@@ -10,18 +10,18 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
-// las fotos subidas viven fuera del jar, asi que no las sirve el manejo de estaticos sino esto
+// las fotos subidas viven fuera del jar, no las sirve el manejo de estaticos sino esto
 @Controller
-public class FotoDeSolicitudController {
+public class FotoSubidaController {
 
-    private final FotosDeSolicitud fotos;
+    private final FotosSubidas fotos;
 
-    public FotoDeSolicitudController(FotosDeSolicitud fotos) {
+    public FotoSubidaController(FotosSubidas fotos) {
         this.fotos = fotos;
     }
 
-    // el nombre es unico y una foto no cambia: el navegador la puede guardar sin preguntar de nuevo
-    @GetMapping(FotosDeSolicitud.RUTA + "{nombre}")
+    // el nombre es unico y una foto no cambia, el navegador la guarda sin preguntar de nuevo
+    @GetMapping(FotosSubidas.RUTA + "{nombre}")
     public ResponseEntity<Resource> foto(@PathVariable String nombre) {
         return fotos.archivo(nombre)
                 .map(archivo -> ResponseEntity.ok()

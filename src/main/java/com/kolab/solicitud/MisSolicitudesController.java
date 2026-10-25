@@ -2,6 +2,7 @@ package com.kolab.solicitud;
 
 import com.kolab.categoria.CategoriaResumen;
 import com.kolab.categoria.CategoriaService;
+import com.kolab.common.FotosSubidas;
 import com.kolab.mensaje.MensajeService;
 import com.kolab.oferta.OfertaResumen;
 import com.kolab.oferta.OfertaService;
@@ -34,12 +35,12 @@ public class MisSolicitudesController {
     private final MensajeService mensajeService;
     private final CategoriaService categoriaService;
     private final DirectorioService directorioService;
-    private final FotosDeSolicitud fotos;
+    private final FotosSubidas fotos;
 
     public MisSolicitudesController(SolicitudService solicitudService, OfertaService ofertaService,
                                     ServicioService servicioService, MensajeService mensajeService,
                                     CategoriaService categoriaService, DirectorioService directorioService,
-                                    FotosDeSolicitud fotos) {
+                                    FotosSubidas fotos) {
         this.solicitudService = solicitudService;
         this.ofertaService = ofertaService;
         this.servicioService = servicioService;
