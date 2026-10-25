@@ -33,27 +33,27 @@
         <h2 class="k-bloque-titulo">Cuánto se está pagando</h2>
         <div class="k-precios">
             <div class="k-precios-barra">
-                <span class="k-precios-marca" th:style="'left:' + ${precios.posicionDelTipico()} + '%'"></span>
+                <span class="k-precios-marca" th:data-izquierda="${precios.posicionDelTipico()}"></span>
             </div>
             <div class="k-precios-pie">
                 <div>
                     <div class="k-precios-etiqueta">Más bajo</div>
                     <span th:replace="~{fragmentos/componentes :: precio(${precios.bajo}, 'k-precio-m')}"></span>
                 </div>
-                <div style="text-align:center;">
+                <div class="k-centrado">
                     <div class="k-precios-etiqueta">Lo típico</div>
                     <span th:replace="~{fragmentos/componentes :: precio(${precios.tipico}, 'k-precio-g')}"></span>
                 </div>
-                <div style="text-align:right;">
+                <div class="k-a-la-derecha">
                     <div class="k-precios-etiqueta">Más alto</div>
                     <span th:replace="~{fragmentos/componentes :: precio(${precios.alto}, 'k-precio-m')}"></span>
                 </div>
             </div>
         </div>
-        <p class="k-vacio" style="margin-top:0.9rem;" th:unless="${precios.esDeReferencia()}">Sale de las
+        <p class="k-vacio k-mt-09" th:unless="${precios.esDeReferencia()}">Sale de las
             <span th:text="${precios.solicitudes}">5</span> solicitudes que la gente publicó en esta categoría.
             Tú puedes proponer el monto que quieras.</p>
-        <p class="k-vacio" style="margin-top:0.9rem;" th:if="${precios.esDeReferencia()}">Todavía no hay
+        <p class="k-vacio k-mt-09" th:if="${precios.esDeReferencia()}">Todavía no hay
             solicitudes aquí: es el rango de referencia de la categoría. Tú puedes proponer el monto que quieras.</p>
     </section>
 
@@ -67,7 +67,7 @@
 
     <section class="k-bloque" th:if="${!#lists.isEmpty(solicitudes)}">
         <div class="k-titulo-fila">
-            <h2 class="k-bloque-titulo" style="margin:0;">Solicitudes abiertas aquí</h2>
+            <h2 class="k-bloque-titulo k-sin-margen">Solicitudes abiertas aquí</h2>
             <a th:href="@{/solicitudes(idCategoria=${categoria.id})}">Ver en Explorar</a>
         </div>
 
@@ -77,6 +77,8 @@
             </th:block>
         </div>
     </section>
+
+    <script th:src="@{/js/medidas.js}" defer></script>
 </main>
 
 </body>
