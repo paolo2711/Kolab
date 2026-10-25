@@ -16,6 +16,15 @@
 
     <div th:replace="~{fragmentos/menu :: pestanasActividad('ofrezco')}"></div>
 
+    <section class="k-bloque" th:unless="${#lists.isEmpty(propuestas)}">
+        <h2 class="k-bloque-titulo">Te propusieron</h2>
+        <div class="k-lista">
+            <th:block th:each="s : ${propuestas}">
+                <div th:replace="~{fragmentos/componentes :: fila(${s}, 'Ofertar')}"></div>
+            </th:block>
+        </div>
+    </section>
+
     <p class="k-pestana-nota">Ofertaste y estás esperando. Aquí decide quien publicó, no tú.</p>
 
     <p class="k-vacio" th:if="${ofertas.isEmpty()}">Todavía no ofertaste en ninguna solicitud.
