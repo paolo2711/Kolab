@@ -60,12 +60,13 @@
                     <span th:text="${cuenta}">cliente@kolab.pe</span><br>
                     <span th:text="${claveDeEjemplo}">kolab1234</span>
                 </p>
-                <form th:action="@{/desarrollo/reiniciar}" method="post" onsubmit="return confirm('Se borra todo. ¿Seguro?')">
+                <form th:action="@{/desarrollo/reiniciar}" method="post" data-confirmar="Se borra todo. ¿Seguro?">
                     <button type="submit">Reiniciar datos</button>
                 </form>
                 <form th:action="@{/desarrollo/ejemplos}" method="post">
                     <button type="submit">Cargar ejemplos</button>
                 </form>
+                <script th:src="@{/js/confirmar.js}" defer></script>
             </div>
 
         </div>

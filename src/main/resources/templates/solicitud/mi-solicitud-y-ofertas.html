@@ -126,20 +126,7 @@
         </div>
     </div>
 
-    <script th:inline="none">
-        document.querySelectorAll('.k-chat-boton[data-hilo]').forEach(function (boton) {
-            boton.addEventListener('click', function () {
-                var hilo = document.getElementById('hilo-' + boton.dataset.hilo);
-                var abierto = !hilo.hidden;
-                document.querySelectorAll('.k-hilo').forEach(function (h) { h.hidden = true; });
-                document.querySelectorAll('.k-chat-boton').forEach(function (b) { b.classList.remove('activo'); });
-                if (!abierto) {
-                    hilo.hidden = false;
-                    boton.classList.add('activo');
-                }
-            });
-        });
-    </script>
+    <script th:src="@{/js/chats-de-ofertas.js}" defer></script>
 </main>
 
 </body>
