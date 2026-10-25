@@ -16,7 +16,10 @@
 
     <div class="k-dos-columnas k-principal-ancha">
         <div class="k-tarjeta">
-            <form th:action="@{/perfil/editar}" th:object="${perfilForm}" method="post">
+            <form th:action="@{/perfil/editar}" th:object="${perfilForm}" method="post"
+                  enctype="multipart/form-data" id="formPerfil">
+                <input type="hidden" th:field="*{fotoActual}">
+                <input type="hidden" th:field="*{portadaActual}">
                 <div class="k-campos">
                     <div class="k-campo">
                         <label for="nombre">Nombre</label>
@@ -63,6 +66,31 @@
                                   th:classappend="${#fields.hasErrors('experiencia')} ? 'k-mal'"></textarea>
                         <span class="k-error" th:if="${#fields.hasErrors('experiencia')}" th:errors="*{experiencia}"></span>
                     </div>
+
+                    <div class="k-campo">
+                        <label for="foto">Foto de perfil <span class="k-opcional">(opcional)</span></label>
+                        <input type="file" id="foto" name="foto" accept="image/jpeg,image/png"
+                               th:classappend="${#fields.hasErrors('foto')} ? 'k-mal'">
+                        <span class="k-error" th:if="${#fields.hasErrors('foto')}" th:errors="*{foto}"></span>
+                        <span class="k-pista" th:unless="${#fields.hasErrors('foto')}">JPG o PNG, hasta 2 MB.</span>
+                        <label class="k-opcion k-mt-055" th:if="*{fotoActual != null}">
+                            <input type="checkbox" th:field="*{quitarFoto}">
+                            <span class="k-opcion-nombre">Quitar mi foto</span>
+                        </label>
+                    </div>
+
+                    <div class="k-campo">
+                        <label for="portada">Portada <span class="k-opcional">(opcional)</span></label>
+                        <input type="file" id="portada" name="portada" accept="image/jpeg,image/png"
+                               th:classappend="${#fields.hasErrors('portada')} ? 'k-mal'">
+                        <span class="k-error" th:if="${#fields.hasErrors('portada')}" th:errors="*{portada}"></span>
+                        <span class="k-pista" th:unless="${#fields.hasErrors('portada')}">
+                            Va arriba de tu perfil. Si no subes una, sale un color de tu foto.</span>
+                        <label class="k-opcion k-mt-055" th:if="*{portadaActual != null}">
+                            <input type="checkbox" th:field="*{quitarPortada}">
+                            <span class="k-opcion-nombre">Quitar la portada</span>
+                        </label>
+                    </div>
                 </div>
 
                 <div class="k-acciones">
@@ -73,6 +101,23 @@
         </div>
 
         <div>
+            <!-- como queda arriba del perfil, js/fotos-de-perfil.js la cambia al elegir una foto -->
+            <div class="k-tarjeta k-mb-15">
+                <h2 class="k-tarjeta-titulo">Vista previa</h2>
+                <img class="k-banner" id="vpPortada" alt="Tu portada"
+                     th:src="${perfilForm.portadaActual != null} ? @{${perfilForm.portadaActual}}"
+                     th:hidden="${perfilForm.portadaActual == null}">
+                <div class="k-franja" id="vpFranja" th:classappend="'f' + ${usuario.franja}"
+                     th:hidden="${perfilForm.portadaActual != null}"></div>
+                <div class="k-perfil-cabecera k-cabecera-bajo-banner">
+                    <img class="k-avatar k-foto-cubre" id="vpFoto" alt="Tu foto"
+                         th:src="${perfilForm.fotoActual != null} ? @{${perfilForm.fotoActual}}"
+                         th:hidden="${perfilForm.fotoActual == null}">
+                    <span class="k-avatar" id="vpIniciales" th:text="${usuario.iniciales}"
+                          th:hidden="${perfilForm.fotoActual != null}">PR</span>
+                </div>
+            </div>
+
             <div class="k-tarjeta k-mb-15">
                 <h2 class="k-tarjeta-titulo">Lo que sé hacer</h2>
                 <p class="k-sin-margen k-mb-12 k-texto-suave">Las categorías en las que trabajas se
@@ -91,6 +136,7 @@
             </div>
         </div>
     </div>
+    <script th:src="@{/js/fotos-de-perfil.js}" defer></script>
 </main>
 
 </body>

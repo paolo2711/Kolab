@@ -2,6 +2,7 @@ package com.kolab.perfil;
 
 import com.kolab.calificacion.CalificacionService;
 import com.kolab.categoria.CategoriaRepository;
+import com.kolab.common.FotosSubidas;
 import com.kolab.common.RecursoNoEncontradoException;
 import com.kolab.common.Tiempo;
 import com.kolab.solicitud.SolicitudRepository;
@@ -25,17 +26,20 @@ public class PerfilServiceImpl implements PerfilService {
     private final SolicitudRepository solicitudRepository;
     private final ReputacionService reputacionService;
     private final CalificacionService calificacionService;
+    private final FotosDePerfil fotos;
 
     public PerfilServiceImpl(PerfilRepository perfilRepository,
                              PerfilCategoriaRepository perfilCategoriaRepository,
                              CategoriaRepository categoriaRepository, SolicitudRepository solicitudRepository,
-                             ReputacionService reputacionService, CalificacionService calificacionService) {
+                             ReputacionService reputacionService, CalificacionService calificacionService,
+                             FotosDePerfil fotos) {
         this.perfilRepository = perfilRepository;
         this.perfilCategoriaRepository = perfilCategoriaRepository;
         this.categoriaRepository = categoriaRepository;
         this.solicitudRepository = solicitudRepository;
         this.reputacionService = reputacionService;
         this.calificacionService = calificacionService;
+        this.fotos = fotos;
     }
 
     @Override
@@ -74,7 +78,8 @@ public class PerfilServiceImpl implements PerfilService {
         return new PerfilResumen(perfil.getDescripcion(), perfil.getExperiencia(), u.getDistrito(), u.getTelefono(),
                 Tiempo.mesYAnio(u.getFechaRegistro()), reputacionService.de(idUsuario),
                 solicitudRepository.countByAutorId(idUsuario),
-                calificacionService.recibidas(idUsuario, PageRequest.of(0, RESENAS)).getContent());
+                calificacionService.recibidas(idUsuario, PageRequest.of(0, RESENAS)).getContent(),
+                CabeceraDePerfil.de(perfil));
     }
 
     @Override
@@ -89,6 +94,8 @@ public class PerfilServiceImpl implements PerfilService {
         form.setDistrito(u.getDistrito());
         form.setDescripcion(perfil.getDescripcion());
         form.setExperiencia(perfil.getExperiencia());
+        form.setFotoActual(FotosSubidas.url(u.getFoto()));
+        form.setPortadaActual(FotosSubidas.url(perfil.getPortada()));
         return form;
     }
 
@@ -109,6 +116,7 @@ public class PerfilServiceImpl implements PerfilService {
         u.setDistrito(distrito);
         perfil.setDescripcion(limpio(form.getDescripcion()));
         perfil.setExperiencia(limpio(form.getExperiencia()));
+        fotos.aplicar(form, u, perfil);
     }
 
     // cada cuenta tiene el suyo desde que se registra: si no aparece, la persona no existe

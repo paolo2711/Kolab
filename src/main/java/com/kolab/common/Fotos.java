@@ -49,7 +49,11 @@ public class Fotos {
         return deCategorias.contains(archivo) ? CATEGORIAS + archivo : null;
     }
 
-    public String dePersona(String email) {
+    // la que subio la persona va primero, si no la de ejemplo que se llama como su correo
+    public String dePersona(String subida, String email) {
+        if (subida != null) {
+            return FotosSubidas.url(subida);
+        }
         String archivo = email.substring(0, email.indexOf('@')) + ".jpg";
         return dePersonas.contains(archivo) ? PERSONAS + archivo : null;
     }

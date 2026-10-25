@@ -3,6 +3,7 @@ package com.kolab.perfil;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
+import org.springframework.web.multipart.MultipartFile;
 
 public class PerfilForm {
 
@@ -25,6 +26,64 @@ public class PerfilForm {
 
     @Size(max = 500, message = "Máximo 500 caracteres")
     private String experiencia;
+
+    // las dos opcionales; si no se sube otra se queda la que habia
+    private MultipartFile foto;
+    private MultipartFile portada;
+    private boolean quitarFoto;
+    private boolean quitarPortada;
+
+    // solo para la vista previa, guardar no las lee
+    private String fotoActual;
+    private String portadaActual;
+
+    public MultipartFile getFoto() {
+        return foto;
+    }
+
+    public void setFoto(MultipartFile foto) {
+        this.foto = foto;
+    }
+
+    public MultipartFile getPortada() {
+        return portada;
+    }
+
+    public void setPortada(MultipartFile portada) {
+        this.portada = portada;
+    }
+
+    public boolean isQuitarFoto() {
+        return quitarFoto;
+    }
+
+    public void setQuitarFoto(boolean quitarFoto) {
+        this.quitarFoto = quitarFoto;
+    }
+
+    public boolean isQuitarPortada() {
+        return quitarPortada;
+    }
+
+    public void setQuitarPortada(boolean quitarPortada) {
+        this.quitarPortada = quitarPortada;
+    }
+
+    public String getFotoActual() {
+        return fotoActual;
+    }
+
+    public void setFotoActual(String fotoActual) {
+        this.fotoActual = fotoActual;
+    }
+
+    public String getPortadaActual() {
+        return portadaActual;
+    }
+
+    public void setPortadaActual(String portadaActual) {
+        this.portadaActual = portadaActual;
+    }
 
     public String getNombre() {
         return nombre;

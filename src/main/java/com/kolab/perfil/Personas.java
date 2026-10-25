@@ -21,7 +21,7 @@ public class Personas {
 
     public Persona de(Usuario usuario) {
         return new Persona(usuario.getId(), usuario.getCodigo(), usuario.getNombreCompleto(), inicialesDe(usuario),
-                fotos.dePersona(usuario.getEmail()));
+                fotos.dePersona(usuario.getFoto(), usuario.getEmail()));
     }
 
     /**
