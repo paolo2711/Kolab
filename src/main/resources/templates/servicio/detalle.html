@@ -7,7 +7,7 @@
 </head>
 <body>
 
-<main>
+<main class="k-medio">
     <div th:replace="~{fragmentos/componentes :: aviso}"></div>
 
     <p class="k-migas"><a th:href="@{/mis-solicitudes}">&larr; Mi actividad</a></p>
@@ -23,20 +23,20 @@
 
     <div class="k-dos-columnas k-principal-ancha">
         <div>
-            <div class="k-tarjeta" style="margin-bottom:1.5rem;">
+            <div class="k-tarjeta k-mb-15">
                 <div class="k-cabecera-precio">
                     <div>
                         <span th:replace="~{fragmentos/componentes :: estado(${servicio.estado})}"></span>
-                        <p style="margin:0.9rem 0 0; color:var(--tinta-2);" th:if="${servicio.puedoCerrar()}">
+                        <p class="k-sin-margen k-mt-09 k-texto-suave" th:if="${servicio.puedoCerrar()}">
                             Coordinen por el chat. Cuando se haya hecho, confírmalo aquí y califica a
                             <span th:text="${servicio.contraparte.nombre}">la otra parte</span>.</p>
-                        <p style="margin:0.9rem 0 0; color:var(--tinta-2);" th:if="${servicio.enCurso() and !servicio.pido}">
+                        <p class="k-sin-margen k-mt-09 k-texto-suave" th:if="${servicio.enCurso() and !servicio.pido}">
                             Coordinen por el chat. Cuando termines, quien lo pidió lo cierra y después
                             se califican los dos.</p>
-                        <p style="margin:0.9rem 0 0; color:var(--tinta-2);" th:if="${servicio.puedoCalificar()}">
+                        <p class="k-sin-margen k-mt-09 k-texto-suave" th:if="${servicio.puedoCalificar()}">
                             El servicio ya está cerrado. Te falta calificar a
                             <span th:text="${servicio.contraparte.nombre}">la otra parte</span>.</p>
-                        <p style="margin:0.9rem 0 0; color:var(--tinta-2);" th:if="${!servicio.enCurso() and servicio.yaCalifique}">
+                        <p class="k-sin-margen k-mt-09 k-texto-suave" th:if="${!servicio.enCurso() and servicio.yaCalifique}">
                             Servicio cerrado y calificado.</p>
                     </div>
                     <div class="k-bloque-precio">
@@ -45,7 +45,7 @@
                     </div>
                 </div>
 
-                <dl class="k-datos" style="margin-top:1.5rem;">
+                <dl class="k-datos k-mt-15">
                     <dt>Comisión de la plataforma</dt>
                     <dd><span th:replace="~{fragmentos/componentes :: precio(${servicio.comision}, 'k-precio-m')}"></span></dd>
                     <dt>Neto para quien lo hace</dt>
@@ -62,17 +62,18 @@
                 </div>
             </div>
 
-            <div class="k-tarjeta" style="margin-bottom:1.5rem;">
+            <div class="k-tarjeta k-mb-15">
                 <h2 class="k-tarjeta-titulo">En qué va</h2>
                 <div th:replace="~{fragmentos/componentes :: hitos(${servicio.hitos()})}"></div>
             </div>
 
             <div class="k-tarjeta">
                 <h2 class="k-tarjeta-titulo">Con quién estás trabajando</h2>
-                <div style="display:flex; align-items:center; gap:0.9rem;">
+                <div class="k-fila-con-cara">
                     <span th:replace="~{fragmentos/componentes :: cara(${servicio.contraparte}, '2.9rem')}"></span>
                     <div>
-                        <div class="k-oferta-nombre" th:text="${servicio.contraparte.nombre}">Luis Mendoza</div>
+                        <a class="k-oferta-nombre k-enlace-limpio" th:href="@{/personas/{codigo}(codigo=${servicio.contraparte.codigo})}"
+                           th:text="${servicio.contraparte.nombre}">Luis Mendoza</a>
                         <div class="k-oferta-meta">
                             <th:block th:unless="${servicio.reputacionContraparte.sinCalificar()}">
                                 <span th:replace="~{fragmentos/componentes :: nota(${servicio.reputacionContraparte.promedio})}"></span> ·
@@ -88,21 +89,19 @@
         <div class="k-chat">
             <div class="k-chat-cabecera">
                 <span th:replace="~{fragmentos/componentes :: cara(${servicio.contraparte}, '2rem')}"></span>
-                Mensajes con <span th:text="${servicio.contraparte.nombre}">Luis Mendoza</span>
+                <span>Mensajes con <a class="k-enlace-limpio" th:href="@{/personas/{codigo}(codigo=${servicio.contraparte.codigo})}"
+                                      th:text="${servicio.contraparte.nombre}">Luis Mendoza</a></span>
+                <a class="k-chat-abrir" th:href="@{/mensajes/{id}(id=${servicio.idOferta})}">Abrir en Mensajes</a>
             </div>
             <div class="k-chat-hilo">
-                <div th:each="m : ${servicio.mensajes}" class="k-burbuja"
-                     th:classappend="${m.mio} ? 'k-burbuja-mio' : 'k-burbuja-otro'">
-                    <span th:text="${m.contenido}">Mensaje</span>
-                    <span class="k-burbuja-hora" th:text="${m.hora}">10:12</span>
-                </div>
+                <th:block th:replace="~{fragmentos/componentes :: burbujas(${servicio.mensajes})}"></th:block>
             </div>
-            <p class="k-vacio" style="margin:0; padding:1rem;" th:if="${#lists.isEmpty(servicio.mensajes)}">
+            <p class="k-vacio k-sin-margen k-relleno-1" th:if="${#lists.isEmpty(servicio.mensajes)}">
                 Todavía no se han escrito.</p>
             <form class="k-chat-envio" th:action="@{/mensajes/{id}(id=${servicio.idOferta})}" method="post">
                 <input type="hidden" name="volver" th:value="@{/servicios/{id}(id=${servicio.id})}">
                 <input type="text" name="contenido" placeholder="Escribe un mensaje" autocomplete="off" required>
-                <button type="submit" class="k-btn k-btn-oscuro">Enviar</button>
+                <button type="submit" class="k-btn k-btn-principal">Enviar</button>
             </form>
         </div>
     </div>

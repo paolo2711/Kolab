@@ -6,12 +6,12 @@
 </head>
 <body>
 
-<main>
+<main class="k-medio">
     <div th:replace="~{fragmentos/componentes :: aviso}"></div>
 
-    <div class="k-perfil-cabecera">
-        <img class="k-avatar" th:if="${usuario.foto != null}" th:src="@{${usuario.foto}}" alt="Tu foto"
-             style="object-fit:cover;">
+    <th:block th:replace="~{fragmentos/componentes :: arribaDelPerfil(${perfil.cabecera}, ${usuario.franja})}"></th:block>
+    <div class="k-perfil-cabecera k-cabecera-bajo-banner">
+        <img class="k-avatar k-foto-cubre" th:if="${usuario.foto != null}" th:src="@{${usuario.foto}}" alt="Tu foto">
         <span class="k-avatar" th:unless="${usuario.foto != null}" th:text="${usuario.iniciales}">PR</span>
 
         <div class="k-perfil-datos">
@@ -35,28 +35,28 @@
 
     <div class="k-dos-columnas k-principal-ancha">
         <div>
-            <div class="k-tarjeta" style="margin-bottom:1.5rem;">
+            <div class="k-tarjeta k-mb-15">
                 <h2 class="k-tarjeta-titulo">Sobre mí</h2>
-                <p style="margin:0; color:var(--tinta-2);" th:if="${perfil.descripcion}" th:text="${perfil.descripcion}">Descripción</p>
-                <p class="k-vacio" style="margin:0;" th:unless="${perfil.descripcion}">Todavía no contaste nada de ti.
+                <p class="k-sin-margen k-texto-suave" th:if="${perfil.descripcion}" th:text="${perfil.descripcion}">Descripción</p>
+                <p class="k-vacio k-sin-margen" th:unless="${perfil.descripcion}">Todavía no contaste nada de ti.
                     <a th:href="@{/perfil/editar}">Escríbelo</a>: es lo primero que lee quien te va a contratar.</p>
 
                 <th:block th:if="${perfil.experiencia}">
-                    <h2 class="k-tarjeta-titulo" style="margin-top:1.4rem;">Experiencia</h2>
-                    <p style="margin:0; color:var(--tinta-2);" th:text="${perfil.experiencia}">Experiencia</p>
+                    <h2 class="k-tarjeta-titulo k-mt-14">Experiencia</h2>
+                    <p class="k-sin-margen k-texto-suave" th:text="${perfil.experiencia}">Experiencia</p>
                 </th:block>
             </div>
 
-            <div class="k-tarjeta" style="margin-bottom:1.5rem;">
+            <div class="k-tarjeta k-mb-15">
                 <div class="k-titulo-fila">
-                    <h2 class="k-tarjeta-titulo" style="margin:0;">Lo que sé hacer</h2>
+                    <h2 class="k-tarjeta-titulo k-sin-margen">Lo que sé hacer</h2>
                     <a th:href="@{/bienvenida}">Cambiar</a>
                 </div>
 
                 <div class="k-chips" th:if="${!#lists.isEmpty(misCategorias)}">
                     <span class="k-chip" th:each="c : ${misCategorias}" th:text="${c.nombre}">Categoría</span>
                 </div>
-                <p class="k-vacio" style="margin:0;" th:if="${#lists.isEmpty(misCategorias)}">
+                <p class="k-vacio k-sin-margen" th:if="${#lists.isEmpty(misCategorias)}">
                     Todavía no dijiste qué sabes hacer. Cuando lo hagas, aquí lo ve quien mire tu perfil
                     y a ti te empiezan a llegar solicitudes de esas categorías.</p>
             </div>
@@ -65,14 +65,15 @@
                 <h2 class="k-tarjeta-titulo">
                     Lo que dicen de mí (<span th:text="${perfil.reputacion.calificaciones}">3</span>)
                 </h2>
-                <p class="k-vacio" style="margin:0;" th:if="${#lists.isEmpty(perfil.resenas)}">
+                <p class="k-vacio k-sin-margen" th:if="${#lists.isEmpty(perfil.resenas)}">
                     Aquí aparecen las notas que te dejan al cerrar cada servicio.</p>
 
                 <div class="k-resena" th:each="r : ${perfil.resenas}">
                     <div class="k-resena-cab">
                         <span th:replace="~{fragmentos/componentes :: cara(${r.autor}, '2.1rem')}"></span>
                         <div>
-                            <div class="k-oferta-nombre" th:text="${r.autor.nombre}">Luis Mendoza</div>
+                            <a class="k-oferta-nombre k-enlace-limpio" th:href="@{/personas/{codigo}(codigo=${r.autor.codigo})}"
+                               th:text="${r.autor.nombre}">Luis Mendoza</a>
                             <div class="k-oferta-meta">
                                 <span th:replace="~{fragmentos/componentes :: nota(${r.puntaje})}"></span>
                                 <span th:text="${r.fecha}">hace 3 días</span>
@@ -119,6 +120,7 @@
             </div>
         </div>
     </div>
+    <script th:src="@{/js/medidas.js}" defer></script>
 </main>
 
 </body>

@@ -5,18 +5,15 @@ import com.kolab.categoria.CategoriaService;
 import com.kolab.common.RecursoNoEncontradoException;
 import com.kolab.common.Tiempo;
 import com.kolab.usuario.Usuario;
-import com.kolab.usuario.UsuarioRepository;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.stream.Collectors;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
- * Implementación de {@link DirectorioService}. Las tarjetas de una lista se arman con una consulta
- * por dato (categorías, reputación, comentarios), sin importar cuántas personas haya.
+ * las tarjetas se arman con una consulta por dato, no una por persona
  */
 @Service
 @Transactional(readOnly = true)
@@ -26,7 +23,6 @@ public class DirectorioServiceImpl implements DirectorioService {
 
     private final PerfilRepository perfilRepository;
     private final PerfilCategoriaRepository perfilCategoriaRepository;
-    private final UsuarioRepository usuarioRepository;
     private final ReputacionService reputacionService;
     private final CalificacionService calificacionService;
     private final CategoriaService categoriaService;
@@ -34,12 +30,11 @@ public class DirectorioServiceImpl implements DirectorioService {
 
     public DirectorioServiceImpl(PerfilRepository perfilRepository,
                                  PerfilCategoriaRepository perfilCategoriaRepository,
-                                 UsuarioRepository usuarioRepository, ReputacionService reputacionService,
+                                 ReputacionService reputacionService,
                                  CalificacionService calificacionService, CategoriaService categoriaService,
                                  Personas personas) {
         this.perfilRepository = perfilRepository;
         this.perfilCategoriaRepository = perfilCategoriaRepository;
-        this.usuarioRepository = usuarioRepository;
         this.reputacionService = reputacionService;
         this.calificacionService = calificacionService;
         this.categoriaService = categoriaService;
@@ -57,17 +52,19 @@ public class DirectorioServiceImpl implements DirectorioService {
     }
 
     @Override
-    public PerfilPublico publico(Long idUsuario) {
-        Usuario u = usuarioRepository.findById(idUsuario)
-                .orElseThrow(() -> new RecursoNoEncontradoException("persona", idUsuario));
-        Optional<Perfil> perfil = perfilRepository.findByUsuarioId(idUsuario);
-        List<Long> suyas = perfil.map(p -> perfilCategoriaRepository.findByPerfilId(p.getId()).stream()
-                .map(PerfilCategoria::getIdCategoria).toList()).orElse(List.of());
+    public PerfilPublico publico(String codigo) {
+        Perfil perfil = perfilRepository.findByUsuarioCodigo(codigo)
+                .orElseThrow(() -> new RecursoNoEncontradoException("persona " + codigo));
+        Usuario u = perfil.getUsuario();
+        Long idUsuario = u.getId();
+        List<Long> suyas = perfilCategoriaRepository.findByPerfilId(perfil.getId()).stream()
+                .map(PerfilCategoria::getIdCategoria).toList();
         return new PerfilPublico(personas.de(u), u.getDistrito(), Tiempo.mesYAnio(u.getFechaRegistro()),
-                perfil.map(Perfil::getDescripcion).orElse(null), perfil.map(Perfil::getExperiencia).orElse(null),
+                perfil.getDescripcion(), perfil.getExperiencia(),
                 reputacionService.de(idUsuario),
                 categoriaService.activas().stream().filter(c -> suyas.contains(c.id())).toList(),
-                calificacionService.recibidas(idUsuario, PageRequest.of(0, RESENAS)).getContent());
+                calificacionService.recibidas(idUsuario, PageRequest.of(0, RESENAS)).getContent(),
+                CabeceraDePerfil.de(perfil));
     }
 
     private List<ExpertoResumen> tarjetas(List<Perfil> perfiles) {

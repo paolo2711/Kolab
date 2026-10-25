@@ -25,12 +25,14 @@ public class MensajeController {
         this.mensajeService = mensajeService;
     }
 
+    // las dos rutas son la misma pantalla: a la izquierda la bandeja y a la derecha lo que se abrió
     @GetMapping("/mensajes")
     public String bandeja(@RequestParam(defaultValue = "0") int pagina,
                           @AuthenticationPrincipal UsuarioAutenticado usuario, Model model) {
         model.addAttribute("seccion", "mensajes");
         model.addAttribute("conversaciones",
                 mensajeService.bandeja(usuario.getIdUsuario(), PageRequest.of(Math.max(pagina, 0), POR_PAGINA)));
+        model.addAttribute("conversacion", null);
         return "mensaje/bandeja";
     }
 
@@ -39,7 +41,9 @@ public class MensajeController {
                                Model model) {
         model.addAttribute("seccion", "mensajes");
         model.addAttribute("conversacion", mensajeService.abrir(idOferta, usuario.getIdUsuario()));
-        return "mensaje/conversacion";
+        model.addAttribute("conversaciones",
+                mensajeService.bandeja(usuario.getIdUsuario(), PageRequest.of(0, POR_PAGINA)));
+        return "mensaje/bandeja";
     }
 
     // se escribe desde tres pantallas distintas; cada una dice a dónde volver

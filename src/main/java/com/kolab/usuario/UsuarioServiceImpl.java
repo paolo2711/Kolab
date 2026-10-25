@@ -1,6 +1,8 @@
 package com.kolab.usuario;
 
 import com.kolab.common.EmailYaRegistradoException;
+import com.kolab.perfil.Perfil;
+import com.kolab.perfil.PerfilRepository;
 import java.time.LocalDateTime;
 import java.util.Locale;
 import java.util.Optional;
@@ -10,19 +12,19 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-/**
- * Implementación de {@link UsuarioService}.
- */
 @Service
 public class UsuarioServiceImpl implements UsuarioService {
 
     private static final Logger log = LoggerFactory.getLogger(UsuarioServiceImpl.class);
 
     private final UsuarioRepository usuarioRepository;
+    private final PerfilRepository perfilRepository;
     private final PasswordEncoder passwordEncoder;
 
-    public UsuarioServiceImpl(UsuarioRepository usuarioRepository, PasswordEncoder passwordEncoder) {
+    public UsuarioServiceImpl(UsuarioRepository usuarioRepository, PerfilRepository perfilRepository,
+                              PasswordEncoder passwordEncoder) {
         this.usuarioRepository = usuarioRepository;
+        this.perfilRepository = perfilRepository;
         this.passwordEncoder = passwordEncoder;
     }
 
@@ -38,11 +40,13 @@ public class UsuarioServiceImpl implements UsuarioService {
         usuario.setNombre(form.getNombre().trim());
         usuario.setApellidos(form.getApellidos().trim());
         usuario.setEmail(email);
+        usuario.setCodigo(codigoLibre());
         usuario.setPasswordHash(passwordEncoder.encode(form.getPassword()));
         usuario.setTelefono(vacioComoNulo(form.getTelefono()));
         usuario.setFechaRegistro(LocalDateTime.now());
         usuario.setEstado(EstadoUsuario.ACTIVO);
         usuarioRepository.save(usuario);
+        perfilRepository.save(new Perfil(usuario));
 
         log.info("usuario registrado id={}", usuario.getId());
         return usuario;
@@ -60,12 +64,27 @@ public class UsuarioServiceImpl implements UsuarioService {
         return !usuarioRepository.existsByEmail(normalizar(email));
     }
 
-    // el correo se guarda siempre igual, si no el unique deja pasar Pepe@x.com y pepe@x.com
+    // repetir es casi imposible con 36^10 pero el unique no perdona
+    private String codigoLibre() {
+        String codigo = CodigoPublico.nuevo();
+        while (usuarioRepository.existsByCodigo(codigo)) {
+            codigo = CodigoPublico.nuevo();
+        }
+        return codigo;
+    }
+
+    // el correo se guarda siempre igual o el unique deja pasar Pepe@x.com y pepe@x.com
     private String normalizar(String email) {
         return email == null ? "" : email.trim().toLowerCase(Locale.ROOT);
     }
 
     private String vacioComoNulo(String texto) {
         return texto == null || texto.isBlank() ? null : texto.trim();
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public boolean estaSuspendida(Long idUsuario) {
+        return usuarioRepository.existsByIdAndEstado(idUsuario, EstadoUsuario.SUSPENDIDO);
     }
 }

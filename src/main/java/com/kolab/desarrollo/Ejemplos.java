@@ -18,9 +18,10 @@ import org.springframework.stereotype.Component;
 @ConditionalOnProperty(name = "kolab.desarrollo", havingValue = "true")
 class Ejemplos {
 
+    // administrador falta en casi todas: el json lo deja en false
     record Persona(String nombre, String apellidos, String email, String telefono, String distrito,
                    BigDecimal latitud, BigDecimal longitud, int mesesEnKolab, String descripcion,
-                   String experiencia, List<String> categorias) {
+                   String experiencia, List<String> categorias, boolean administrador) {
     }
 
     record Solicitud(String clave, String autor, String para, String categoria, String titulo,

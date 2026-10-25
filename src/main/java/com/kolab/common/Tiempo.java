@@ -1,6 +1,7 @@
 package com.kolab.common;
 
 import java.time.Duration;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Locale;
@@ -13,8 +14,8 @@ public final class Tiempo {
     private static final Locale PERU = Locale.forLanguageTag("es-PE");
     private static final DateTimeFormatter DIA = DateTimeFormatter.ofPattern("dd/MM/yyyy");
     private static final DateTimeFormatter HORA = DateTimeFormatter.ofPattern("HH:mm");
-    private static final DateTimeFormatter DIA_CORTO = DateTimeFormatter.ofPattern("dd/MM");
     private static final DateTimeFormatter MES = DateTimeFormatter.ofPattern("MMMM 'de' yyyy", PERU);
+    private static final DateTimeFormatter DIA_LARGO = DateTimeFormatter.ofPattern("d 'de' MMMM", PERU);
 
     private Tiempo() {
     }
@@ -49,11 +50,29 @@ public final class Tiempo {
     }
 
     /**
-     * La hora si fue hoy, el día si fue antes. Es lo que muestra cada burbuja del chat.
+     * El día al que pertenece un mensaje, para separar la conversación por jornadas.
      */
-    public static String hora(LocalDateTime cuando) {
-        boolean hoy = cuando.toLocalDate().equals(LocalDateTime.now().toLocalDate());
-        return cuando.format(hoy ? HORA : DIA_CORTO);
+    public static String dia(LocalDateTime cuando) {
+        LocalDate fecha = cuando.toLocalDate();
+        LocalDate hoy = LocalDate.now();
+        if (fecha.equals(hoy)) {
+            return "Hoy";
+        }
+        if (fecha.equals(hoy.minusDays(1))) {
+            return "Ayer";
+        }
+        return cuando.format(fecha.getYear() == hoy.getYear() ? DIA_LARGO : DIA);
+    }
+
+    /**
+     * Solo la hora. En la conversación el día lo dice el separador, así que la burbuja no lo repite.
+     */
+    public static String minuto(LocalDateTime cuando) {
+        return cuando.format(HORA);
+    }
+
+    public static String fecha(LocalDateTime cuando) {
+        return cuando.format(DIA);
     }
 
     public static String mesYAnio(LocalDateTime cuando) {

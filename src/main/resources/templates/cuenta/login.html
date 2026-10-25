@@ -2,17 +2,17 @@
 <html lang="es" xmlns:th="http://www.thymeleaf.org"
       th:replace="~{layout :: base(~{::title}, ~{::main})}">
 <head>
-    <title>Registro e inicio de sesión · KOLAB</title>
+    <title th:text="${panel} ? 'Panel de administración · KOLAB' : 'Registro e inicio de sesión · KOLAB'">Registro e inicio de sesión · KOLAB</title>
 </head>
 <body>
 
-<main class="k-acceso">
+<main th:class="${panel} ? 'k-formulario k-acceso' : 'k-medio k-acceso'">
     <div class="k-encabezado">
-        <h1>Ingresa a KOLAB</h1>
-        <p>Publica lo que necesitas con el precio que tú propones, o gana ofreciendo lo que sabes hacer.</p>
+        <h1 th:text="${panel} ? 'Panel de administración' : 'Ingresa a KOLAB'">Ingresa a KOLAB</h1>
+        <p th:unless="${panel}">Publica lo que necesitas con el precio que tú propones, o gana ofreciendo lo que sabes hacer.</p>
     </div>
 
-    <div class="k-dos-columnas">
+    <div th:class="${panel} ? null : 'k-dos-columnas'">
         <div class="k-tarjeta">
 
             <div class="k-aviso" th:if="${aviso}" th:text="${aviso}"></div>
@@ -20,8 +20,11 @@
             <div class="k-aviso k-aviso-error" th:if="${param.error}">
                 El correo o la contraseña no coinciden.
             </div>
+            <div class="k-aviso k-aviso-error" th:if="${param.suspendida}">
+                Tu cuenta está suspendida, así que no puedes ingresar.
+            </div>
 
-            <form th:action="@{/login}" method="post">
+            <form th:action="${panel} ? @{/admin/login} : @{/login}" method="post">
                 <div class="k-campos k-campos-una">
                     <div class="k-campo">
                         <label for="email">Correo electrónico</label>
@@ -36,30 +39,39 @@
                 </div>
                 <div class="k-acciones">
                     <button type="submit" class="k-btn k-btn-principal">Ingresar</button>
-                    <a th:href="@{/recuperar}">Olvidé mi contraseña</a>
+                    <a th:href="@{/recuperar}" th:unless="${panel}">Olvidé mi contraseña</a>
                 </div>
             </form>
 
-            <div class="k-separador">¿Todavía no tienes cuenta?</div>
+            <th:block th:unless="${panel}">
+                <div class="k-separador">¿Todavía no tienes cuenta?</div>
+                <a class="k-btn k-btn-linea" th:href="@{/registro}">Crear cuenta</a>
+            </th:block>
 
-            <a class="k-btn k-btn-linea" th:href="@{/registro}">Crear cuenta</a>
+            <div th:if="${modoDesarrollo} and ${panel}">
+                <p th:each="cuenta : ${administradoresDeEjemplo}">
+                    <span th:text="${cuenta}">admin@kolab.pe</span><br>
+                    <span th:text="${claveDeEjemplo}">kolab1234</span>
+                </p>
+            </div>
 
-            <div th:if="${modoDesarrollo}">
+            <div th:if="${modoDesarrollo} and not ${panel}">
                 <p th:each="cuenta : ${cuentasDeEjemplo}">
                     <span th:text="${cuenta}">cliente@kolab.pe</span><br>
                     <span th:text="${claveDeEjemplo}">kolab1234</span>
                 </p>
-                <form th:action="@{/desarrollo/reiniciar}" method="post" onsubmit="return confirm('Se borra todo. ¿Seguro?')">
+                <form th:action="@{/desarrollo/reiniciar}" method="post" data-confirmar="Se borra todo. ¿Seguro?">
                     <button type="submit">Reiniciar datos</button>
                 </form>
                 <form th:action="@{/desarrollo/ejemplos}" method="post">
                     <button type="submit">Cargar ejemplos</button>
                 </form>
+                <script th:src="@{/js/confirmar.js}" defer></script>
             </div>
 
         </div>
 
-        <div class="k-lienzo">
+        <div class="k-lienzo" th:unless="${panel}">
             <img class="k-acceso-foto" th:if="${fotoAcceso}" th:src="@{${fotoAcceso}}"
                  alt="Una persona enseñándole a otra">
             <h2>Tú pones el precio.<br><em>Quien sabe hacerlo</em> decide si lo toma.</h2>

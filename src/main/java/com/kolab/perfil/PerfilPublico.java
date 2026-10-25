@@ -14,7 +14,8 @@ public record PerfilPublico(Persona persona,
                             String experiencia,
                             Reputacion reputacion,
                             List<CategoriaResumen> categorias,
-                            List<ResenaResumen> resenas) {
+                            List<ResenaResumen> resenas,
+                            CabeceraDePerfil cabecera) {
 
     public boolean ofrece() {
         return !categorias.isEmpty();

@@ -29,14 +29,28 @@ public class DetallesUsuarioService implements UserDetailsService {
     @Override
     @Transactional(readOnly = true)
     public UserDetails loadUserByUsername(String email) {
+        return cargar(email, Rol.USUARIO);
+    }
+
+    /**
+     * La cuenta con ese correo si tiene el rol de la puerta por la que entra. La de otro rol se rechaza
+     * igual que un correo inexistente, así ningún ingreso revela qué cuentas administran.
+     */
+    @Transactional(readOnly = true)
+    public UsuarioAutenticado cargar(String email, Rol rol) {
         // se corta antes de mirar la clave; quien mira la pantalla ve el mismo mensaje de siempre
         if (intentos.estaBloqueado(email)) {
             throw new LockedException("Demasiados intentos con " + email);
         }
         return usuarioService.buscarPorEmail(email)
+                .filter(usuario -> usuario.getRol() == rol)
                 .map(usuario -> new UsuarioAutenticado(usuario, ofreceServicios(usuario),
-                        fotos.dePersona(usuario.getEmail())))
-                .orElseThrow(() -> new UsernameNotFoundException("No hay cuenta con el correo " + email));
+                        fotos.dePersona(usuario.getFoto(), usuario.getEmail())))
+                .orElseThrow(() -> new UsernameNotFoundException("No hay cuenta " + rol + " con el correo " + email));
+    }
+
+    public boolean suspendida(Long idUsuario) {
+        return usuarioService.estaSuspendida(idUsuario);
     }
 
     private boolean ofreceServicios(Usuario usuario) {

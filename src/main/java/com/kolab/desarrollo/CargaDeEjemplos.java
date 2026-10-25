@@ -10,6 +10,7 @@ import com.kolab.solicitud.SolicitudForm;
 import com.kolab.solicitud.SolicitudRepository;
 import com.kolab.solicitud.SolicitudService;
 import com.kolab.usuario.RegistroForm;
+import com.kolab.usuario.Rol;
 import com.kolab.usuario.Usuario;
 import com.kolab.usuario.UsuarioRepository;
 import com.kolab.usuario.UsuarioService;
@@ -22,8 +23,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
- * Llena una base vacía con los ejemplos de {@code resources/ejemplos}. Pasa por los mismos servicios
- * que usa la aplicación, así los ejemplos cumplen las mismas reglas que los datos de verdad.
+ * llena una base vacia con los ejemplos, por los mismos servicios que usa la app
  */
 @Component
 @ConditionalOnProperty(name = "kolab.desarrollo", havingValue = "true")
@@ -60,7 +60,7 @@ class CargaDeEjemplos {
     }
 
     /**
-     * @return {@code false} si la base ya tenía solicitudes y no se tocó nada
+     * @return false si la base ya tenia solicitudes y no se toco nada
      */
     @Transactional
     public boolean cargarSiVacia() {
@@ -90,6 +90,9 @@ class CargaDeEjemplos {
         Usuario u = usuarioRepository.getReferenceById(id);
         u.setLatitud(p.latitud());
         u.setLongitud(p.longitud());
+        if (p.administrador()) {
+            u.setRol(Rol.ADMINISTRADOR);
+        }
         carga.fechas.add(Fechado.registro(id, p.mesesEnKolab()));
     }
 
@@ -102,7 +105,8 @@ class CargaDeEjemplos {
         form.setDescripcion(s.descripcion());
         form.setFechaDeseada(LocalDate.now().plusDays(s.dentroDeDias()));
         form.setPrecioPropuesto(s.precio());
-        form.setIdDestinatario(s.para() == null ? null : carga.persona(s.para()));
+        form.setCodigoDestinatario(s.para() == null ? null
+                : usuarioService.buscarPorEmail(s.para()).map(Usuario::getCodigo).orElseThrow());
 
         Long id = solicitudService.publicar(form, carga.persona(s.autor()));
         Solicitud publicada = solicitudRepository.getReferenceById(id);
@@ -111,6 +115,19 @@ class CargaDeEjemplos {
         carga.solicitudes.put(s.clave(), id);
         carga.autores.put(s.clave(), s.autor());
         carga.fechas.add(Fechado.solicitud(id, s.haceHoras()));
+    }
+
+    /**
+     * deja creadas las cuentas de admin de los ejemplos aunque la base ya tenga datos
+     */
+    @Transactional
+    public void asegurarAdministradores() {
+        ejemplos.personas().stream().filter(Ejemplos.Persona::administrador).forEach(p -> {
+            Long id = usuarioService.buscarPorEmail(p.email())
+                    .map(Usuario::getId)
+                    .orElseGet(() -> usuarioService.registrar(registro(p)).getId());
+            usuarioRepository.getReferenceById(id).setRol(Rol.ADMINISTRADOR);
+        });
     }
 
     private RegistroForm registro(Ejemplos.Persona p) {

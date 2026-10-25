@@ -24,6 +24,21 @@
                                  rgba(11, 19, 31, 0.12) 100%);
     --velo-lado: linear-gradient(to right, rgba(11, 19, 31, 0.86) 0%, rgba(11, 19, 31, 0.6) 42%,
                                  rgba(11, 19, 31, 0.05) 78%);
+
+    /* los tres unicos anchos de pagina. Ninguna pantalla define el suyo: usa una de las tres clases */
+    --relleno-lateral: clamp(1rem, 4vw, 4rem);
+    --ancho-total: 100%;
+    --ancho-medio: min(80vw, 80rem);
+    --ancho-formulario: 40rem;
+    --alto-barra: 63px;
+}
+
+/* en celular los tres son lo mismo: todo el ancho menos el relleno */
+@media (max-width: 52rem) {
+    :root {
+        --ancho-medio: 100%;
+        --ancho-formulario: 100%;
+    }
 }
 
 * {
@@ -68,11 +83,31 @@ a:hover {
     padding: 2.25rem 0 4rem;
 }
 
+/* el marco va de borde a borde en toda pantalla; el relleno crece con ella */
 .k-ancho {
     width: 100%;
-    max-width: 68rem;
     margin: 0 auto;
-    padding: 0 1.5rem;
+    padding: 0 var(--relleno-lateral);
+}
+
+/* cada pantalla usa una de las tres y ninguna define un ancho propio */
+main.k-total,
+main.k-medio,
+main.k-formulario {
+    width: 100%;
+    margin-inline: auto;
+}
+
+main.k-total {
+    max-width: var(--ancho-total);
+}
+
+main.k-medio {
+    max-width: var(--ancho-medio);
+}
+
+main.k-formulario {
+    max-width: var(--ancho-formulario);
 }
 
 /* barra superior */
@@ -230,6 +265,12 @@ a:hover {
     border: 1px solid var(--linea);
     border-radius: var(--r-grande);
     padding: 1.6rem;
+}
+
+/* el texto se corta a una medida de lectura aunque la tarjeta se estire */
+.k-tarjeta > p,
+.k-resena-texto {
+    max-width: 74ch;
 }
 
 .k-tarjeta-titulo {
@@ -401,17 +442,6 @@ textarea.k-mal:focus {
 .k-btn-linea:hover {
     border-color: var(--tinta);
     color: var(--tinta);
-}
-
-.k-btn-oscuro {
-    background: var(--tinta);
-    border-color: var(--tinta);
-    color: #fff;
-}
-
-.k-btn-oscuro:hover {
-    background: var(--tinta);
-    color: #fff;
 }
 
 .k-btn-chico {
@@ -611,6 +641,15 @@ textarea.k-mal:focus {
     gap: 0.75rem;
 }
 
+/* en pantalla muy ancha una fila sola quedaria de dos mil pixeles: se parten en dos columnas */
+@media (min-width: 100rem) {
+    .k-lista-doble {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        align-content: start;
+    }
+}
+
 .k-conteo {
     font-size: 0.88rem;
     color: var(--tinta-2);
@@ -653,6 +692,13 @@ a.k-solicitud {
     font-size: 0.82rem;
     color: var(--tinta-3);
     margin-top: 0.35rem;
+}
+
+/* lo que esta pasando con una oferta propia, que es lo primero que se busca en la fila */
+.k-oferta-situacion {
+    font-size: 0.88rem;
+    font-weight: 600;
+    margin-top: 0.1rem;
 }
 
 .k-solicitud-derecha {
@@ -764,41 +810,19 @@ a.k-solicitud {
     font-size: 0.94rem;
 }
 
+/* el paso del chat chico a la conversacion completa, al otro extremo de la cabecera */
+.k-chat-abrir {
+    margin-left: auto;
+    font-size: 0.85rem;
+    font-weight: 500;
+    white-space: nowrap;
+}
+
 .k-chat-hilo {
     flex: 1;
-    display: flex;
-    flex-direction: column;
-    gap: 0.6rem;
-    padding: 1.1rem;
+    padding: 0.6rem 1.1rem 1.1rem;
     overflow-y: auto;
     background: var(--hueso);
-}
-
-.k-burbuja {
-    max-width: 78%;
-    padding: 0.55rem 0.85rem;
-    border-radius: var(--r);
-    font-size: 0.9rem;
-    line-height: 1.5;
-}
-
-.k-burbuja-otro {
-    align-self: flex-start;
-    background: var(--panel);
-    border: 1px solid var(--linea);
-}
-
-.k-burbuja-mio {
-    align-self: flex-end;
-    background: var(--acento-suave);
-    border: 1px solid #cfdff2;
-}
-
-.k-burbuja-hora {
-    display: block;
-    font-size: 0.72rem;
-    color: var(--tinta-3);
-    margin-top: 0.2rem;
 }
 
 .k-chat-envio input {
@@ -1447,7 +1471,7 @@ a.k-solicitud {
 
 .k-rejilla {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(15rem, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr));
     gap: 0.75rem;
 }
 
@@ -1604,6 +1628,13 @@ a.k-solicitud {
     }
 }
 
+/* las ocho categorias entran en una sola fila cuando la pantalla da para eso */
+@media (min-width: 100rem) {
+    .k-mosaico.k-mosaico-grande {
+        grid-template-columns: repeat(8, minmax(0, 1fr));
+    }
+}
+
 .k-mosaico-grande .k-tesela-nombre {
     font-size: 1.05rem;
 }
@@ -1743,6 +1774,12 @@ a.k-solicitud {
     margin-top: -1px;
 }
 
+/* con el chat abierto la tarjeta y el chat son una sola caja: mismo borde y sin esquinas abajo */
+.k-oferta-caja:has(.k-hilo:not([hidden])) .k-oferta {
+    border-color: var(--acento) var(--acento) var(--linea);
+    border-radius: var(--r) var(--r) 0 0;
+}
+
 .k-hilo .k-chat-hilo {
     min-height: 9rem;
     max-height: 17rem;
@@ -1751,13 +1788,6 @@ a.k-solicitud {
 button.k-chat-boton {
     cursor: pointer;
     font: inherit;
-}
-
-/* conversacion a pantalla completa */
-
-.k-chat-solo {
-    min-height: 30rem;
-    max-width: 46rem;
 }
 
 .k-senal {
@@ -1795,7 +1825,8 @@ button.k-chat-boton {
 
 .k-cartas {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(13.5rem, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(min(16rem, 100%), 22rem));
+    justify-content: start;
     gap: 0.9rem;
 }
 
@@ -1978,6 +2009,21 @@ img {
     background: var(--hueso);
 }
 
+/* arriba del perfil: un color que sale del nombre, claro para que no pese como un bloque oscuro */
+.k-franja {
+    height: 7rem;
+    border: 1px solid var(--linea);
+    border-bottom: 0;
+    border-radius: var(--r-grande) var(--r-grande) 0 0;
+}
+
+.k-franja.f0 { background: #dbe7f6; }
+.k-franja.f1 { background: #d7ece8; }
+.k-franja.f2 { background: #f3e3d7; }
+.k-franja.f3 { background: #e4def3; }
+.k-franja.f4 { background: #dcecdf; }
+.k-franja.f5 { background: #f4e9c9; }
+
 .k-cabecera-bajo-banner {
     margin-top: 0;
     border-top: 0;
@@ -1985,7 +2031,8 @@ img {
 }
 
 /* en un perfil con portada la foto de la persona se monta sobre ella */
-.k-perfil-cabecera.k-cabecera-bajo-banner > .k-cara {
+.k-perfil-cabecera.k-cabecera-bajo-banner > .k-cara,
+.k-perfil-cabecera.k-cabecera-bajo-banner > .k-avatar {
     margin-top: -3.6rem;
     border: 4px solid var(--panel);
 }
@@ -1994,7 +2041,7 @@ img {
 
 .k-mosaico {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(10.5rem, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(12rem, 1fr));
     gap: 0.6rem;
 }
 
@@ -2202,97 +2249,17 @@ button:focus-visible,
     line-height: 1;
 }
 
-/* bandeja de mensajes */
-
-.k-bandeja {
-    display: flex;
-    flex-direction: column;
-    background: var(--panel);
-    border: 1px solid var(--linea);
-    border-radius: var(--r-grande);
-    overflow: hidden;
-}
-
-.k-charla {
-    display: flex;
-    align-items: flex-start;
-    gap: 0.85rem;
-    padding: 0.95rem 1.15rem;
-    text-decoration: none;
-    color: inherit;
-    border-bottom: 1px solid var(--linea);
-    transition: background 140ms ease;
-}
-
-.k-charla:last-child {
-    border-bottom: 0;
-}
-
-.k-charla:hover {
-    background: var(--hueso);
-}
-
-.k-charla-cuerpo {
-    flex: 1;
-    min-width: 0;
-}
-
-.k-charla-cima {
-    display: flex;
-    align-items: baseline;
-    justify-content: space-between;
-    gap: 0.75rem;
-}
-
-.k-charla-nombre {
-    font-weight: 600;
-}
-
-.k-charla-hora {
-    font-size: 0.8rem;
-    color: var(--tinta-3);
-    white-space: nowrap;
-    font-variant-numeric: tabular-nums;
-}
-
-.k-charla-sobre {
-    display: block;
-    font-size: 0.8rem;
-    color: var(--tinta-3);
-}
-
-.k-charla-ultimo {
-    display: block;
-    margin-top: 0.15rem;
-    color: var(--tinta-2);
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-}
-
-.k-charla-nuevo .k-charla-ultimo {
-    color: var(--tinta);
-    font-weight: 500;
-}
-
-.k-charla-punto {
-    width: 0.5rem;
-    height: 0.5rem;
-    margin-top: 0.55rem;
-    flex-shrink: 0;
-    border-radius: 50%;
-    background: var(--acento);
-}
-
 /* tratos cerrados: el que está del otro lado manda, no el título */
 
 .k-tratos {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(19rem, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(min(21rem, 100%), 30rem));
+    justify-content: start;
     gap: 0.9rem;
 }
 
 .k-trato {
+    position: relative;
     display: flex;
     flex-direction: column;
     gap: 0.3rem;
@@ -2336,7 +2303,21 @@ button:focus-visible,
     color: var(--tinta-2);
 }
 
-.k-trato-persona b {
+.k-trato-ir {
+    color: inherit;
+    text-decoration: none;
+}
+
+/* el enlace al servicio se estira sobre toda la tarjeta */
+.k-trato-ir::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+}
+
+.k-trato-quien {
+    position: relative;
+    z-index: 1;
     font-weight: 600;
     color: var(--tinta);
 }
@@ -2601,7 +2582,8 @@ button:focus-visible,
 
 /* marca de propuesta directa dentro de la fila */
 
-.k-para-ti {
+/* insignias cortas al lado del titulo de una fila: «Para ti», «Nuevo» */
+.k-insignia {
     margin-left: 0.5rem;
     font-size: 0.74rem;
     font-weight: 600;
@@ -2610,6 +2592,10 @@ button:focus-visible,
     border-radius: var(--r-chico);
     padding: 0.05rem 0.4rem;
     vertical-align: 0.12em;
+}
+
+.k-insignia + .k-insignia {
+    margin-left: 0.3rem;
 }
 
 /* paginacion de las listas */
@@ -2640,10 +2626,17 @@ button:focus-visible,
     flex-shrink: 0;
 }
 
-/* mi resumen: cuatro cifras en fila cuando hay espacio */
+/* mi resumen: cuatro cifras en fila cuando hay espacio, y las ocho seguidas si sobra */
 
 @media (min-width: 52rem) {
     .k-metricas-cuatro {
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+}
+
+/* pasados los 1600 las cifras de a dos se ponen de a cuatro, como las del otro bloque */
+@media (min-width: 100rem) {
+    .k-metricas {
         grid-template-columns: repeat(4, minmax(0, 1fr));
     }
 }
@@ -2738,3 +2731,531 @@ button:focus-visible,
     background: var(--acento);
 }
 
+/* ===== mensajes =====
+   Es la unica pantalla que ocupa todo el alto: la lista y la conversacion se desplazan por dentro
+   y la pagina no se mueve, como en cualquier mensajeria. Debajo de 840 se ve una cosa o la otra */
+
+.k-msj-lista-cima {
+    display: flex;
+    flex-direction: column;
+    gap: 0.7rem;
+    padding-bottom: 0.9rem;
+    border-bottom: 1px solid var(--linea);
+}
+
+.k-msj-titulo {
+    margin: 0;
+    font-size: 1.5rem;
+    letter-spacing: -0.02em;
+}
+
+.k-msj-buscar {
+    width: 100%;
+    padding: 0.5rem 0.8rem;
+    border: 1px solid var(--linea-fuerte);
+    border-radius: var(--r);
+    font: inherit;
+    font-size: 0.92rem;
+    background: var(--panel);
+}
+
+.k-msj-buscar:focus {
+    outline: none;
+    border-color: var(--acento);
+    box-shadow: 0 0 0 3px var(--acento-suave);
+}
+
+.k-msj-filtros {
+    display: flex;
+    gap: 0.4rem;
+}
+
+.k-msj-filtro {
+    padding: 0.3rem 0.8rem;
+    border: 1px solid var(--linea-fuerte);
+    border-radius: 999px;
+    background: var(--panel);
+    color: var(--tinta-2);
+    font: inherit;
+    font-size: 0.85rem;
+    cursor: pointer;
+}
+
+.k-msj-filtro[aria-pressed="true"] {
+    border-color: var(--tinta);
+    background: var(--tinta);
+    color: #fff;
+}
+
+.k-msj-charlas {
+    display: flex;
+    flex-direction: column;
+}
+
+.k-msj-charla {
+    display: flex;
+    align-items: center;
+    gap: 0.7rem;
+    padding: 0.7rem;
+    border-radius: var(--r);
+    color: inherit;
+    text-decoration: none;
+}
+
+.k-msj-charla:hover {
+    background: var(--hueso);
+}
+
+.k-msj-charla-abierta,
+.k-msj-charla-abierta:hover {
+    background: var(--acento-suave);
+}
+
+.k-msj-charla-cuerpo {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    flex: 1;
+}
+
+.k-msj-charla-cima {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 0.5rem;
+}
+
+.k-msj-charla-nombre {
+    font-weight: 600;
+    font-size: 0.94rem;
+}
+
+.k-msj-charla-hora {
+    flex-shrink: 0;
+    font-size: 0.78rem;
+    color: var(--tinta-3);
+}
+
+.k-msj-charla-sobre,
+.k-msj-charla-ultimo {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.k-msj-charla-sobre {
+    font-size: 0.82rem;
+    color: var(--tinta-3);
+}
+
+.k-msj-charla-ultimo {
+    font-size: 0.86rem;
+    color: var(--tinta-2);
+}
+
+.k-msj-punto {
+    flex-shrink: 0;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--acento);
+}
+
+.k-msj-sin-nada {
+    margin: 1.5rem 0;
+}
+
+/* conversacion */
+
+.k-msj-elegir {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.6rem;
+    height: 100%;
+    color: var(--tinta-3);
+}
+
+.k-msj-elegir i {
+    font-size: 2.4rem;
+}
+
+.k-msj-elegir p {
+    margin: 0;
+}
+
+.k-msj-cabecera {
+    display: flex;
+    align-items: center;
+    gap: 0.7rem;
+    padding: 0.8rem 1rem;
+    border-bottom: 1px solid var(--linea);
+}
+
+.k-msj-cabecera-cuerpo {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+}
+
+.k-msj-cabecera-nombre {
+    font-weight: 600;
+}
+
+.k-msj-cabecera-sobre {
+    font-size: 0.85rem;
+    color: var(--tinta-2);
+}
+
+.k-msj-hilo {
+    flex: 1;
+    overflow-y: auto;
+    padding: 1rem;
+    background: var(--hueso);
+}
+
+.k-msj-dia {
+    margin: 1rem 0 0.6rem;
+    text-align: center;
+    font-size: 0.78rem;
+    color: var(--tinta-3);
+}
+
+.k-msj-burbuja {
+    display: flex;
+    align-items: baseline;
+    gap: 0.5rem;
+    width: fit-content;
+    max-width: min(42rem, 76%);
+    margin-top: 0.45rem;
+    padding: 0.5rem 0.8rem;
+    border-radius: var(--r-grande);
+    font-size: 0.93rem;
+}
+
+/* dos mensajes seguidos de la misma persona se pegan: se leen como uno */
+.k-msj-burbuja[data-seguido] {
+    margin-top: 0.15rem;
+}
+
+.k-msj-suyo {
+    background: var(--panel);
+    border: 1px solid var(--linea);
+}
+
+.k-msj-mio {
+    margin-left: auto;
+    background: var(--acento);
+    color: #fff;
+}
+
+.k-msj-hora {
+    flex-shrink: 0;
+    font-size: 0.72rem;
+    color: var(--tinta-3);
+}
+
+.k-msj-mio .k-msj-hora {
+    color: rgba(255, 255, 255, 0.75);
+}
+
+.k-msj-visto {
+    margin-top: 0.2rem;
+    text-align: right;
+    font-size: 0.72rem;
+    color: var(--tinta-3);
+}
+
+.k-msj-escribir {
+    display: flex;
+    gap: 0.6rem;
+    padding: 0.8rem 1rem;
+    border-top: 1px solid var(--linea);
+    background: var(--panel);
+}
+
+.k-msj-escribir input {
+    flex: 1;
+    padding: 0.6rem 0.9rem;
+    border: 1px solid var(--linea-fuerte);
+    border-radius: 999px;
+    font: inherit;
+    background: var(--hueso);
+}
+
+.k-msj-escribir input:focus {
+    outline: none;
+    border-color: var(--acento);
+    background: var(--panel);
+    box-shadow: 0 0 0 3px var(--acento-suave);
+}
+
+/* en celular se ve la lista o la conversacion, nunca las dos */
+.k-msj-lista {
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+}
+
+.k-msj-panel {
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+}
+
+.k-msj-abierta .k-msj-lista {
+    display: none;
+}
+
+.k-msj:not(.k-msj-abierta) .k-msj-panel {
+    display: none;
+}
+
+@media (min-width: 52.5rem) {
+    .k-msj {
+        display: grid;
+        grid-template-columns: 22.5rem minmax(0, 1fr);
+        gap: 1.25rem;
+        height: calc(100vh - var(--alto-barra) - 2rem);
+    }
+
+    .k-msj-lista,
+    .k-msj:not(.k-msj-abierta) .k-msj-panel,
+    .k-msj-abierta .k-msj-lista {
+        display: flex;
+    }
+
+    .k-msj-charlas {
+        overflow-y: auto;
+        padding-top: 0.5rem;
+    }
+
+    .k-msj-panel {
+        border: 1px solid var(--linea);
+        border-radius: var(--r-grande);
+        overflow: hidden;
+        background: var(--panel);
+    }
+
+    /* desde aqui la cabecera ya dice de quien es la conversacion: la flecha solo sirve en celular */
+    .k-msj-volver {
+        display: none;
+    }
+}
+
+/* la pantalla de mensajes se queda con el alto entero: sin pie y sin aire de mas */
+body:has(.k-msj) .k-pie {
+    display: none;
+}
+
+@media (min-width: 52.5rem) {
+    body:has(.k-msj) .k-cuerpo {
+        padding: 1rem 0;
+        overflow: hidden;
+    }
+}
+
+/* en celular la conversacion abierta ocupa justo la pantalla: la barra arriba, la caja pegada
+   al fondo y solo el hilo se desplaza. Se arma con la columna del body para no depender del alto
+   de la barra, que aqui cambia segun cuantas lineas ocupe el menu */
+@media (max-width: 52.49rem) {
+    body:has(.k-msj-abierta) {
+        height: 100dvh;
+        min-height: 0;
+    }
+
+    body:has(.k-msj-abierta) .k-cuerpo {
+        flex: 1 1 auto;
+        min-height: 0;
+        display: flex;
+        flex-direction: column;
+        padding: 0.5rem 0 0;
+    }
+
+    body:has(.k-msj-abierta) .k-cuerpo > .k-ancho {
+        flex: 1;
+        min-height: 0;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .k-msj-abierta {
+        flex: 1;
+        min-height: 0;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .k-msj-abierta .k-msj-panel {
+        flex: 1;
+    }
+}
+
+/* panel de administracion: una fila por cuenta, con lo justo para reconocerla */
+
+.k-panel-salir {
+    margin-left: auto;
+}
+
+.k-panel-cima {
+    margin-bottom: 1.5rem;
+}
+
+.k-panel-cima h1 {
+    margin: 0;
+}
+
+/* tablas del panel: lineas finas y numeros alineados */
+
+.k-tabla {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.92rem;
+}
+
+.k-tabla th {
+    padding: 0 0.6rem 0.5rem 0;
+    text-align: left;
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: var(--tinta-3);
+}
+
+.k-tabla td {
+    padding: 0.55rem 0.6rem 0.55rem 0;
+    border-top: 1px solid var(--linea);
+    font-variant-numeric: tabular-nums;
+}
+
+.k-tabla th:not(:first-child),
+.k-tabla td:not(:first-child) {
+    text-align: right;
+}
+
+.k-admin-lista {
+    padding: 0.4rem 1.25rem;
+}
+
+.k-admin-fila {
+    display: grid;
+    grid-template-columns: minmax(0, 1.2fr) minmax(0, 1.4fr) 7rem 6rem 7rem;
+    align-items: center;
+    gap: 1rem;
+    padding: 0.7rem 0;
+    border-top: 1px solid var(--linea);
+}
+
+.k-admin-fila:first-child {
+    border-top: 0;
+}
+
+.k-admin-cabeza {
+    font-size: 0.8rem;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+    color: var(--tinta-3);
+}
+
+.k-admin-nombre {
+    font-weight: 600;
+}
+
+.k-admin-correo {
+    color: var(--tinta-2);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.k-admin-dato {
+    font-size: 0.9rem;
+    color: var(--tinta-2);
+    font-variant-numeric: tabular-nums;
+}
+
+.k-admin-suspendida {
+    color: var(--rojo);
+}
+
+.k-admin-accion {
+    text-align: right;
+}
+
+@media (max-width: 40rem) {
+    .k-admin-cabeza {
+        display: none;
+    }
+
+    .k-admin-fila {
+        grid-template-columns: minmax(0, 1fr) auto;
+        gap: 0.2rem 1rem;
+    }
+
+    .k-admin-correo {
+        grid-column: 1;
+    }
+}
+
+/* ajustes sueltos que antes iban en un atributo style. Llevan !important para pesar lo mismo que
+   pesaban en linea, que le ganaba a cualquier otra regla: asi ninguna pantalla cambia de aspecto.
+   k-sin-margen va antes que los margenes de un lado, para que al combinarlos gane el lado */
+
+.k-sin-margen { margin: 0 !important; }
+
+.k-mt-025 { margin-top: 0.25rem !important; }
+.k-mt-055 { margin-top: 0.55rem !important; }
+.k-mt-09 { margin-top: 0.9rem !important; }
+.k-mt-14 { margin-top: 1.4rem !important; }
+.k-mt-15 { margin-top: 1.5rem !important; }
+.k-mt-175 { margin-top: 1.75rem !important; }
+.k-mt-2 { margin-top: 2rem !important; }
+.k-mt-25 { margin-top: 2.5rem !important; }
+
+.k-mb-04 { margin-bottom: 0.4rem !important; }
+.k-mb-1 { margin-bottom: 1rem !important; }
+.k-mb-12 { margin-bottom: 1.2rem !important; }
+.k-mb-125 { margin-bottom: 1.25rem !important; }
+.k-mb-14 { margin-bottom: 1.4rem !important; }
+.k-mb-15 { margin-bottom: 1.5rem !important; }
+
+.k-ml-075 { margin-left: 0.75rem !important; }
+
+.k-relleno-1 { padding: 1rem !important; }
+.k-pagina-error { padding: 4rem 0 !important; }
+
+.k-texto-suave { color: var(--tinta-2) !important; }
+.k-centrado { text-align: center !important; }
+.k-a-la-derecha { text-align: right !important; }
+.k-alinear-arriba { align-items: flex-start !important; }
+.k-foto-cubre { object-fit: cover !important; }
+
+.k-titulo-aclaracion {
+    font-size: 0.5em !important;
+    color: var(--tinta-2) !important;
+    font-weight: 500 !important;
+}
+
+.k-inicial-menu {
+    width: 2rem !important;
+    height: 2rem !important;
+    font-size: 0.72rem !important;
+}
+
+/* sin !important: pone display, y una regla asi no puede ganarle al atributo hidden */
+.k-fila-con-cara {
+    display: flex;
+    align-items: center;
+    gap: 0.9rem;
+}
+
+/* los tamanos de cara que usan las pantallas; el fragmento arma el nombre a partir del tamano */
+.k-cara-17 { --lado: 1.7rem; }
+.k-cara-19 { --lado: 1.9rem; }
+.k-cara-2 { --lado: 2rem; }
+.k-cara-21 { --lado: 2.1rem; }
+.k-cara-24 { --lado: 2.4rem; }
+.k-cara-26 { --lado: 2.6rem; }
+.k-cara-29 { --lado: 2.9rem; }
+.k-cara-32 { --lado: 3.2rem; }
+.k-cara-5 { --lado: 5rem; }

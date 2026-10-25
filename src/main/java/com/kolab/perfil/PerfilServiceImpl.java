@@ -2,13 +2,12 @@ package com.kolab.perfil;
 
 import com.kolab.calificacion.CalificacionService;
 import com.kolab.categoria.CategoriaRepository;
+import com.kolab.common.FotosSubidas;
 import com.kolab.common.RecursoNoEncontradoException;
 import com.kolab.common.Tiempo;
 import com.kolab.solicitud.SolicitudRepository;
 import com.kolab.usuario.Usuario;
-import com.kolab.usuario.UsuarioRepository;
 import java.util.List;
-import java.util.Optional;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -21,35 +20,34 @@ public class PerfilServiceImpl implements PerfilService {
 
     private static final int RESENAS = 5;
 
-    private final UsuarioRepository usuarioRepository;
     private final PerfilRepository perfilRepository;
     private final PerfilCategoriaRepository perfilCategoriaRepository;
     private final CategoriaRepository categoriaRepository;
     private final SolicitudRepository solicitudRepository;
     private final ReputacionService reputacionService;
     private final CalificacionService calificacionService;
+    private final FotosDePerfil fotos;
 
-    public PerfilServiceImpl(UsuarioRepository usuarioRepository, PerfilRepository perfilRepository,
+    public PerfilServiceImpl(PerfilRepository perfilRepository,
                              PerfilCategoriaRepository perfilCategoriaRepository,
                              CategoriaRepository categoriaRepository, SolicitudRepository solicitudRepository,
-                             ReputacionService reputacionService, CalificacionService calificacionService) {
-        this.usuarioRepository = usuarioRepository;
+                             ReputacionService reputacionService, CalificacionService calificacionService,
+                             FotosDePerfil fotos) {
         this.perfilRepository = perfilRepository;
         this.perfilCategoriaRepository = perfilCategoriaRepository;
         this.categoriaRepository = categoriaRepository;
         this.solicitudRepository = solicitudRepository;
         this.reputacionService = reputacionService;
         this.calificacionService = calificacionService;
+        this.fotos = fotos;
     }
 
     @Override
     @Transactional(readOnly = true)
     public List<Long> categoriasDe(Long idUsuario) {
-        return perfilRepository.findByUsuarioId(idUsuario)
-                .map(perfil -> perfilCategoriaRepository.findByPerfilId(perfil.getId()).stream()
-                        .map(PerfilCategoria::getIdCategoria)
-                        .toList())
-                .orElse(List.of());
+        return perfilCategoriaRepository.findByPerfilId(perfilDe(idUsuario).getId()).stream()
+                .map(PerfilCategoria::getIdCategoria)
+                .toList();
     }
 
     @Override
@@ -75,34 +73,37 @@ public class PerfilServiceImpl implements PerfilService {
     @Override
     @Transactional(readOnly = true)
     public PerfilResumen miPerfil(Long idUsuario) {
-        Usuario u = usuario(idUsuario);
-        Optional<Perfil> perfil = perfilRepository.findByUsuarioId(idUsuario);
-        return new PerfilResumen(perfil.map(Perfil::getDescripcion).orElse(null),
-                perfil.map(Perfil::getExperiencia).orElse(null), u.getDistrito(), u.getTelefono(),
+        Perfil perfil = perfilDe(idUsuario);
+        Usuario u = perfil.getUsuario();
+        return new PerfilResumen(perfil.getDescripcion(), perfil.getExperiencia(), u.getDistrito(), u.getTelefono(),
                 Tiempo.mesYAnio(u.getFechaRegistro()), reputacionService.de(idUsuario),
                 solicitudRepository.countByAutorId(idUsuario),
-                calificacionService.recibidas(idUsuario, PageRequest.of(0, RESENAS)).getContent());
+                calificacionService.recibidas(idUsuario, PageRequest.of(0, RESENAS)).getContent(),
+                CabeceraDePerfil.de(perfil));
     }
 
     @Override
     @Transactional(readOnly = true)
     public PerfilForm formularioDe(Long idUsuario) {
-        Usuario u = usuario(idUsuario);
-        Optional<Perfil> perfil = perfilRepository.findByUsuarioId(idUsuario);
+        Perfil perfil = perfilDe(idUsuario);
+        Usuario u = perfil.getUsuario();
         PerfilForm form = new PerfilForm();
         form.setNombre(u.getNombre());
         form.setApellidos(u.getApellidos());
         form.setTelefono(u.getTelefono());
         form.setDistrito(u.getDistrito());
-        form.setDescripcion(perfil.map(Perfil::getDescripcion).orElse(null));
-        form.setExperiencia(perfil.map(Perfil::getExperiencia).orElse(null));
+        form.setDescripcion(perfil.getDescripcion());
+        form.setExperiencia(perfil.getExperiencia());
+        form.setFotoActual(FotosSubidas.url(u.getFoto()));
+        form.setPortadaActual(FotosSubidas.url(perfil.getPortada()));
         return form;
     }
 
     @Override
     @Transactional
     public void actualizar(Long idUsuario, PerfilForm form) {
-        Usuario u = usuario(idUsuario);
+        Perfil perfil = perfilDe(idUsuario);
+        Usuario u = perfil.getUsuario();
         u.setNombre(form.getNombre().trim());
         u.setApellidos(form.getApellidos().trim());
         u.setTelefono(limpio(form.getTelefono()));
@@ -113,25 +114,14 @@ public class PerfilServiceImpl implements PerfilService {
             u.setLongitud(null);
         }
         u.setDistrito(distrito);
-
-        String descripcion = limpio(form.getDescripcion());
-        String experiencia = limpio(form.getExperiencia());
-        Optional<Perfil> perfil = perfilRepository.findByUsuarioId(idUsuario);
-        if (perfil.isPresent() || descripcion != null || experiencia != null) {
-            Perfil p = perfil.orElseGet(() -> perfilRepository.save(new Perfil(u)));
-            p.setDescripcion(descripcion);
-            p.setExperiencia(experiencia);
-        }
+        perfil.setDescripcion(limpio(form.getDescripcion()));
+        perfil.setExperiencia(limpio(form.getExperiencia()));
+        fotos.aplicar(form, u, perfil);
     }
 
-    // el perfil nace cuando alguien dice por primera vez que sabe hacer algo
+    // cada cuenta tiene el suyo desde que se registra: si no aparece, la persona no existe
     private Perfil perfilDe(Long idUsuario) {
         return perfilRepository.findByUsuarioId(idUsuario)
-                .orElseGet(() -> perfilRepository.save(new Perfil(usuario(idUsuario))));
-    }
-
-    private Usuario usuario(Long idUsuario) {
-        return usuarioRepository.findById(idUsuario)
                 .orElseThrow(() -> new RecursoNoEncontradoException("persona", idUsuario));
     }
 

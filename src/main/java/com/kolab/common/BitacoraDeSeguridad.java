@@ -40,6 +40,18 @@ public class BitacoraDeSeguridad {
         log.info("contrasena cambiada con enlace · cuenta={} · ip={}", enmascarar(email), ip);
     }
 
+    public void cuentaSuspendida(String email, String por, String ip) {
+        log.warn("cuenta suspendida · cuenta={} · por={} · ip={}", enmascarar(email), enmascarar(por), ip);
+    }
+
+    public void cuentaReactivada(String email, String por, String ip) {
+        log.info("cuenta reactivada · cuenta={} · por={} · ip={}", enmascarar(email), enmascarar(por), ip);
+    }
+
+    public void sesionCortada(String email, String ip) {
+        log.warn("sesion cerrada porque la cuenta esta suspendida · cuenta={} · ip={}", enmascarar(email), ip);
+    }
+
     public void noEsSuyo(String ruta, String email, String ip) {
         log.warn("pidio algo ajeno o inexistente · ruta={} · cuenta={} · ip={}",
                 ruta, enmascarar(email), ip);

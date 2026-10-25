@@ -12,8 +12,7 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 /**
- * La cuenta de la persona. La misma cuenta pide y ofrece: no hay cuentas de cliente y de experto
- * por separado. Quien ofrece es quien declaró categorías en su {@link com.kolab.perfil.Perfil}.
+ * la cuenta, la misma pide y ofrece. ofrece quien declaro categorias en su perfil
  */
 @Entity
 @Table(name = "usuario")
@@ -33,11 +32,19 @@ public class Usuario {
     @Column(nullable = false, length = 120, unique = true)
     private String email;
 
+    // el de /personas/{codigo}, se pone al registrarse y no cambia
+    @Column(nullable = false, length = 10, unique = true, updatable = false)
+    private String codigo;
+
     @Column(name = "password_hash", nullable = false, length = 100)
     private String passwordHash;
 
     @Column(length = 20)
     private String telefono;
+
+    // la que subio, null si no subio ninguna
+    @Column(length = 40)
+    private String foto;
 
     @Column(length = 60)
     private String distrito;
@@ -55,15 +62,19 @@ public class Usuario {
     @Column(nullable = false, length = 20)
     private EstadoUsuario estado;
 
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false, length = 20)
+    private Rol rol = Rol.USUARIO;
+
     /**
-     * Nombre y apellidos juntos, que es como se muestra en toda la aplicación.
+     * nombre y apellidos juntos, como se muestra en toda la app
      */
     public String getNombreCompleto() {
         return nombre + " " + apellidos;
     }
 
     /**
-     * Si la cuenta puede operar. Una cuenta suspendida no ingresa ni publica.
+     * si la cuenta puede operar, una suspendida no ingresa ni publica
      */
     public boolean estaActivo() {
         return estado == EstadoUsuario.ACTIVO;
@@ -141,6 +152,22 @@ public class Usuario {
         this.telefono = telefono;
     }
 
+    public String getFoto() {
+        return foto;
+    }
+
+    public void setFoto(String foto) {
+        this.foto = foto;
+    }
+
+    public String getCodigo() {
+        return codigo;
+    }
+
+    public void setCodigo(String codigo) {
+        this.codigo = codigo;
+    }
+
     public LocalDateTime getFechaRegistro() {
         return fechaRegistro;
     }
@@ -155,5 +182,25 @@ public class Usuario {
 
     public void setEstado(EstadoUsuario estado) {
         this.estado = estado;
+    }
+
+    public Rol getRol() {
+        return rol;
+    }
+
+    public void setRol(Rol rol) {
+        this.rol = rol;
+    }
+
+    public boolean esAdministrador() {
+        return rol == Rol.ADMINISTRADOR;
+    }
+
+    public void suspender() {
+        this.estado = EstadoUsuario.SUSPENDIDO;
+    }
+
+    public void reactivar() {
+        this.estado = EstadoUsuario.ACTIVO;
     }
 }

@@ -18,8 +18,8 @@ import java.math.RoundingMode;
  * Lo que la persona cuenta de sí misma y su reputación. Es uno por cuenta, no hay perfil de
  * cliente y perfil de experto aparte: el actor es uno solo.
  *
- * <p>Nace cuando alguien declara por primera vez qué sabe hacer, no al registrarse. Quien solo
- * pide servicios nunca necesita uno.
+ * <p>Se crea junto con la cuenta, al registrarse. Quien solo pide servicios lo tiene igual, sin
+ * categorías.
  *
  * <p>{@code califPromedio} y {@code totalCalificaciones} están guardados a propósito en vez de
  * calcularse al consultar: el promedio se lee en cada listado de expertos y recalcularlo cada vez
@@ -49,6 +49,14 @@ public class Perfil {
 
     @Column(name = "total_calificaciones", nullable = false)
     private int totalCalificaciones = 0;
+
+    // foto ancha de arriba del perfil, en la carpeta de fotos subidas
+    @Column(length = 40)
+    private String portada;
+
+    // color principal de la foto de la persona, para la franja si no hay portada
+    @Column(name = "color_foto", length = 7)
+    private String colorFoto;
 
     protected Perfil() {
     }
@@ -107,6 +115,22 @@ public class Perfil {
 
     public void setExperiencia(String experiencia) {
         this.experiencia = experiencia;
+    }
+
+    public String getPortada() {
+        return portada;
+    }
+
+    public void setPortada(String portada) {
+        this.portada = portada;
+    }
+
+    public String getColorFoto() {
+        return colorFoto;
+    }
+
+    public void setColorFoto(String colorFoto) {
+        this.colorFoto = colorFoto;
     }
 
     public BigDecimal getCalifPromedio() {

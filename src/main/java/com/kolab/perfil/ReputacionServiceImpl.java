@@ -1,7 +1,7 @@
 package com.kolab.perfil;
 
+import com.kolab.common.RecursoNoEncontradoException;
 import com.kolab.servicio.ServicioRepository;
-import com.kolab.usuario.UsuarioRepository;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
@@ -17,14 +17,10 @@ public class ReputacionServiceImpl implements ReputacionService {
 
     private final PerfilRepository perfilRepository;
     private final ServicioRepository servicioRepository;
-    private final UsuarioRepository usuarioRepository;
 
-    public ReputacionServiceImpl(PerfilRepository perfilRepository,
-                                 ServicioRepository servicioRepository,
-                                 UsuarioRepository usuarioRepository) {
+    public ReputacionServiceImpl(PerfilRepository perfilRepository, ServicioRepository servicioRepository) {
         this.perfilRepository = perfilRepository;
         this.servicioRepository = servicioRepository;
-        this.usuarioRepository = usuarioRepository;
     }
 
     @Override
@@ -43,10 +39,6 @@ public class ReputacionServiceImpl implements ReputacionService {
             reputaciones.put(id, new Reputacion(p.getCalifPromedio(), p.getTotalCalificaciones(),
                     dados.getOrDefault(id, 0L)));
         }
-        for (Long id : idsUsuario) {
-            reputaciones.putIfAbsent(id, new Reputacion(Reputacion.NUEVA.promedio(), 0,
-                    dados.getOrDefault(id, 0L)));
-        }
         return reputaciones;
     }
 
@@ -59,8 +51,8 @@ public class ReputacionServiceImpl implements ReputacionService {
     @Override
     @Transactional
     public void sumarCalificacion(Long idUsuario, int puntaje) {
-        Perfil perfil = perfilRepository.findByUsuarioId(idUsuario)
-                .orElseGet(() -> perfilRepository.save(new Perfil(usuarioRepository.getReferenceById(idUsuario))));
-        perfil.registrarCalificacion(puntaje);
+        perfilRepository.findByUsuarioId(idUsuario)
+                .orElseThrow(() -> new RecursoNoEncontradoException("persona", idUsuario))
+                .registrarCalificacion(puntaje);
     }
 }

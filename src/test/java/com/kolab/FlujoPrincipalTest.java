@@ -3,6 +3,8 @@ package com.kolab;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
+import com.kolab.administracion.AdministracionService;
+import com.kolab.administracion.Tablero;
 import com.kolab.calificacion.CalificacionForm;
 import com.kolab.common.OperacionNoPermitidaException;
 import com.kolab.common.RecursoNoEncontradoException;
@@ -10,6 +12,7 @@ import com.kolab.mensaje.MensajeService;
 import com.kolab.oferta.EstadoOferta;
 import com.kolab.oferta.OfertaForm;
 import com.kolab.oferta.OfertaService;
+import com.kolab.oferta.SituacionDeOferta;
 import com.kolab.perfil.PerfilService;
 import com.kolab.perfil.ReputacionService;
 import com.kolab.servicio.ServicioDetalle;
@@ -21,7 +24,10 @@ import com.kolab.solicitud.Modalidad;
 import com.kolab.solicitud.SolicitudForm;
 import com.kolab.solicitud.SolicitudResumen;
 import com.kolab.solicitud.SolicitudService;
+import com.kolab.usuario.DetallesUsuarioService;
 import com.kolab.usuario.RegistroForm;
+import com.kolab.usuario.Rol;
+import com.kolab.usuario.UsuarioRepository;
 import com.kolab.usuario.UsuarioService;
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -33,8 +39,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.transaction.annotation.Transactional;
 
-// el flujo de los cinco procesos contra la base de verdad (H2 con las mismas migraciones): publicar,
-// ofertar, aceptar, conversar, cerrar y calificar. cada prueba se deshace al terminar.
+// el flujo completo contra H2 con las mismas migraciones, cada prueba se deshace al terminar
 @SpringBootTest
 @Transactional
 class FlujoPrincipalTest {
@@ -42,6 +47,7 @@ class FlujoPrincipalTest {
     private static final long MUSICA = 1L;
 
     @Autowired private UsuarioService usuarioService;
+    @Autowired private UsuarioRepository usuarioRepository;
     @Autowired private PerfilService perfilService;
     @Autowired private SolicitudService solicitudService;
     @Autowired private CatalogoService catalogoService;
@@ -49,6 +55,8 @@ class FlujoPrincipalTest {
     @Autowired private ServicioService servicioService;
     @Autowired private MensajeService mensajeService;
     @Autowired private ReputacionService reputacionService;
+    @Autowired private AdministracionService administracionService;
+    @Autowired private DetallesUsuarioService detallesUsuarioService;
 
     private Long pide;
     private Long ofrece;
@@ -82,6 +90,69 @@ class FlujoPrincipalTest {
                 .isInstanceOf(RecursoNoEncontradoException.class);
         assertThatThrownBy(() -> ofertaService.ofertar(id, oferta("70"), otro))
                 .isInstanceOf(OperacionNoPermitidaException.class);
+    }
+
+    @Test
+    void laPropuestaDirectaLeLlegaSoloASuDestinatarioHastaQueLaResponde() {
+        Long directa = publicar(ofrece, "80");
+        Long publica = publicar(null, "80");
+
+        assertThat(catalogoService.propuestasSinResponder(ofrece, 5)).extracting(SolicitudResumen::id)
+                .containsExactly(directa);
+        assertThat(catalogoService.propuestasSinResponder(otro, 5)).isEmpty();
+        assertThat(catalogoService.propuestasSinResponder(pide, 5)).isEmpty();
+
+        ofertaService.ofertar(directa, oferta("80"), ofrece);
+
+        assertThat(catalogoService.propuestasSinResponder(ofrece, 5)).extracting(SolicitudResumen::id)
+                .doesNotContain(directa, publica);
+    }
+
+    @Test
+    void loRecienPublicadoSaleComoNuevo() {
+        Long id = publicar(null, "80");
+
+        assertThat(explorar(ofrece)).filteredOn(s -> s.id().equals(id)).singleElement()
+                .extracting(SolicitudResumen::nueva).isEqualTo(true);
+    }
+
+    @Test
+    void unaPropuestaDirectaCanceladaYaNoLeLlega() {
+        Long directa = publicar(ofrece, "80");
+
+        solicitudService.cancelar(directa, pide);
+
+        assertThat(catalogoService.propuestasSinResponder(ofrece, 5)).isEmpty();
+    }
+
+    @Test
+    void loQueOfrezcoDiceLoQuePasaConCadaOferta() {
+        Long elegida = publicar(null, "80");
+        Long idElegida = ofertaService.ofertar(elegida, oferta("80"), ofrece);
+        Long laQueGanoOtro = publicar(null, "90");
+        ofertaService.ofertar(laQueGanoOtro, oferta("90"), ofrece);
+        Long cancelada = publicar(null, "70");
+        ofertaService.ofertar(cancelada, oferta("70"), ofrece);
+
+        assertThat(situacionEn(elegida)).isEqualTo(SituacionDeOferta.ESPERANDO);
+
+        Long idServicio = ofertaService.aceptar(idElegida, pide);
+        ofertaService.aceptar(ofertaService.ofertar(laQueGanoOtro, oferta("85"), otro), pide);
+        solicitudService.cancelar(cancelada, pide);
+
+        assertThat(situacionEn(elegida)).isEqualTo(SituacionDeOferta.EN_CURSO);
+        assertThat(situacionEn(laQueGanoOtro)).isEqualTo(SituacionDeOferta.NO_ELEGIDA);
+        assertThat(situacionEn(cancelada)).isEqualTo(SituacionDeOferta.CANCELADA);
+
+        servicioService.cerrarYCalificar(idServicio, nota(5), pide);
+
+        assertThat(situacionEn(elegida)).isEqualTo(SituacionDeOferta.CERRADO);
+    }
+
+    private SituacionDeOferta situacionEn(Long idSolicitud) {
+        return ofertaService.mias(ofrece, PageRequest.of(0, 20)).getContent().stream()
+                .filter(o -> o.idSolicitud().equals(idSolicitud))
+                .findFirst().orElseThrow().situacion();
     }
 
     @Test
@@ -157,6 +228,35 @@ class FlujoPrincipalTest {
     }
 
     @Test
+    void elPanelCuentaLoQuePasaEnLaPlataforma() {
+        Tablero antes = administracionService.tablero();
+
+        Long id = publicar(null, "80");
+        Long idServicio = ofertaService.aceptar(ofertaService.ofertar(id, oferta("80"), ofrece), pide);
+        servicioService.cerrarYCalificar(idServicio, nota(5), pide);
+
+        Tablero despues = administracionService.tablero();
+        assertThat(despues.serviciosCerrados()).isEqualTo(antes.serviciosCerrados() + 1);
+        assertThat(despues.comisionDelMes()).isEqualByComparingTo(antes.comisionDelMes().add(new BigDecimal("4.00")));
+        assertThat(despues.meses().get(5).solicitudes()).isEqualTo(antes.meses().get(5).solicitudes() + 1);
+        assertThat(despues.meses().get(5).serviciosCerrados()).isEqualTo(antes.meses().get(5).serviciosCerrados() + 1);
+        assertThat(despues.categorias()).extracting(Tablero.CategoriaPedida::nombre).contains("Música");
+    }
+
+    @Test
+    void unaCuentaSuspendidaNoIngresaHastaQueLaReactivan() {
+        administracionService.suspender(ofrece, pide);
+
+        assertThat(usuarioService.estaSuspendida(ofrece)).isTrue();
+        assertThat(detallesUsuarioService.cargar("luis@kolab.pe", Rol.USUARIO).isEnabled()).isFalse();
+
+        administracionService.reactivar(ofrece);
+
+        assertThat(usuarioService.estaSuspendida(ofrece)).isFalse();
+        assertThat(detallesUsuarioService.cargar("luis@kolab.pe", Rol.USUARIO).isEnabled()).isTrue();
+    }
+
+    @Test
     void cancelarLaSacaDelCatalogoYYaNoSeEdita() {
         Long id = publicar(null, "80");
 
@@ -184,7 +284,7 @@ class FlujoPrincipalTest {
         form.setDescripcion("Quiero aprender desde cero, los sábados en la mañana.");
         form.setFechaDeseada(LocalDate.now().plusDays(7));
         form.setPrecioPropuesto(new BigDecimal(precio));
-        form.setIdDestinatario(para);
+        form.setCodigoDestinatario(para == null ? null : usuarioRepository.findById(para).orElseThrow().getCodigo());
         return form;
     }
 

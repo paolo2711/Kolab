@@ -9,9 +9,9 @@
 <body>
 <div class="k-cuerpo">
     <div class="k-ancho">
-        <main class="k-encabezado" style="padding:4rem 0;">
+        <main class="k-encabezado k-pagina-error">
             <a class="k-marca" th:href="@{/}">KOLAB</a>
-            <h1 style="margin-top:2rem;" th:text="${status == 404} ? 'Esto no existe' : 'Algo salió mal'">Algo salió mal</h1>
+            <h1 class="k-mt-2" th:text="${status == 404} ? 'Esto no existe' : 'Algo salió mal'">Algo salió mal</h1>
             <p th:if="${status == 404}">La página que buscas no existe o no tienes cómo verla.</p>
             <p th:unless="${status == 404}">No pudimos completar lo que pediste. Vuelve a intentarlo en un momento.</p>
             <p><a th:href="@{/}">Volver al inicio</a></p>

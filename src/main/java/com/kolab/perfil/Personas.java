@@ -6,11 +6,12 @@ import org.springframework.stereotype.Component;
 import org.apache.commons.lang3.StringUtils;
 
 /**
- * Arma la {@link Persona} que viaja a las vistas a partir de la cuenta. Es el único lugar que decide
- * cómo se muestra una persona: nombre, iniciales y foto.
+ * arma la Persona que va a las vistas, el unico lugar que decide nombre, iniciales y foto
  */
 @Component
 public class Personas {
+
+    private static final int FRANJAS = 6;
 
     private final Fotos fotos;
 
@@ -19,8 +20,15 @@ public class Personas {
     }
 
     public Persona de(Usuario usuario) {
-        return new Persona(usuario.getId(), usuario.getNombreCompleto(), inicialesDe(usuario),
-                fotos.dePersona(usuario.getEmail()));
+        return new Persona(usuario.getId(), usuario.getCodigo(), usuario.getNombreCompleto(), inicialesDe(usuario),
+                fotos.dePersona(usuario.getFoto(), usuario.getEmail()));
+    }
+
+    /**
+     * color de la franja del perfil sacado del nombre, asi la misma persona sale siempre igual
+     */
+    public static int franjaDe(String nombreCompleto) {
+        return Math.floorMod(StringUtils.trimToEmpty(nombreCompleto).hashCode(), FRANJAS);
     }
 
     public static String inicialesDe(Usuario usuario) {

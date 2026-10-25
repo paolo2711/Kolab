@@ -7,6 +7,7 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.format.annotation.DateTimeFormat;
 
 public class SolicitudForm {
@@ -37,8 +38,30 @@ public class SolicitudForm {
     @DecimalMax(value = "9999.00", message = "El máximo es S/ 9999")
     private BigDecimal precioPropuesto;
 
-    // lleno cuando es una propuesta directa a una persona
-    private Long idDestinatario;
+    // codigo publico del destinatario si es propuesta directa, el id no sale a la pagina
+    private String codigoDestinatario;
+
+    // opcional, al editar sin foto nueva se queda la que tenia
+    private MultipartFile foto;
+
+    // solo para la vista previa al editar, guardar no la lee
+    private String fotoActual;
+
+    public String getFotoActual() {
+        return fotoActual;
+    }
+
+    public void setFotoActual(String fotoActual) {
+        this.fotoActual = fotoActual;
+    }
+
+    public MultipartFile getFoto() {
+        return foto;
+    }
+
+    public void setFoto(MultipartFile foto) {
+        this.foto = foto;
+    }
 
     public String getTitulo() {
         return titulo;
@@ -96,11 +119,11 @@ public class SolicitudForm {
         this.precioPropuesto = precioPropuesto;
     }
 
-    public Long getIdDestinatario() {
-        return idDestinatario;
+    public String getCodigoDestinatario() {
+        return codigoDestinatario;
     }
 
-    public void setIdDestinatario(Long idDestinatario) {
-        this.idDestinatario = idDestinatario;
+    public void setCodigoDestinatario(String codigoDestinatario) {
+        this.codigoDestinatario = codigoDestinatario == null || codigoDestinatario.isBlank() ? null : codigoDestinatario;
     }
 }

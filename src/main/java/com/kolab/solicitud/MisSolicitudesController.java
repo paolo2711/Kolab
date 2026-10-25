@@ -1,6 +1,8 @@
 package com.kolab.solicitud;
 
+import com.kolab.categoria.CategoriaResumen;
 import com.kolab.categoria.CategoriaService;
+import com.kolab.common.FotosSubidas;
 import com.kolab.mensaje.MensajeService;
 import com.kolab.oferta.OfertaResumen;
 import com.kolab.oferta.OfertaService;
@@ -8,6 +10,7 @@ import com.kolab.perfil.DirectorioService;
 import com.kolab.servicio.ServicioService;
 import com.kolab.usuario.UsuarioAutenticado;
 import jakarta.validation.Valid;
+import java.util.List;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
@@ -21,7 +24,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-// lo que cada quien hace con sus propias solicitudes: publicarlas, seguirlas y elegir oferta
+// publicar, seguir y elegir oferta en las solicitudes propias
 @Controller
 @RequestMapping("/mis-solicitudes")
 public class MisSolicitudesController {
@@ -32,16 +35,19 @@ public class MisSolicitudesController {
     private final MensajeService mensajeService;
     private final CategoriaService categoriaService;
     private final DirectorioService directorioService;
+    private final FotosSubidas fotos;
 
     public MisSolicitudesController(SolicitudService solicitudService, OfertaService ofertaService,
                                     ServicioService servicioService, MensajeService mensajeService,
-                                    CategoriaService categoriaService, DirectorioService directorioService) {
+                                    CategoriaService categoriaService, DirectorioService directorioService,
+                                    FotosSubidas fotos) {
         this.solicitudService = solicitudService;
         this.ofertaService = ofertaService;
         this.servicioService = servicioService;
         this.mensajeService = mensajeService;
         this.categoriaService = categoriaService;
         this.directorioService = directorioService;
+        this.fotos = fotos;
     }
 
     @GetMapping
@@ -57,12 +63,12 @@ public class MisSolicitudesController {
     @GetMapping("/nueva")
     public String formularioNueva(@RequestParam(required = false) String titulo,
                                   @RequestParam(required = false) Long idCategoria,
-                                  @RequestParam(required = false) Long idPersona,
+                                  @RequestParam(required = false) String persona,
                                   Model model) {
         SolicitudForm form = new SolicitudForm();
         form.setTitulo(titulo);
         form.setIdCategoria(idCategoria);
-        form.setIdDestinatario(idPersona);
+        form.setCodigoDestinatario(persona);
         model.addAttribute("solicitudForm", form);
         return formulario("solicitud/nueva", form, model);
     }
@@ -71,11 +77,12 @@ public class MisSolicitudesController {
     public String publicar(@Valid @ModelAttribute SolicitudForm solicitudForm, BindingResult errores,
                            @AuthenticationPrincipal UsuarioAutenticado usuario,
                            Model model, RedirectAttributes flash) {
+        revisarFoto(solicitudForm, errores);
         if (errores.hasErrors()) {
             return formulario("solicitud/nueva", solicitudForm, model);
         }
         Long id = solicitudService.publicar(solicitudForm, usuario.getIdUsuario());
-        flash.addFlashAttribute("aviso", solicitudForm.getIdDestinatario() == null
+        flash.addFlashAttribute("aviso", solicitudForm.getCodigoDestinatario() == null
                 ? "Publicada. Quienes saben de esa categoría ya la ven."
                 : "Enviada. Solo le llega a la persona que elegiste.");
         return "redirect:/mis-solicitudes/" + id;
@@ -105,6 +112,7 @@ public class MisSolicitudesController {
     public String guardarEdicion(@PathVariable Long id, @Valid @ModelAttribute SolicitudForm solicitudForm,
                                  BindingResult errores, @AuthenticationPrincipal UsuarioAutenticado usuario,
                                  Model model, RedirectAttributes flash) {
+        revisarFoto(solicitudForm, errores);
         if (errores.hasErrors()) {
             model.addAttribute("idSolicitud", id);
             return formulario("solicitud/editar", solicitudForm, model);
@@ -138,12 +146,28 @@ public class MisSolicitudesController {
         return "redirect:/mis-solicitudes/" + id;
     }
 
+    // la vista previa al cargar: la foto que ya tiene o la de la categoria elegida
+    private static String fotoPrevia(SolicitudForm form, List<CategoriaResumen> categorias) {
+        if (form.getFotoActual() != null) {
+            return form.getFotoActual();
+        }
+        return categorias.stream().filter(c -> c.id().equals(form.getIdCategoria()))
+                .findFirst().map(CategoriaResumen::foto).orElse(null);
+    }
+
+    // el archivo no lo revisa bean validation, hay que mirarlo por dentro
+    private void revisarFoto(SolicitudForm form, BindingResult errores) {
+        fotos.problemaCon(form.getFoto()).ifPresent(problema -> errores.rejectValue("foto", "foto", problema));
+    }
+
     private String formulario(String vista, SolicitudForm form, Model model) {
         model.addAttribute("seccion", "actividad");
-        model.addAttribute("categorias", categoriaService.activas());
+        List<CategoriaResumen> categorias = categoriaService.activas();
+        model.addAttribute("categorias", categorias);
         model.addAttribute("modalidades", Modalidad.values());
-        if (form.getIdDestinatario() != null) {
-            model.addAttribute("destinatario", directorioService.publico(form.getIdDestinatario()).persona());
+        model.addAttribute("fotoPrevia", fotoPrevia(form, categorias));
+        if (form.getCodigoDestinatario() != null) {
+            model.addAttribute("destinatario", directorioService.publico(form.getCodigoDestinatario()).persona());
         }
         return vista;
     }

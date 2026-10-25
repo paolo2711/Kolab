@@ -6,7 +6,7 @@
 </head>
 <body>
 
-<main>
+<main class="k-medio">
     <div th:replace="~{fragmentos/componentes :: aviso}"></div>
 
     <p class="k-migas"><a th:href="@{/mis-solicitudes}">&larr; Mis solicitudes</a></p>
@@ -17,7 +17,7 @@
             <b th:text="'Dirigida a ' + ${destinatario.nombre}">Dirigida a Luis Mendoza</b>
             Solo le llega a esta persona. Nadie más la ve en Explorar.
         </div>
-        <a class="k-enlace-suave" th:href="@{/personas/{id}(id=${destinatario.id})}">Ver su perfil</a>
+        <a class="k-enlace-suave" th:href="@{/personas/{codigo}(codigo=${destinatario.codigo})}">Ver su perfil</a>
     </div>
 
     <div class="k-encabezado">
@@ -27,8 +27,9 @@
 
     <div class="k-dos-columnas k-principal-ancha">
         <div class="k-tarjeta">
-            <form th:action="@{/mis-solicitudes}" th:object="${solicitudForm}" method="post" novalidate id="formSolicitud">
-                <input type="hidden" th:field="*{idDestinatario}">
+            <form th:action="@{/mis-solicitudes}" th:object="${solicitudForm}" method="post" novalidate id="formSolicitud"
+                  enctype="multipart/form-data">
+                <input type="hidden" th:field="*{codigoDestinatario}">
 
                 <div class="k-campos">
                     <div class="k-campo k-campo-ancho">
@@ -44,7 +45,8 @@
                         <select id="idCategoria" th:field="*{idCategoria}"
                                 th:classappend="${#fields.hasErrors('idCategoria')} ? 'k-mal'">
                             <option value="">Elige una</option>
-                            <option th:each="c : ${categorias}" th:value="${c.id}" th:text="${c.nombre}">Categoría</option>
+                            <option th:each="c : ${categorias}" th:value="${c.id}" th:text="${c.nombre}"
+                                    th:data-foto="${c.foto != null} ? @{${c.foto}}">Categoría</option>
                         </select>
                         <span class="k-error" th:if="${#fields.hasErrors('idCategoria')}" th:errors="*{idCategoria}"></span>
                     </div>
@@ -87,6 +89,14 @@
                         <span class="k-error" th:if="${#fields.hasErrors('precioPropuesto')}" th:errors="*{precioPropuesto}"></span>
                         <span class="k-pista" th:unless="${#fields.hasErrors('precioPropuesto')}">Pueden aceptarlo o proponerte otro.</span>
                     </div>
+
+                    <div class="k-campo k-campo-ancho">
+                        <label for="foto">Foto <span class="k-opcional">(opcional)</span></label>
+                        <input type="file" id="foto" name="foto" accept="image/jpeg,image/png"
+                               th:classappend="${#fields.hasErrors('foto')} ? 'k-mal'">
+                        <span class="k-error" th:if="${#fields.hasErrors('foto')}" th:errors="*{foto}"></span>
+                        <span class="k-pista" th:unless="${#fields.hasErrors('foto')}">JPG o PNG, hasta 2 MB. Si no subes una, va la foto de la categoría.</span>
+                    </div>
                 </div>
 
                 <div class="k-acciones">
@@ -97,51 +107,10 @@
             </form>
         </div>
 
-        <div class="k-tarjeta">
-            <h2 class="k-tarjeta-titulo">Vista previa</h2>
-            <p class="k-vacio">Así la van a ver quienes pueden ofertar.</p>
-
-            <div class="k-solicitud" style="align-items:flex-start;">
-                <div>
-                    <span class="k-solicitud-titulo k-vp-vacio" id="vpTitulo">Tu título va aquí</span>
-                    <div class="k-solicitud-meta">
-                        <span id="vpCategoria">Categoría</span> · <span id="vpModalidad">Modalidad</span>
-                    </div>
-                    <div class="k-solicitud-ofertas">Publicada recién · sin ofertas</div>
-                </div>
-                <span class="k-precio k-precio-g"><span class="k-moneda">S/</span><span id="vpPrecio">0.00</span></span>
-            </div>
-        </div>
+        <div th:replace="~{fragmentos/componentes :: vistaPrevia}"></div>
     </div>
 
-    <script th:inline="none">
-        (function () {
-            var f = document.getElementById('formSolicitud');
-            if (!f) return;
-            var titulo = f.querySelector('#titulo');
-            var categoria = f.querySelector('#idCategoria');
-            var modalidad = f.querySelector('#modalidad');
-            var precio = f.querySelector('#precioPropuesto');
-
-            function pintar() {
-                var vpTitulo = document.getElementById('vpTitulo');
-                vpTitulo.textContent = titulo.value.trim() || 'Tu título va aquí';
-                vpTitulo.classList.toggle('k-vp-vacio', !titulo.value.trim());
-                document.getElementById('vpCategoria').textContent =
-                    categoria.selectedIndex > 0 ? categoria.options[categoria.selectedIndex].text : 'Categoría';
-                document.getElementById('vpModalidad').textContent =
-                    modalidad.options[modalidad.selectedIndex].text;
-                document.getElementById('vpPrecio').textContent =
-                    precio.value ? Number(precio.value).toFixed(2) : '0.00';
-            }
-
-            [titulo, categoria, modalidad, precio].forEach(function (campo) {
-                campo.addEventListener('input', pintar);
-                campo.addEventListener('change', pintar);
-            });
-            pintar();
-        })();
-    </script>
+    <script th:src="@{/js/vista-previa.js}" defer></script>
 </main>
 
 </body>

@@ -6,7 +6,7 @@
 </head>
 <body>
 
-<main>
+<main class="k-total">
     <div th:replace="~{fragmentos/componentes :: aviso}"></div>
 
     <div class="k-encabezado">
@@ -59,7 +59,7 @@
                 <span class="k-pista">Solo aplica a las presenciales.</span>
             </div>
 
-            <label class="k-opcion" style="margin-bottom:1rem;" th:if="${puedeFiltrarPorLoQueSe}">
+            <label class="k-opcion k-mb-1" th:if="${puedeFiltrarPorLoQueSe}">
                 <input type="checkbox" th:field="*{soloLoQueSe}">
                 <span class="k-opcion-nombre">Solo lo que sé hacer</span>
             </label>
@@ -71,13 +71,13 @@
             <p class="k-conteo">
                 <span th:text="${solicitudes.totalElements}">6</span>
                 <span th:text="${solicitudes.totalElements == 1} ? 'solicitud encontrada' : 'solicitudes encontradas'">solicitudes encontradas</span>
-                <a th:if="${!filtro.vacio()}" th:href="@{/solicitudes}" style="margin-left:0.75rem;">Quitar filtros</a>
+                <a class="k-ml-075" th:if="${!filtro.vacio()}" th:href="@{/solicitudes}">Quitar filtros</a>
             </p>
 
             <p class="k-vacio" th:if="${solicitudes.isEmpty()}">
                 No hay solicitudes abiertas con esos filtros. Prueba quitando alguno.</p>
 
-            <div class="k-lista">
+            <div class="k-lista k-lista-doble">
                 <th:block th:each="s : ${solicitudes.content}">
                     <div th:replace="~{fragmentos/componentes :: fila(${s}, 'Ofertar')}"></div>
                 </th:block>

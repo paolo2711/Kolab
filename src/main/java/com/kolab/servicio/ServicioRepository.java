@@ -83,6 +83,15 @@ public interface ServicioRepository extends JpaRepository<Servicio, Long> {
 
     long countByOfertaSolicitudAutorId(Long idAutor);
 
+    long countByEstado(EstadoServicio estado);
+
+    // año, mes, cuántos se cerraron y la comisión que dejaron, solo de los meses que tuvieron alguno
+    @Query("""
+            select year(s.fechaCierre), month(s.fechaCierre), count(s), coalesce(sum(s.comision), 0) from Servicio s
+            where s.estado = com.kolab.servicio.EstadoServicio.CERRADO and s.fechaCierre >= :desde
+            group by year(s.fechaCierre), month(s.fechaCierre)""")
+    List<Object[]> cerradosPorMesDesde(@Param("desde") LocalDateTime desde);
+
     // cuánto se cerró por debajo o por encima del precio que propuso quien pidió, en promedio
     @Query("""
             select avg(s.montoFinal - s.oferta.solicitud.precioPropuesto) from Servicio s

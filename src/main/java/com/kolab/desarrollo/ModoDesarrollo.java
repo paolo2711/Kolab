@@ -15,11 +15,16 @@ class ModoDesarrollo {
     private static final int CUENTAS_A_LA_VISTA = 2;
 
     private final List<String> cuentas;
+    private final List<String> administradores;
     private final String clave;
 
     ModoDesarrollo(Ejemplos ejemplos, @Value("${kolab.clave-de-ejemplo}") String clave) {
         this.cuentas = ejemplos.personas().stream()
                 .limit(CUENTAS_A_LA_VISTA)
+                .map(Ejemplos.Persona::email)
+                .toList();
+        this.administradores = ejemplos.personas().stream()
+                .filter(Ejemplos.Persona::administrador)
                 .map(Ejemplos.Persona::email)
                 .toList();
         this.clave = clave;
@@ -33,6 +38,11 @@ class ModoDesarrollo {
     @ModelAttribute("cuentasDeEjemplo")
     List<String> cuentasDeEjemplo() {
         return cuentas;
+    }
+
+    @ModelAttribute("administradoresDeEjemplo")
+    List<String> administradoresDeEjemplo() {
+        return administradores;
     }
 
     @ModelAttribute("claveDeEjemplo")

@@ -6,7 +6,7 @@
 </head>
 <body>
 
-<main>
+<main class="k-medio">
     <div th:replace="~{fragmentos/componentes :: aviso}"></div>
 
     <div class="k-titulo-fila k-encabezado">
@@ -16,7 +16,16 @@
 
     <div th:replace="~{fragmentos/menu :: pestanasActividad('ofrezco')}"></div>
 
-    <p class="k-pestana-nota">Ofertaste y estás esperando. Aquí decide quien publicó, no tú.</p>
+    <section class="k-bloque" th:unless="${#lists.isEmpty(propuestas)}">
+        <h2 class="k-bloque-titulo">Te propusieron</h2>
+        <div class="k-lista">
+            <th:block th:each="s : ${propuestas}">
+                <div th:replace="~{fragmentos/componentes :: fila(${s}, 'Ofertar')}"></div>
+            </th:block>
+        </div>
+    </section>
+
+    <p class="k-pestana-nota">Aquí decide quien publicó, no tú.</p>
 
     <p class="k-vacio" th:if="${ofertas.isEmpty()}">Todavía no ofertaste en ninguna solicitud.
         <a th:href="@{/solicitudes}">Mira lo que se está pidiendo</a>.</p>
@@ -27,6 +36,7 @@
             <th:block th:replace="~{fragmentos/componentes :: miniatura(${o.foto}, ${o.icono}, ${o.categoria})}"></th:block>
             <div class="k-solicitud-cuerpo">
                 <span class="k-solicitud-titulo" th:text="${o.solicitud}">Solicitud</span>
+                <div class="k-oferta-situacion" th:text="${o.situacion.texto}">Esperando que quien pidió elija</div>
                 <div class="k-solicitud-meta">
                     <span th:text="${o.categoria}">Categoría</span> ·
                     enviada <span th:text="${o.enviada}">hace 1 hora</span>

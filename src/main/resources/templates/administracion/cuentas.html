@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layout :: base(~{::title}, ~{::main})}">
+<head>
+    <title>Cuentas · KOLAB</title>
+</head>
+<body>
+
+<main class="k-medio">
+    <div th:replace="~{fragmentos/componentes :: aviso}"></div>
+
+    <div class="k-encabezado">
+        <h1>Cuentas</h1>
+        <p><span th:text="${cuentas.totalElements}">15</span> registradas, las más nuevas primero.</p>
+    </div>
+
+    <div class="k-tarjeta k-admin-lista">
+        <div class="k-admin-fila k-admin-cabeza">
+            <span>Nombre</span>
+            <span>Correo</span>
+            <span>Registro</span>
+            <span>Estado</span>
+            <span></span>
+        </div>
+        <div class="k-admin-fila" th:each="c : ${cuentas.content}">
+            <span class="k-admin-nombre" th:text="${c.nombre}">Luis Mendoza Quispe</span>
+            <span class="k-admin-correo" th:text="${c.email}">luis@kolab.pe</span>
+            <span class="k-admin-dato" th:text="${c.registrada}">12/08/2026</span>
+            <span class="k-admin-dato" th:classappend="${c.activa} ? '' : 'k-admin-suspendida'"
+                  th:text="${c.activa} ? 'Activa' : 'Suspendida'">Activa</span>
+
+            <span class="k-admin-accion">
+                <form th:unless="${c.id == #authentication.principal.idUsuario}" method="post"
+                      th:action="${c.activa} ? @{/admin/cuentas/{id}/suspender(id=${c.id})} : @{/admin/cuentas/{id}/reactivar(id=${c.id})}">
+                    <input type="hidden" name="pagina" th:value="${cuentas.number}">
+                    <button type="submit" class="k-btn k-btn-linea k-btn-chico"
+                            th:text="${c.activa} ? 'Suspender' : 'Reactivar'">Suspender</button>
+                </form>
+                <span class="k-admin-dato" th:if="${c.id == #authentication.principal.idUsuario}">Tu cuenta</span>
+            </span>
+        </div>
+    </div>
+
+    <nav th:replace="~{fragmentos/componentes :: paginas(${cuentas}, '/admin/cuentas', '')}"></nav>
+</main>
+
+</body>
+</html>

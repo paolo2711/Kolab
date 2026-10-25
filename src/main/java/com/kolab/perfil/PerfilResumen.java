@@ -13,7 +13,8 @@ public record PerfilResumen(String descripcion,
                             String miembroDesde,
                             Reputacion reputacion,
                             long solicitudesPublicadas,
-                            List<ResenaResumen> resenas) {
+                            List<ResenaResumen> resenas,
+                            CabeceraDePerfil cabecera) {
 
     public boolean sinCalificar() {
         return reputacion.sinCalificar();

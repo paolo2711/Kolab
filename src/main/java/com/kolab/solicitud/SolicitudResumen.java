@@ -22,6 +22,7 @@ public record SolicitudResumen(Long id,
                                List<Persona> ofertantes,
                                String publicada,
                                boolean directa,
+                               boolean nueva,
                                Double kilometros) {
 
     public boolean tieneFoto() {

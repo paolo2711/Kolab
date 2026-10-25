@@ -2,6 +2,7 @@ package com.kolab.solicitud;
 
 import com.kolab.categoria.Categoria;
 import com.kolab.categoria.CategoriaRepository;
+import com.kolab.common.FotosSubidas;
 import com.kolab.common.OperacionNoPermitidaException;
 import com.kolab.common.RecursoNoEncontradoException;
 import com.kolab.usuario.Usuario;
@@ -11,9 +12,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-/**
- * Implementación de {@link SolicitudService}.
- */
 @Service
 public class SolicitudServiceImpl implements SolicitudService {
 
@@ -22,15 +20,19 @@ public class SolicitudServiceImpl implements SolicitudService {
     private final UsuarioRepository usuarioRepository;
     private final DetallesDeSolicitud detalles;
     private final MisSolicitudes misSolicitudes;
+    private final FotosDeSolicitud fotos;
+    private final FotosSubidas subidas;
 
     public SolicitudServiceImpl(SolicitudRepository solicitudRepository, CategoriaRepository categoriaRepository,
                                 UsuarioRepository usuarioRepository, DetallesDeSolicitud detalles,
-                                MisSolicitudes misSolicitudes) {
+                                MisSolicitudes misSolicitudes, FotosDeSolicitud fotos, FotosSubidas subidas) {
         this.solicitudRepository = solicitudRepository;
         this.categoriaRepository = categoriaRepository;
         this.usuarioRepository = usuarioRepository;
         this.detalles = detalles;
         this.misSolicitudes = misSolicitudes;
+        this.fotos = fotos;
+        this.subidas = subidas;
     }
 
     @Override
@@ -40,12 +42,16 @@ public class SolicitudServiceImpl implements SolicitudService {
         Solicitud nueva = new Solicitud(categoriaActiva(form.getIdCategoria()), autor, form.getTitulo().trim(),
                 form.getDescripcion().trim(), form.getModalidad(), form.getPrecioPropuesto());
         copiarDetalles(form, nueva);
-        if (form.getIdDestinatario() != null) {
-            if (form.getIdDestinatario().equals(idAutor)) {
+        if (FotosSubidas.subio(form.getFoto())) {
+            nueva.setFoto(subidas.guardar(form.getFoto()));
+        }
+        if (form.getCodigoDestinatario() != null) {
+            Usuario destinatario = usuarioRepository.findByCodigo(form.getCodigoDestinatario())
+                    .orElseThrow(() -> new RecursoNoEncontradoException("persona " + form.getCodigoDestinatario()));
+            if (destinatario.getId().equals(idAutor)) {
                 throw new OperacionNoPermitidaException("No puedes proponerte un servicio a ti mismo.");
             }
-            nueva.setDestinatario(usuarioRepository.findById(form.getIdDestinatario())
-                    .orElseThrow(() -> new RecursoNoEncontradoException("persona", form.getIdDestinatario())));
+            nueva.setDestinatario(destinatario);
         }
         return solicitudRepository.save(nueva).getId();
     }
@@ -80,6 +86,7 @@ public class SolicitudServiceImpl implements SolicitudService {
         form.setDescripcion(s.getDescripcion());
         form.setFechaDeseada(s.getFechaDeseada());
         form.setPrecioPropuesto(s.getPrecioPropuesto());
+        form.setFotoActual(fotos.propia(s));
         return form;
     }
 
@@ -93,6 +100,11 @@ public class SolicitudServiceImpl implements SolicitudService {
         s.setDescripcion(form.getDescripcion().trim());
         s.setPrecioPropuesto(form.getPrecioPropuesto());
         copiarDetalles(form, s);
+        if (FotosSubidas.subio(form.getFoto())) {
+            String anterior = s.getFoto();
+            s.setFoto(subidas.guardar(form.getFoto()));
+            subidas.borrar(anterior);
+        }
     }
 
     @Override
@@ -134,7 +146,7 @@ public class SolicitudServiceImpl implements SolicitudService {
         return c;
     }
 
-    // en una virtual el distrito no dice nada, así que no se guarda
+    // en una virtual el distrito no dice nada asi que no se guarda
     private void copiarDetalles(SolicitudForm form, Solicitud s) {
         boolean presencial = form.getModalidad() == Modalidad.PRESENCIAL;
         String distrito = form.getDistrito() == null ? null : form.getDistrito().trim();

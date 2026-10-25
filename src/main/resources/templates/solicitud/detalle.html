@@ -6,7 +6,7 @@
 </head>
 <body>
 
-<main>
+<main class="k-medio">
     <div th:replace="~{fragmentos/componentes :: aviso}"></div>
 
     <p class="k-migas"><a th:href="@{/solicitudes}">&larr; Todas las solicitudes</a></p>
@@ -23,18 +23,18 @@
 
     <div class="k-dos-columnas k-principal-ancha">
         <div>
-            <div class="k-tarjeta" style="margin-bottom:1.5rem;">
+            <div class="k-tarjeta k-mb-15">
                 <div class="k-titulo-fila">
                     <span th:replace="~{fragmentos/componentes :: estado(${solicitud.estado})}"></span>
-                    <a class="k-enlace-suave" th:href="@{/personas/{id}(id=${solicitud.autor.id})}"
+                    <a class="k-enlace-suave" th:href="@{/personas/{codigo}(codigo=${solicitud.autor.codigo})}"
                        th:text="'Publicada por ' + ${solicitud.autor.nombre}">Publicada por</a>
                 </div>
-                <p style="margin:0.9rem 0 0; color:var(--tinta-2);" th:text="${solicitud.descripcion}">Descripción</p>
+                <p class="k-sin-margen k-mt-09 k-texto-suave" th:text="${solicitud.descripcion}">Descripción</p>
             </div>
 
             <div class="k-tarjeta" th:if="${miOferta == null and !solicitud.admiteOfertas()}">
                 <h2 class="k-tarjeta-titulo">Ya no recibe ofertas</h2>
-                <p class="k-vacio" style="margin:0;">Quien la publicó ya eligió o la canceló.</p>
+                <p class="k-vacio k-sin-margen">Quien la publicó ya eligió o la canceló.</p>
             </div>
 
             <div class="k-tarjeta" th:if="${miOferta == null and solicitud.admiteOfertas()}">
@@ -69,7 +69,7 @@
 
             <div class="k-tarjeta" th:if="${miOferta != null}">
                 <div class="k-titulo-fila">
-                    <h2 class="k-tarjeta-titulo" style="margin:0;">Tu oferta</h2>
+                    <h2 class="k-tarjeta-titulo k-sin-margen">Tu oferta</h2>
                     <span th:replace="~{fragmentos/componentes :: estado(${miOferta.estado})}"></span>
                 </div>
                 <p class="k-vacio">Propusiste
@@ -87,7 +87,7 @@
                 </div>
             </div>
 
-            <h2 class="k-tarjeta-titulo" style="margin-top:1.75rem;">
+            <h2 class="k-tarjeta-titulo k-mt-175">
                 Con quién compites (<span th:text="${#lists.size(solicitud.enJuego)}">3</span>)
             </h2>
             <p class="k-vacio" th:if="${#lists.isEmpty(solicitud.enJuego)}">Todavía nadie ofertó. Puedes ser el primero.</p>
@@ -112,7 +112,7 @@
         <div class="k-tarjeta">
             <div class="k-etiqueta">Precio que propone</div>
             <span th:replace="~{fragmentos/componentes :: precio(${solicitud.precioPropuesto}, 'k-precio-xl')}"></span>
-            <div class="k-solicitud-ofertas" style="margin-bottom:1.4rem;"
+            <div class="k-solicitud-ofertas k-mb-14"
                  th:text="'Publicada ' + ${solicitud.publicada}">Publicada hace 2 horas</div>
 
             <dl class="k-datos">

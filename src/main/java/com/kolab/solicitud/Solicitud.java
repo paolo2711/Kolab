@@ -28,6 +28,8 @@ import java.time.LocalDateTime;
 @Table(name = "solicitud")
 public class Solicitud {
 
+    private static final int HORAS_DE_NUEVA = 48;
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_solicitud")
@@ -77,6 +79,10 @@ public class Solicitud {
     @Column(name = "fecha_publicacion", nullable = false)
     private LocalDateTime fechaPublicacion = LocalDateTime.now();
 
+    // el nombre del archivo en la carpeta de fotos subidas; null si usa la de su categoria
+    @Column(length = 40)
+    private String foto;
+
     protected Solicitud() {
     }
 
@@ -95,6 +101,11 @@ public class Solicitud {
      */
     public boolean esPropuestaDirecta() {
         return destinatario != null;
+    }
+
+    /** Nueva durante sus primeras 48 horas: es lo que la marca como recién publicada en las listas. */
+    public boolean esNueva(LocalDateTime ahora) {
+        return fechaPublicacion.isAfter(ahora.minusHours(HORAS_DE_NUEVA));
     }
 
     /**
@@ -159,6 +170,14 @@ public class Solicitud {
 
     public Usuario getAutor() {
         return autor;
+    }
+
+    public String getFoto() {
+        return foto;
+    }
+
+    public void setFoto(String foto) {
+        this.foto = foto;
     }
 
     public Usuario getDestinatario() {

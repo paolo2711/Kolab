@@ -7,6 +7,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.multipart.MaxUploadSizeExceededException;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @ControllerAdvice
@@ -23,6 +24,13 @@ public class ManejoDeErrores {
     public String noPermitida(OperacionNoPermitidaException e, HttpServletRequest pedido,
                               RedirectAttributes flash) {
         flash.addFlashAttribute("error", e.getMessage());
+        return "redirect:" + deDondeVino(pedido);
+    }
+
+    // un archivo de mas de 10 MB ni llega al controlador: se vuelve al formulario con el aviso
+    @ExceptionHandler(MaxUploadSizeExceededException.class)
+    public String archivoEnorme(HttpServletRequest pedido, RedirectAttributes flash) {
+        flash.addFlashAttribute("error", "La foto pesa más de 2 MB.");
         return "redirect:" + deDondeVino(pedido);
     }
 

@@ -6,6 +6,48 @@ Todo lo que cambia en KOLAB se anota aquí. El formato sigue
 
 ## [Sin publicar]
 
+## [0.3.0]
+
+### Agregado
+
+- Rol de administrador con su propio ingreso y su panel: cuentas, solicitudes abiertas,
+  servicios, comisión del mes y categorías más pedidas, con descarga en Excel.
+- Suspender y reactivar cuentas. Una suspendida no entra y si estaba adentro se le corta la sesión.
+- Foto opcional en la solicitud (JPG o PNG, hasta 2 MB), revisada por contenido y guardada fuera
+  del jar. Sin foto sale la de la categoría.
+- Foto de perfil y portada en Editar perfil. Sin portada, la franja de arriba toma el color de la
+  foto.
+- Vista previa en Publicar y Editar con lo ya escrito y la foto elegida.
+- Abrir en Mensajes desde el chat chico, y Visto debajo del último mensaje propio.
+- Las propuestas directas sin responder salen arriba con «Para ti», y lo publicado hace menos de
+  48 horas lleva «Nuevo».
+- Enlaces al perfil de la otra persona desde servicios, mensajes y reseñas.
+
+### Cambiado
+
+- Las pantallas usan todo el ancho. Mensajes tiene la lista a la izquierda y el chat a la derecha.
+- El perfil se crea con la cuenta (migración V12 para las que ya había). El directorio solo muestra
+  a quien tiene alguna categoría.
+- Lo que ofrezco dice qué pasó con cada oferta.
+- Los chats chicos usan las mismas burbujas y el mismo botón que Mensajes.
+- El fondo de los perfiles es una franja de color según el nombre, no la foto de una categoría.
+
+### Corregido
+
+- La vista previa de Publicar y los chats de las ofertas no funcionaban: sus scripts estaban en la
+  plantilla y la política de contenido los bloqueaba. Lo mismo el aviso antes de reiniciar los
+  datos en modo desarrollo.
+- En el panel, un formulario sin token daba 404 en vez de 403.
+
+### Seguridad
+
+- Los perfiles van por un código público al azar y no por el id de la base, que dejaba recorrer
+  las cuentas una por una. Por id responde 404.
+- Sin `'unsafe-inline'` en la política de contenido. Hay pruebas que fallan si vuelve un `style=`,
+  un script escrito en la plantilla o un atributo `on*`.
+- Pruebas de seguridad de punta a punta: rutas privadas, cosas ajenas, CSRF y bloqueo por intentos.
+- Tomcat 10.1.61.
+
 ## [0.2.0]
 
 ### Agregado

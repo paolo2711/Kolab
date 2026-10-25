@@ -70,8 +70,9 @@
     </li>
 </ol>
 
-<span th:fragment="cara(p, lado)" class="k-cara" th:style="'--lado:' + ${lado}"
-      th:classappend="${p.tieneFoto()} ? '' : 'k-cara-letras t' + ${p.tono}">
+<span th:fragment="cara(p, lado)" class="k-cara"
+      th:classappend="${'k-cara-' + #strings.replace(#strings.replace(lado, 'rem', ''), '.', '')}
+                      + (${p.tieneFoto()} ? '' : ' k-cara-letras t' + ${p.tono})">
     <img th:if="${p.tieneFoto()}" th:src="@{${p.retrato()}}" th:alt="${p.nombre}" loading="lazy">
     <span th:unless="${p.tieneFoto()}" th:text="${p.iniciales}">LM</span>
 </span>
@@ -111,21 +112,81 @@
     </li>
 </ol>
 
+<!-- burbujas con separador por dia, las usan mensajes y los chats chicos -->
+<th:block th:fragment="burbujas(mensajes)">
+    <th:block th:each="m, i : ${mensajes}">
+        <div class="k-msj-dia"
+             th:if="${i.first or m.dia != mensajes[i.index - 1].dia}"
+             th:text="${m.dia}">Hoy</div>
+
+        <div class="k-msj-burbuja"
+             th:classappend="${m.mio} ? 'k-msj-mio' : 'k-msj-suyo'"
+             th:attrappend="data-seguido=${!i.first
+                 and m.mio == mensajes[i.index - 1].mio
+                 and m.dia == mensajes[i.index - 1].dia} ? 'si' : null">
+            <span th:text="${m.contenido}">Mensaje</span>
+            <span class="k-msj-hora" th:text="${m.minuto}">10:12</span>
+        </div>
+
+        <!-- solo bajo el ultimo mensaje y si es mio, si ya contesto es que lo vio -->
+        <div class="k-msj-visto" th:if="${i.last and m.mio and m.leido}">Visto</div>
+    </th:block>
+</th:block>
+
+<!-- la tarjeta como saldra publicada, ya pintada con lo escrito por si vuelve con error -->
+<div th:fragment="vistaPrevia" class="k-tarjeta">
+    <h2 class="k-tarjeta-titulo">Vista previa</h2>
+    <p class="k-vacio">Así la van a ver quienes pueden ofertar.</p>
+
+    <div class="k-solicitud k-alinear-arriba" th:object="${solicitudForm}"
+         id="vistaPrevia" th:data-foto-propia="*{fotoActual}">
+        <img class="k-miniatura" id="vpFoto" th:src="${fotoPrevia != null} ? @{${fotoPrevia}}" alt="Foto de la solicitud"
+             th:hidden="${fotoPrevia == null}">
+        <span class="k-miniatura k-sin-foto" id="vpSinFoto" th:hidden="${fotoPrevia != null}">
+            <i class="bi bi-image"></i></span>
+        <div>
+            <span class="k-solicitud-titulo" id="vpTitulo"
+                  th:classappend="${#strings.isEmpty(solicitudForm.titulo)} ? 'k-vp-vacio'"
+                  th:text="${#strings.isEmpty(solicitudForm.titulo)} ? 'Tu título va aquí' : *{titulo}">Tu título va aquí</span>
+            <div class="k-solicitud-meta">
+                <span id="vpCategoria"><th:block th:each="c : ${categorias}" th:if="${c.id == solicitudForm.idCategoria}"
+                          th:text="${c.nombre}"></th:block><th:block
+                          th:if="${solicitudForm.idCategoria == null}">Categoría</th:block></span> ·
+                <span id="vpModalidad"
+                      th:text="*{modalidad} != null ? *{modalidad.etiqueta} : ${modalidades[0].etiqueta}">Modalidad</span>
+            </div>
+            <div class="k-solicitud-ofertas">Publicada recién · sin ofertas</div>
+        </div>
+        <span class="k-precio k-precio-g"><span class="k-moneda">S/</span><span id="vpPrecio"
+              th:text="*{precioPropuesto} != null ? ${#numbers.formatDecimal(solicitudForm.precioPropuesto, 1, 2, 'POINT')} : '0.00'">0.00</span></span>
+    </div>
+</div>
+
+<!-- arriba del perfil: la portada si la subio, si no la franja con el color de su foto o el del nombre -->
+<th:block th:fragment="arribaDelPerfil(cabecera, franja)">
+    <img class="k-banner" th:if="${cabecera.portada != null}" th:src="@{${cabecera.portada}}" alt="Portada del perfil">
+    <div class="k-franja" th:unless="${cabecera.portada != null}" th:classappend="'f' + ${franja}"
+         th:data-fondo="${cabecera.color}"></div>
+</th:block>
+
 <div th:fragment="servicios(lista, titulo, vacio)">
-    <h2 class="k-bloque-titulo" style="margin-top:2.5rem;" th:text="${titulo}">Servicios</h2>
+    <h2 class="k-bloque-titulo k-mt-25" th:text="${titulo}">Servicios</h2>
     <p class="k-vacio" th:if="${#lists.isEmpty(lista)}" th:text="${vacio}">Todavía nada.</p>
 
     <div class="k-tratos">
-        <a class="k-trato" th:each="v : ${lista}" th:href="@{/servicios/{id}(id=${v.id})}">
+        <!-- el titulo lleva al servicio y cubre la tarjeta, el nombre va encima y lleva al perfil -->
+        <div class="k-trato" th:each="v : ${lista}">
             <span class="k-trato-cima">
-                <span class="k-trato-titulo" th:text="${v.titulo}">Clases de inglés conversacional</span>
+                <a class="k-trato-titulo k-trato-ir" th:href="@{/servicios/{id}(id=${v.id})}"
+                   th:text="${v.titulo}">Clases de inglés conversacional</a>
                 <span th:replace="~{fragmentos/componentes :: estado(${v.estado})}"></span>
             </span>
 
             <span class="k-trato-persona">
                 <span th:replace="~{fragmentos/componentes :: cara(${v.contraparte}, '1.7rem')}"></span>
                 <span th:text="${v.loDoy} ? 'te contrató' : 'lo contrataste'">lo contrataste</span>
-                <b th:text="${v.contraparte.nombre}">Luis Mendoza</b>
+                <a class="k-trato-quien k-enlace-limpio" th:href="@{/personas/{codigo}(codigo=${v.contraparte.codigo})}"
+                   th:text="${v.contraparte.nombre}">Luis Mendoza</a>
                 · <span th:text="${v.fecha}">empezó hace 4 días</span>
             </span>
 
@@ -143,7 +204,7 @@
                     <span th:replace="~{fragmentos/componentes :: precio(${v.neto}, 'k-precio-m')}"></span>
                 </span>
             </span>
-        </a>
+        </div>
     </div>
 </div>
 
@@ -153,7 +214,8 @@
     <div class="k-solicitud-cuerpo">
         <span class="k-solicitud-titulo">
             <span th:text="${s.titulo}">Título</span>
-            <span class="k-para-ti" th:if="${s.directa}">Para ti</span>
+            <span class="k-insignia" th:if="${s.directa}">Para ti</span>
+            <span class="k-insignia" th:if="${s.nueva}">Nuevo</span>
         </span>
         <div class="k-solicitud-meta">
             <span th:text="${s.categoria}">Categoría</span> ·
@@ -178,11 +240,11 @@
             <span th:replace="~{fragmentos/componentes :: cara(${e.persona}, '3.2rem')}"></span>
         </div>
 
-        <a class="k-carta-titulo k-enlace-limpio" th:href="@{/personas/{id}(id=${e.persona.id})}"
+        <a class="k-carta-titulo k-enlace-limpio" th:href="@{/personas/{codigo}(codigo=${e.persona.codigo})}"
            th:text="${e.persona.nombre}">Luis Mendoza</a>
         <div class="k-carta-meta" th:text="${e.enQueTrabaja}">Música · Idiomas</div>
 
-        <div class="k-oferta-meta" style="margin-top:0.55rem;">
+        <div class="k-oferta-meta k-mt-055">
             <th:block th:unless="${e.sinCalificar()}">
                 <span th:replace="~{fragmentos/componentes :: nota(${e.calificacion})}"></span> ·
             </th:block>
@@ -195,7 +257,7 @@
 
         <div class="k-carta-pie">
             <a class="k-btn k-btn-linea k-btn-chico"
-               th:href="@{/mis-solicitudes/nueva(idPersona=${e.persona.id}, idCategoria=${idCategoria})}">Pedirle un servicio</a>
+               th:href="@{/mis-solicitudes/nueva(persona=${e.persona.codigo}, idCategoria=${idCategoria})}">Pedirle un servicio</a>
         </div>
     </div>
 </div>
