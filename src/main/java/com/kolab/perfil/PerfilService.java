@@ -16,8 +16,7 @@ public interface PerfilService {
     List<Long> categoriasDe(Long idUsuario);
 
     /**
-     * Reemplaza las categorías declaradas por las que se pasan. Si la persona todavía no tenía
-     * perfil, se le crea en esta misma operación.
+     * Reemplaza las categorías declaradas por las que se pasan.
      *
      * @param idsCategoria las categorías que quedan; una lista vacía borra todas
      */
@@ -33,8 +32,7 @@ public interface PerfilService {
     PerfilForm formularioDe(Long idUsuario);
 
     /**
-     * Guarda los datos de la cuenta y lo que la persona cuenta de sí. Si escribió algo sobre ella y
-     * todavía no tenía perfil, se le crea.
+     * Guarda los datos de la cuenta y lo que la persona cuenta de sí.
      */
     void actualizar(Long idUsuario, PerfilForm form);
 }

@@ -15,6 +15,7 @@ import org.springframework.data.repository.query.Param;
  */
 public interface PerfilRepository extends JpaRepository<Perfil, Long> {
 
+    @EntityGraph(attributePaths = "usuario")
     Optional<Perfil> findByUsuarioId(Long idUsuario);
 
     @EntityGraph(attributePaths = "usuario")
