@@ -10,6 +10,8 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import com.kolab.common.EmailYaRegistradoException;
+import com.kolab.perfil.Perfil;
+import com.kolab.perfil.PerfilRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -25,13 +27,16 @@ class UsuarioServiceImplTest {
     private UsuarioRepository usuarioRepository;
 
     @Mock
+    private PerfilRepository perfilRepository;
+
+    @Mock
     private PasswordEncoder passwordEncoder;
 
     private UsuarioServiceImpl usuarioService;
 
     @BeforeEach
     void prepararServicio() {
-        usuarioService = new UsuarioServiceImpl(usuarioRepository, passwordEncoder);
+        usuarioService = new UsuarioServiceImpl(usuarioRepository, perfilRepository, passwordEncoder);
     }
 
     @Test
@@ -66,6 +71,21 @@ class UsuarioServiceImplTest {
                 .isInstanceOf(EmailYaRegistradoException.class);
 
         verify(usuarioRepository, never()).save(any());
+        verify(perfilRepository, never()).save(any());
+    }
+
+    @Test
+    void alRegistrarseLaCuentaYaTieneSuPerfil() {
+        RegistroForm form = formularioValido("cliente@kolab.pe");
+        when(usuarioRepository.existsByEmail(anyString())).thenReturn(false);
+        when(passwordEncoder.encode(anyString())).thenReturn("hash");
+
+        Usuario usuario = usuarioService.registrar(form);
+
+        ArgumentCaptor<Perfil> captor = ArgumentCaptor.forClass(Perfil.class);
+        verify(perfilRepository).save(captor.capture());
+        assertThat(captor.getValue().getUsuario()).isSameAs(usuario);
+        assertThat(captor.getValue().sinCalificar()).isTrue();
     }
 
     @Test

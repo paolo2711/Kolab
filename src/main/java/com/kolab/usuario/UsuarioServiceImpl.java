@@ -1,6 +1,8 @@
 package com.kolab.usuario;
 
 import com.kolab.common.EmailYaRegistradoException;
+import com.kolab.perfil.Perfil;
+import com.kolab.perfil.PerfilRepository;
 import java.time.LocalDateTime;
 import java.util.Locale;
 import java.util.Optional;
@@ -19,10 +21,13 @@ public class UsuarioServiceImpl implements UsuarioService {
     private static final Logger log = LoggerFactory.getLogger(UsuarioServiceImpl.class);
 
     private final UsuarioRepository usuarioRepository;
+    private final PerfilRepository perfilRepository;
     private final PasswordEncoder passwordEncoder;
 
-    public UsuarioServiceImpl(UsuarioRepository usuarioRepository, PasswordEncoder passwordEncoder) {
+    public UsuarioServiceImpl(UsuarioRepository usuarioRepository, PerfilRepository perfilRepository,
+                              PasswordEncoder passwordEncoder) {
         this.usuarioRepository = usuarioRepository;
+        this.perfilRepository = perfilRepository;
         this.passwordEncoder = passwordEncoder;
     }
 
@@ -43,6 +48,7 @@ public class UsuarioServiceImpl implements UsuarioService {
         usuario.setFechaRegistro(LocalDateTime.now());
         usuario.setEstado(EstadoUsuario.ACTIVO);
         usuarioRepository.save(usuario);
+        perfilRepository.save(new Perfil(usuario));
 
         log.info("usuario registrado id={}", usuario.getId());
         return usuario;

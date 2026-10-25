@@ -18,8 +18,8 @@ import java.math.RoundingMode;
  * Lo que la persona cuenta de sí misma y su reputación. Es uno por cuenta, no hay perfil de
  * cliente y perfil de experto aparte: el actor es uno solo.
  *
- * <p>Nace cuando alguien declara por primera vez qué sabe hacer, no al registrarse. Quien solo
- * pide servicios nunca necesita uno.
+ * <p>Se crea junto con la cuenta, al registrarse. Quien solo pide servicios lo tiene igual, sin
+ * categorías.
  *
  * <p>{@code califPromedio} y {@code totalCalificaciones} están guardados a propósito en vez de
  * calcularse al consultar: el promedio se lee en cada listado de expertos y recalcularlo cada vez
