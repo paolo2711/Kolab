@@ -4,9 +4,8 @@ import java.security.SecureRandom;
 import java.util.regex.Pattern;
 
 /**
- * El código con que se ve el perfil de alguien desde afuera, en vez del id de la base: con el id
- * cualquiera podía recorrer los perfiles de uno en uno y saber cuántas cuentas hay. Son 10
- * caracteres al azar sacados de {@link SecureRandom}, no salen del nombre y no cambian nunca.
+ * codigo con que se ve un perfil desde afuera, el id dejaba recorrer las cuentas una por una
+ * 10 caracteres al azar con SecureRandom, no sale del nombre y no cambia nunca
  */
 public final class CodigoPublico {
 

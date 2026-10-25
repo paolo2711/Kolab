@@ -36,7 +36,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
 
-// el perfil de alguien se ve por su codigo publico; con el id de la base no hay nada que ver
+// el perfil se ve por codigo publico, por id no hay nada
 @SpringBootTest
 @AutoConfigureMockMvc
 @Transactional
@@ -121,7 +121,7 @@ class CodigoDePerfilTest {
                 assertThat(s.getDestinatario()).extracting(Usuario::getId).isEqualTo(luis.getId()));
     }
 
-    // un enlace nuevo con el id se escribe sin darse cuenta: esto lo atrapa en las plantillas
+    // un enlace nuevo con id se cuela sin darse cuenta, esto lo atrapa
     @Test
     void ningunaPlantillaArmaEnlacesAPerfilesConElId() throws IOException {
         Pattern conId = Pattern.compile("/personas/\\{id}|idPersona");

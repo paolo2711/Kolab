@@ -112,7 +112,7 @@
     </li>
 </ol>
 
-<!-- las burbujas de una conversacion con su separador por dia; las usan Mensajes y los chats chicos -->
+<!-- burbujas con separador por dia, las usan mensajes y los chats chicos -->
 <th:block th:fragment="burbujas(mensajes)">
     <th:block th:each="m, i : ${mensajes}">
         <div class="k-msj-dia"
@@ -128,13 +128,12 @@
             <span class="k-msj-hora" th:text="${m.minuto}">10:12</span>
         </div>
 
-        <!-- como en cualquier chat, solo bajo el ultimo mensaje y si es mio: si ya contesto, lo vio -->
+        <!-- solo bajo el ultimo mensaje y si es mio, si ya contesto es que lo vio -->
         <div class="k-msj-visto" th:if="${i.last and m.mio and m.leido}">Visto</div>
     </th:block>
 </th:block>
 
-<!-- la tarjeta tal como saldra publicada. sale ya pintada con lo escrito, para cuando el formulario
-     vuelve con un error; js/vista-previa.js la repinta mientras se escribe o se elige una foto -->
+<!-- la tarjeta como saldra publicada, ya pintada con lo escrito por si vuelve con error -->
 <div th:fragment="vistaPrevia" class="k-tarjeta">
     <h2 class="k-tarjeta-titulo">Vista previa</h2>
     <p class="k-vacio">Así la van a ver quienes pueden ofertar.</p>
@@ -168,7 +167,7 @@
     <p class="k-vacio" th:if="${#lists.isEmpty(lista)}" th:text="${vacio}">Todavía nada.</p>
 
     <div class="k-tratos">
-        <!-- el titulo lleva al servicio y cubre toda la tarjeta; el nombre queda encima y lleva al perfil -->
+        <!-- el titulo lleva al servicio y cubre la tarjeta, el nombre va encima y lleva al perfil -->
         <div class="k-trato" th:each="v : ${lista}">
             <span class="k-trato-cima">
                 <a class="k-trato-titulo k-trato-ir" th:href="@{/servicios/{id}(id=${v.id})}"

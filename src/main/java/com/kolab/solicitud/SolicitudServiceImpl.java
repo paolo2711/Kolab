@@ -11,9 +11,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-/**
- * Implementación de {@link SolicitudService}.
- */
 @Service
 public class SolicitudServiceImpl implements SolicitudService {
 
@@ -150,7 +147,7 @@ public class SolicitudServiceImpl implements SolicitudService {
         return c;
     }
 
-    // en una virtual el distrito no dice nada, así que no se guarda
+    // en una virtual el distrito no dice nada asi que no se guarda
     private void copiarDetalles(SolicitudForm form, Solicitud s) {
         boolean presencial = form.getModalidad() == Modalidad.PRESENCIAL;
         String distrito = form.getDistrito() == null ? null : form.getDistrito().trim();

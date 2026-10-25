@@ -38,13 +38,13 @@ public class SolicitudForm {
     @DecimalMax(value = "9999.00", message = "El máximo es S/ 9999")
     private BigDecimal precioPropuesto;
 
-    // el codigo publico de la persona cuando es una propuesta directa; el id no sale a la pagina
+    // codigo publico del destinatario si es propuesta directa, el id no sale a la pagina
     private String codigoDestinatario;
 
-    // opcional; al editar, si no se sube otra se queda la que tenia
+    // opcional, al editar sin foto nueva se queda la que tenia
     private MultipartFile foto;
 
-    // solo para pintar la vista previa al editar; guardar no la lee
+    // solo para la vista previa al editar, guardar no la lee
     private String fotoActual;
 
     public String getFotoActual() {

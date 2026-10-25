@@ -29,7 +29,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
 
-// cada resena de un perfil lleva al perfil de quien la escribio, en el propio y en el que ven los demas
+// cada resena lleva al perfil de quien la escribio, en mi perfil y en el de los demas
 @SpringBootTest
 @AutoConfigureMockMvc
 @Transactional

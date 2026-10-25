@@ -11,8 +11,7 @@ import org.h2.jdbcx.JdbcDataSource;
 import org.junit.jupiter.api.Test;
 import org.springframework.jdbc.core.JdbcTemplate;
 
-// la V14 sobre una base que ya tiene cuentas: se arma hasta la V13 en una H2 aparte, se cargan
-// cuentas como estaban y recien ahi se corre la migracion
+// la V14 sobre una base con cuentas: H2 aparte hasta la V13, se cargan cuentas y recien ahi migra
 class CodigoPublicoMigracionTest {
 
     @Test

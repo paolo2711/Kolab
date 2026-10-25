@@ -7,7 +7,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
-// el perfil que ve el resto. desde aquí se le propone un servicio directo, sin pasar por el catálogo
+// el perfil que ve el resto, desde aqui se le propone un servicio directo
 @Controller
 public class PersonaController {
 
@@ -17,7 +17,7 @@ public class PersonaController {
         this.directorioService = directorioService;
     }
 
-    // va por el codigo publico: un /personas/5 es un codigo que no existe y responde 404
+    // por codigo publico, un /personas/5 no existe y da 404
     @GetMapping("/personas/{codigo}")
     public String publico(@PathVariable String codigo, @AuthenticationPrincipal UsuarioAutenticado usuario,
                           Model model) {

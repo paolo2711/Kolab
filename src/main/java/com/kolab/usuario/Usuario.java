@@ -12,8 +12,7 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 /**
- * La cuenta de la persona. La misma cuenta pide y ofrece: no hay cuentas de cliente y de experto
- * por separado. Quien ofrece es quien declaró categorías en su {@link com.kolab.perfil.Perfil}.
+ * la cuenta, la misma pide y ofrece. ofrece quien declaro categorias en su perfil
  */
 @Entity
 @Table(name = "usuario")
@@ -33,7 +32,7 @@ public class Usuario {
     @Column(nullable = false, length = 120, unique = true)
     private String email;
 
-    // el que se ve en /personas/{codigo}; se pone al registrarse y no se toca mas
+    // el de /personas/{codigo}, se pone al registrarse y no cambia
     @Column(nullable = false, length = 10, unique = true, updatable = false)
     private String codigo;
 
@@ -64,14 +63,14 @@ public class Usuario {
     private Rol rol = Rol.USUARIO;
 
     /**
-     * Nombre y apellidos juntos, que es como se muestra en toda la aplicación.
+     * nombre y apellidos juntos, como se muestra en toda la app
      */
     public String getNombreCompleto() {
         return nombre + " " + apellidos;
     }
 
     /**
-     * Si la cuenta puede operar. Una cuenta suspendida no ingresa ni publica.
+     * si la cuenta puede operar, una suspendida no ingresa ni publica
      */
     public boolean estaActivo() {
         return estado == EstadoUsuario.ACTIVO;

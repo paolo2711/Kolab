@@ -23,7 +23,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
 
-// el fondo de arriba del perfil es una franja de color que sale del nombre, no la foto de una categoria
+// arriba del perfil va una franja de color segun el nombre, no la foto de la categoria
 @SpringBootTest
 @AutoConfigureMockMvc
 @Transactional
@@ -59,7 +59,7 @@ class PortadaDelPerfilTest {
         assertThat(Personas.franjaDe(null)).isBetween(0, 5);
     }
 
-    // la propia ruta publica manda a mi perfil, asi que la ve otra cuenta
+    // la ruta publica propia manda a mi perfil, por eso la ve otra cuenta
     private UsuarioAutenticado otro() {
         registrar("mira.portada@kolab.pe");
         return detalles.cargar("mira.portada@kolab.pe", Rol.USUARIO);

@@ -29,7 +29,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
 
-// con un servicio en curso, cada parte llega al perfil de la otra desde donde la ve nombrada
+// con un servicio en curso cada parte llega al perfil de la otra
 @SpringBootTest
 @AutoConfigureMockMvc
 @Transactional

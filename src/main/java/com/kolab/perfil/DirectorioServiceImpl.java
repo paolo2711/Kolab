@@ -13,8 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
- * Implementación de {@link DirectorioService}. Las tarjetas de una lista se arman con una consulta
- * por dato (categorías, reputación, comentarios), sin importar cuántas personas haya.
+ * las tarjetas se arman con una consulta por dato, no una por persona
  */
 @Service
 @Transactional(readOnly = true)

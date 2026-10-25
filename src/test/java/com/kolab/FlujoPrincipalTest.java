@@ -39,8 +39,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.transaction.annotation.Transactional;
 
-// el flujo de los cinco procesos contra la base de verdad (H2 con las mismas migraciones): publicar,
-// ofertar, aceptar, conversar, cerrar y calificar. cada prueba se deshace al terminar.
+// el flujo completo contra H2 con las mismas migraciones, cada prueba se deshace al terminar
 @SpringBootTest
 @Transactional
 class FlujoPrincipalTest {
