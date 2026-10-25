@@ -91,6 +91,31 @@ class FlujoPrincipalTest {
     }
 
     @Test
+    void laPropuestaDirectaLeLlegaSoloASuDestinatarioHastaQueLaResponde() {
+        Long directa = publicar(ofrece, "80");
+        Long publica = publicar(null, "80");
+
+        assertThat(catalogoService.propuestasSinResponder(ofrece, 5)).extracting(SolicitudResumen::id)
+                .containsExactly(directa);
+        assertThat(catalogoService.propuestasSinResponder(otro, 5)).isEmpty();
+        assertThat(catalogoService.propuestasSinResponder(pide, 5)).isEmpty();
+
+        ofertaService.ofertar(directa, oferta("80"), ofrece);
+
+        assertThat(catalogoService.propuestasSinResponder(ofrece, 5)).extracting(SolicitudResumen::id)
+                .doesNotContain(directa, publica);
+    }
+
+    @Test
+    void unaPropuestaDirectaCanceladaYaNoLeLlega() {
+        Long directa = publicar(ofrece, "80");
+
+        solicitudService.cancelar(directa, pide);
+
+        assertThat(catalogoService.propuestasSinResponder(ofrece, 5)).isEmpty();
+    }
+
+    @Test
     void nadieOfertaDosVecesNiEnLoSuyo() {
         Long id = publicar(null, "80");
         ofertaService.ofertar(id, oferta("80"), ofrece);

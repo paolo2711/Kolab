@@ -1,5 +1,6 @@
 package com.kolab.inicio;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.user;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
@@ -15,11 +16,14 @@ import com.kolab.mensaje.MensajeService;
 import com.kolab.oferta.OfertaService;
 import com.kolab.perfil.DirectorioService;
 import com.kolab.solicitud.CatalogoService;
+import com.kolab.solicitud.Modalidad;
+import com.kolab.solicitud.SolicitudResumen;
 import com.kolab.solicitud.SolicitudService;
 import com.kolab.usuario.DetallesUsuarioService;
 import com.kolab.usuario.EstadoUsuario;
 import com.kolab.usuario.Usuario;
 import com.kolab.usuario.UsuarioAutenticado;
+import java.math.BigDecimal;
 import java.util.List;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -86,6 +90,37 @@ class InicioControllerTest {
         mockMvc.perform(inicioComo(false))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/bienvenida"));
+    }
+
+    @Test
+    void quienRecibioUnaPropuestaLaVeArribaMarcadaParaEl() throws Exception {
+        SolicitudResumen propuesta = solicitud(7L, "Clases de guitarra para mi hijo", true);
+        Mockito.when(catalogoService.propuestasSinResponder(Mockito.eq(1L), Mockito.anyInt())).thenReturn(List.of(propuesta));
+        Mockito.when(catalogoService.enMisCategorias(Mockito.eq(1L), Mockito.anyInt()))
+                .thenReturn(List.of(propuesta, solicitud(8L, "Pintar la fachada", false)));
+
+        String pagina = mockMvc.perform(inicioComo(true))
+                .andExpect(status().isOk())
+                .andReturn().getResponse().getContentAsString();
+
+        assertThat(pagina).contains("Te propusieron", "Para ti");
+        // arriba en su seccion y no repetida en la lista de mas abajo
+        assertThat(pagina.split("Clases de guitarra para mi hijo", -1)).hasSize(2);
+        assertThat(pagina.indexOf("Te propusieron")).isLessThan(pagina.indexOf("Pintar la fachada"));
+    }
+
+    @Test
+    void sinPropuestasNoApareceLaSeccion() throws Exception {
+        Mockito.when(catalogoService.enMisCategorias(Mockito.eq(1L), Mockito.anyInt())).thenReturn(List.of());
+
+        mockMvc.perform(inicioComo(true))
+                .andExpect(content().string(org.hamcrest.Matchers.not(
+                        org.hamcrest.Matchers.containsString("Te propusieron"))));
+    }
+
+    private SolicitudResumen solicitud(Long id, String titulo, boolean directa) {
+        return new SolicitudResumen(id, titulo, 1L, "Música", "bi-music-note", null, Modalidad.PRESENCIAL,
+                "Jesús María", new BigDecimal("80"), null, List.of(), "hace 2 horas", directa, null);
     }
 
     private MockHttpServletRequestBuilder inicioComo(boolean ofreceServicios) {

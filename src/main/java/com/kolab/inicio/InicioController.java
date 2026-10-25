@@ -22,6 +22,7 @@ public class InicioController {
     private static final int CERCANAS = 6;
     private static final int MEJORES_EXPERTOS = 4;
     private static final int OPORTUNIDADES = 5;
+    private static final int PROPUESTAS = 5;
 
     private final CatalogoService catalogoService;
     private final CategoriaService categoriaService;
@@ -51,18 +52,27 @@ public class InicioController {
         }
 
         Long yo = usuario.getIdUsuario();
-        List<SolicitudResumen> cercanas = catalogoService.cercanas(yo, CERCANAS);
+        List<SolicitudResumen> propuestas = catalogoService.propuestasSinResponder(yo, PROPUESTAS);
+        List<SolicitudResumen> cercanas = sinLas(propuestas, catalogoService.cercanas(yo, CERCANAS));
         List<SolicitudResumen> deLoMio = catalogoService.enMisCategorias(yo, OPORTUNIDADES + CERCANAS);
-        List<SolicitudResumen> lista = deLoMio.isEmpty() ? catalogoService.recientes(yo, OPORTUNIDADES + CERCANAS) : deLoMio;
+        List<SolicitudResumen> lista = sinLas(propuestas,
+                deLoMio.isEmpty() ? catalogoService.recientes(yo, OPORTUNIDADES + CERCANAS) : deLoMio);
 
         model.addAttribute("seccion", "inicio");
         model.addAttribute("usuario", usuario);
         model.addAttribute("categorias", categoriaService.activas());
+        model.addAttribute("propuestas", propuestas);
         model.addAttribute("cercanas", cercanas);
         model.addAttribute("expertos", directorioService.mejorCalificados(MEJORES_EXPERTOS));
         model.addAttribute("filtradas", !deLoMio.isEmpty());
         model.addAttribute("oportunidades", sinRepetir(lista, cercanas));
         return "inicio/inicio-usuario";
+    }
+
+    // una propuesta que ya está arriba en "te propusieron" no se repite en los bloques de más abajo
+    private static List<SolicitudResumen> sinLas(List<SolicitudResumen> yaMostradas, List<SolicitudResumen> lista) {
+        List<Long> ids = yaMostradas.stream().map(SolicitudResumen::id).toList();
+        return lista.stream().filter(s -> !ids.contains(s.id())).toList();
     }
 
     // lo que ya salió en "cerca de ti" no se repite más abajo, salvo que al quitarlo el bloque

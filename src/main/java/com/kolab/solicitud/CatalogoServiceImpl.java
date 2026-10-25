@@ -67,6 +67,11 @@ public class CatalogoServiceImpl implements CatalogoService {
     }
 
     @Override
+    public List<SolicitudResumen> propuestasSinResponder(Long idUsuario, int cuantas) {
+        return buscar(SolicitudesVisibles.propuestasSinResponderA(idUsuario), idUsuario, cuantas);
+    }
+
+    @Override
     public List<SolicitudResumen> cercanas(Long idUsuario, int cuantas) {
         Usuario yo = usuario(idUsuario);
         if (yo.getLatitud() == null || yo.getLongitud() == null) {

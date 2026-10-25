@@ -21,6 +21,15 @@
         </div>
     </section>
 
+    <section class="k-bloque" th:unless="${#lists.isEmpty(propuestas)}">
+        <h2 class="k-bloque-titulo">Te propusieron</h2>
+        <div class="k-lista">
+            <th:block th:each="s : ${propuestas}">
+                <div th:replace="~{fragmentos/componentes :: fila(${s}, 'Ofertar')}"></div>
+            </th:block>
+        </div>
+    </section>
+
     <div class="k-invita" th:unless="${usuario.ofreceServicios()}">
         <div>
             <b>¿Sabes hacer algo?</b>

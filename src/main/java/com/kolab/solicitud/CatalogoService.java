@@ -20,6 +20,11 @@ public interface CatalogoService {
     List<SolicitudResumen> recientes(Long idUsuario, int cuantas);
 
     /**
+     * Las propuestas directas que recibió esta persona y todavía no respondió, las más nuevas primero.
+     */
+    List<SolicitudResumen> propuestasSinResponder(Long idUsuario, int cuantas);
+
+    /**
      * Las presenciales más cerca de donde vive la persona. Vacío si no se sabe dónde vive.
      */
     List<SolicitudResumen> cercanas(Long idUsuario, int cuantas);
