@@ -89,6 +89,19 @@ class UsuarioServiceImplTest {
     }
 
     @Test
+    void alRegistrarseRecibeUnCodigoPublicoQueNoEsteUsado() {
+        RegistroForm form = formularioValido("cliente@kolab.pe");
+        when(usuarioRepository.existsByEmail(anyString())).thenReturn(false);
+        when(passwordEncoder.encode(anyString())).thenReturn("hash");
+        when(usuarioRepository.existsByCodigo(anyString())).thenReturn(true, false);
+
+        usuarioService.registrar(form);
+
+        assertThat(usuarioGuardado().getCodigo()).matches(CodigoPublico.FORMA);
+        verify(usuarioRepository, times(2)).existsByCodigo(anyString());
+    }
+
+    @Test
     void elTelefonoVacioSeGuardaComoNulo() {
         RegistroForm form = formularioValido("cliente@kolab.pe");
         form.setTelefono("   ");

@@ -33,6 +33,10 @@ public class Usuario {
     @Column(nullable = false, length = 120, unique = true)
     private String email;
 
+    // el que se ve en /personas/{codigo}; se pone al registrarse y no se toca mas
+    @Column(nullable = false, length = 10, unique = true, updatable = false)
+    private String codigo;
+
     @Column(name = "password_hash", nullable = false, length = 100)
     private String passwordHash;
 
@@ -143,6 +147,14 @@ public class Usuario {
 
     public void setTelefono(String telefono) {
         this.telefono = telefono;
+    }
+
+    public String getCodigo() {
+        return codigo;
+    }
+
+    public void setCodigo(String codigo) {
+        this.codigo = codigo;
     }
 
     public LocalDateTime getFechaRegistro() {

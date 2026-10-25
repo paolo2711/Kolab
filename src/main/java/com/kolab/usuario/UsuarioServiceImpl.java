@@ -43,6 +43,7 @@ public class UsuarioServiceImpl implements UsuarioService {
         usuario.setNombre(form.getNombre().trim());
         usuario.setApellidos(form.getApellidos().trim());
         usuario.setEmail(email);
+        usuario.setCodigo(codigoLibre());
         usuario.setPasswordHash(passwordEncoder.encode(form.getPassword()));
         usuario.setTelefono(vacioComoNulo(form.getTelefono()));
         usuario.setFechaRegistro(LocalDateTime.now());
@@ -64,6 +65,15 @@ public class UsuarioServiceImpl implements UsuarioService {
     @Transactional(readOnly = true)
     public boolean emailDisponible(String email) {
         return !usuarioRepository.existsByEmail(normalizar(email));
+    }
+
+    // con 36 elevado a 10 combinaciones repetir es casi imposible, pero el unique no perdona
+    private String codigoLibre() {
+        String codigo = CodigoPublico.nuevo();
+        while (usuarioRepository.existsByCodigo(codigo)) {
+            codigo = CodigoPublico.nuevo();
+        }
+        return codigo;
     }
 
     // el correo se guarda siempre igual, si no el unique deja pasar Pepe@x.com y pepe@x.com
