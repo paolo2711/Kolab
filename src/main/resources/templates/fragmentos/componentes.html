@@ -133,6 +133,36 @@
     </th:block>
 </th:block>
 
+<!-- la tarjeta tal como saldra publicada. sale ya pintada con lo escrito, para cuando el formulario
+     vuelve con un error; js/vista-previa.js la repinta mientras se escribe o se elige una foto -->
+<div th:fragment="vistaPrevia" class="k-tarjeta">
+    <h2 class="k-tarjeta-titulo">Vista previa</h2>
+    <p class="k-vacio">Así la van a ver quienes pueden ofertar.</p>
+
+    <div class="k-solicitud k-alinear-arriba" th:object="${solicitudForm}"
+         id="vistaPrevia" th:data-foto-propia="*{fotoActual}">
+        <img class="k-miniatura" id="vpFoto" th:src="${fotoPrevia != null} ? @{${fotoPrevia}}" alt="Foto de la solicitud"
+             th:hidden="${fotoPrevia == null}">
+        <span class="k-miniatura k-sin-foto" id="vpSinFoto" th:hidden="${fotoPrevia != null}">
+            <i class="bi bi-image"></i></span>
+        <div>
+            <span class="k-solicitud-titulo" id="vpTitulo"
+                  th:classappend="${#strings.isEmpty(solicitudForm.titulo)} ? 'k-vp-vacio'"
+                  th:text="${#strings.isEmpty(solicitudForm.titulo)} ? 'Tu título va aquí' : *{titulo}">Tu título va aquí</span>
+            <div class="k-solicitud-meta">
+                <span id="vpCategoria"><th:block th:each="c : ${categorias}" th:if="${c.id == solicitudForm.idCategoria}"
+                          th:text="${c.nombre}"></th:block><th:block
+                          th:if="${solicitudForm.idCategoria == null}">Categoría</th:block></span> ·
+                <span id="vpModalidad"
+                      th:text="*{modalidad} != null ? *{modalidad.etiqueta} : ${modalidades[0].etiqueta}">Modalidad</span>
+            </div>
+            <div class="k-solicitud-ofertas">Publicada recién · sin ofertas</div>
+        </div>
+        <span class="k-precio k-precio-g"><span class="k-moneda">S/</span><span id="vpPrecio"
+              th:text="*{precioPropuesto} != null ? ${#numbers.formatDecimal(solicitudForm.precioPropuesto, 1, 2, 'POINT')} : '0.00'">0.00</span></span>
+    </div>
+</div>
+
 <div th:fragment="servicios(lista, titulo, vacio)">
     <h2 class="k-bloque-titulo k-mt-25" th:text="${titulo}">Servicios</h2>
     <p class="k-vacio" th:if="${#lists.isEmpty(lista)}" th:text="${vacio}">Todavía nada.</p>

@@ -11,6 +11,10 @@ public record Persona(Long id, String nombre, String iniciales, String foto) {
         return foto;
     }
 
+    public int getFranja() {
+        return Personas.franjaDe(nombre);
+    }
+
     // sin esto una lista de gente sin foto es una fila de círculos idénticos
     public int getTono() {
         return (int) (id % 5);

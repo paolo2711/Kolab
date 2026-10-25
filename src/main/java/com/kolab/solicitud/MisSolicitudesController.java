@@ -1,5 +1,6 @@
 package com.kolab.solicitud;
 
+import com.kolab.categoria.CategoriaResumen;
 import com.kolab.categoria.CategoriaService;
 import com.kolab.mensaje.MensajeService;
 import com.kolab.oferta.OfertaResumen;
@@ -8,6 +9,7 @@ import com.kolab.perfil.DirectorioService;
 import com.kolab.servicio.ServicioService;
 import com.kolab.usuario.UsuarioAutenticado;
 import jakarta.validation.Valid;
+import java.util.List;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
@@ -32,16 +34,19 @@ public class MisSolicitudesController {
     private final MensajeService mensajeService;
     private final CategoriaService categoriaService;
     private final DirectorioService directorioService;
+    private final FotosDeSolicitud fotos;
 
     public MisSolicitudesController(SolicitudService solicitudService, OfertaService ofertaService,
                                     ServicioService servicioService, MensajeService mensajeService,
-                                    CategoriaService categoriaService, DirectorioService directorioService) {
+                                    CategoriaService categoriaService, DirectorioService directorioService,
+                                    FotosDeSolicitud fotos) {
         this.solicitudService = solicitudService;
         this.ofertaService = ofertaService;
         this.servicioService = servicioService;
         this.mensajeService = mensajeService;
         this.categoriaService = categoriaService;
         this.directorioService = directorioService;
+        this.fotos = fotos;
     }
 
     @GetMapping
@@ -71,6 +76,7 @@ public class MisSolicitudesController {
     public String publicar(@Valid @ModelAttribute SolicitudForm solicitudForm, BindingResult errores,
                            @AuthenticationPrincipal UsuarioAutenticado usuario,
                            Model model, RedirectAttributes flash) {
+        revisarFoto(solicitudForm, errores);
         if (errores.hasErrors()) {
             return formulario("solicitud/nueva", solicitudForm, model);
         }
@@ -105,6 +111,7 @@ public class MisSolicitudesController {
     public String guardarEdicion(@PathVariable Long id, @Valid @ModelAttribute SolicitudForm solicitudForm,
                                  BindingResult errores, @AuthenticationPrincipal UsuarioAutenticado usuario,
                                  Model model, RedirectAttributes flash) {
+        revisarFoto(solicitudForm, errores);
         if (errores.hasErrors()) {
             model.addAttribute("idSolicitud", id);
             return formulario("solicitud/editar", solicitudForm, model);
@@ -138,10 +145,26 @@ public class MisSolicitudesController {
         return "redirect:/mis-solicitudes/" + id;
     }
 
+    // lo que la vista previa muestra al cargar: la foto que ya tiene o la de la categoria elegida
+    private static String fotoPrevia(SolicitudForm form, List<CategoriaResumen> categorias) {
+        if (form.getFotoActual() != null) {
+            return form.getFotoActual();
+        }
+        return categorias.stream().filter(c -> c.id().equals(form.getIdCategoria()))
+                .findFirst().map(CategoriaResumen::foto).orElse(null);
+    }
+
+    // el archivo no lo valida Bean Validation: hay que mirarlo por dentro
+    private void revisarFoto(SolicitudForm form, BindingResult errores) {
+        fotos.problemaCon(form.getFoto()).ifPresent(problema -> errores.rejectValue("foto", "foto", problema));
+    }
+
     private String formulario(String vista, SolicitudForm form, Model model) {
         model.addAttribute("seccion", "actividad");
-        model.addAttribute("categorias", categoriaService.activas());
+        List<CategoriaResumen> categorias = categoriaService.activas();
+        model.addAttribute("categorias", categorias);
         model.addAttribute("modalidades", Modalidad.values());
+        model.addAttribute("fotoPrevia", fotoPrevia(form, categorias));
         if (form.getIdDestinatario() != null) {
             model.addAttribute("destinatario", directorioService.publico(form.getIdDestinatario()).persona());
         }

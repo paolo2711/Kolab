@@ -1,7 +1,6 @@
 package com.kolab.solicitud;
 
 import com.kolab.common.Distancia;
-import com.kolab.common.Fotos;
 import com.kolab.common.Tiempo;
 import com.kolab.oferta.Oferta;
 import com.kolab.oferta.OfertaRepository;
@@ -24,9 +23,9 @@ class ResumenesDeSolicitud {
 
     private final OfertaRepository ofertaRepository;
     private final Personas personas;
-    private final Fotos fotos;
+    private final FotosDeSolicitud fotos;
 
-    ResumenesDeSolicitud(OfertaRepository ofertaRepository, Personas personas, Fotos fotos) {
+    ResumenesDeSolicitud(OfertaRepository ofertaRepository, Personas personas, FotosDeSolicitud fotos) {
         this.ofertaRepository = ofertaRepository;
         this.personas = personas;
         this.fotos = fotos;
@@ -52,7 +51,7 @@ class ResumenesDeSolicitud {
         BigDecimal mejor = ofertas.isEmpty() ? null : ofertas.get(0).getMontoPropuesto();
         String categoria = s.getCategoria().getNombre();
         return new SolicitudResumen(s.getId(), s.getTitulo(), s.getCategoria().getId(), categoria,
-                s.getCategoria().getIcono(), fotos.deCategoria(categoria), s.getModalidad(),
+                s.getCategoria().getIcono(), fotos.de(s), s.getModalidad(),
                 s.getDistrito(), s.getPrecioPropuesto(), mejor, quienes,
                 Tiempo.hace(s.getFechaPublicacion()), s.esPropuestaDirecta(), s.esNueva(LocalDateTime.now()),
                 kilometros(desde, s));

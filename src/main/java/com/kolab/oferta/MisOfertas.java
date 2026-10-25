@@ -1,8 +1,8 @@
 package com.kolab.oferta;
 
-import com.kolab.common.Fotos;
 import com.kolab.common.Tiempo;
 import com.kolab.mensaje.MensajeRepository;
+import com.kolab.solicitud.FotosDeSolicitud;
 import com.kolab.solicitud.Solicitud;
 import java.util.HashMap;
 import java.util.List;
@@ -20,9 +20,9 @@ class MisOfertas {
 
     private final OfertaRepository ofertaRepository;
     private final MensajeRepository mensajeRepository;
-    private final Fotos fotos;
+    private final FotosDeSolicitud fotos;
 
-    MisOfertas(OfertaRepository ofertaRepository, MensajeRepository mensajeRepository, Fotos fotos) {
+    MisOfertas(OfertaRepository ofertaRepository, MensajeRepository mensajeRepository, FotosDeSolicitud fotos) {
         this.ofertaRepository = ofertaRepository;
         this.mensajeRepository = mensajeRepository;
         this.fotos = fotos;
@@ -45,7 +45,7 @@ class MisOfertas {
         Solicitud s = o.getSolicitud();
         String categoria = s.getCategoria().getNombre();
         return new OfertaEnviada(o.getId(), s.getId(), s.getTitulo(), categoria, s.getCategoria().getIcono(),
-                fotos.deCategoria(categoria), s.getPrecioPropuesto(), o.getMontoPropuesto(), o.getEstado(),
+                fotos.de(s), s.getPrecioPropuesto(), o.getMontoPropuesto(), o.getEstado(),
                 SituacionDeOferta.de(o.getEstado(), s.getEstado()), sinLeer, cuantas, Tiempo.hace(o.getFechaOferta()));
     }
 

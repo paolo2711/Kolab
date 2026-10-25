@@ -1,6 +1,5 @@
 package com.kolab.solicitud;
 
-import com.kolab.common.Fotos;
 import com.kolab.common.Tiempo;
 import com.kolab.mensaje.MensajeRepository;
 import com.kolab.oferta.Oferta;
@@ -23,10 +22,10 @@ class MisSolicitudes {
     private final SolicitudRepository solicitudRepository;
     private final OfertaRepository ofertaRepository;
     private final MensajeRepository mensajeRepository;
-    private final Fotos fotos;
+    private final FotosDeSolicitud fotos;
 
     MisSolicitudes(SolicitudRepository solicitudRepository, OfertaRepository ofertaRepository,
-                   MensajeRepository mensajeRepository, Fotos fotos) {
+                   MensajeRepository mensajeRepository, FotosDeSolicitud fotos) {
         this.solicitudRepository = solicitudRepository;
         this.ofertaRepository = ofertaRepository;
         this.mensajeRepository = mensajeRepository;
@@ -60,7 +59,7 @@ class MisSolicitudes {
     private MiSolicitud aMiSolicitud(Solicitud s, List<Oferta> ofertas, long sinLeer) {
         String categoria = s.getCategoria().getNombre();
         return new MiSolicitud(s.getId(), s.getTitulo(), categoria, s.getCategoria().getIcono(),
-                fotos.deCategoria(categoria), s.getModalidad(), s.getPrecioPropuesto(), ofertas.size(),
+                fotos.de(s), s.getModalidad(), s.getPrecioPropuesto(), ofertas.size(),
                 ofertas.isEmpty() ? null : ofertas.get(0).getMontoPropuesto(), sinLeer, s.getEstado(),
                 Tiempo.hace(s.getFechaPublicacion()));
     }

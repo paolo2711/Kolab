@@ -46,6 +46,10 @@ public class UsuarioAutenticado extends User {
         return iniciales;
     }
 
+    public int getFranja() {
+        return Personas.franjaDe(nombreCompleto);
+    }
+
     // null si no hay foto: el menú pinta las iniciales
     public String getFoto() {
         return foto;

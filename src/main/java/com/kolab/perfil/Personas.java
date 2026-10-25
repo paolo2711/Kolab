@@ -12,6 +12,8 @@ import org.apache.commons.lang3.StringUtils;
 @Component
 public class Personas {
 
+    private static final int FRANJAS = 6;
+
     private final Fotos fotos;
 
     public Personas(Fotos fotos) {
@@ -21,6 +23,14 @@ public class Personas {
     public Persona de(Usuario usuario) {
         return new Persona(usuario.getId(), usuario.getNombreCompleto(), inicialesDe(usuario),
                 fotos.dePersona(usuario.getEmail()));
+    }
+
+    /**
+     * El color de la franja de arriba del perfil, sacado del nombre: la misma persona sale siempre
+     * con el mismo color, en su perfil y en el que ven los demás.
+     */
+    public static int franjaDe(String nombreCompleto) {
+        return Math.floorMod(StringUtils.trimToEmpty(nombreCompleto).hashCode(), FRANJAS);
     }
 
     public static String inicialesDe(Usuario usuario) {

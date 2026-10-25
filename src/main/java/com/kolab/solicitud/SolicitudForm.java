@@ -7,6 +7,7 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.format.annotation.DateTimeFormat;
 
 public class SolicitudForm {
@@ -39,6 +40,28 @@ public class SolicitudForm {
 
     // lleno cuando es una propuesta directa a una persona
     private Long idDestinatario;
+
+    // opcional; al editar, si no se sube otra se queda la que tenia
+    private MultipartFile foto;
+
+    // solo para pintar la vista previa al editar; guardar no la lee
+    private String fotoActual;
+
+    public String getFotoActual() {
+        return fotoActual;
+    }
+
+    public void setFotoActual(String fotoActual) {
+        this.fotoActual = fotoActual;
+    }
+
+    public MultipartFile getFoto() {
+        return foto;
+    }
+
+    public void setFoto(MultipartFile foto) {
+        this.foto = foto;
+    }
 
     public String getTitulo() {
         return titulo;

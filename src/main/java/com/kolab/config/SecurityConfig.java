@@ -42,7 +42,8 @@ public class SecurityConfig {
             "script-src 'self' https://cdn.jsdelivr.net",
             "style-src 'self' https://fonts.googleapis.com https://cdn.jsdelivr.net",
             "font-src 'self' https://fonts.gstatic.com https://cdn.jsdelivr.net",
-            "img-src 'self' data:",
+            // blob: es la foto elegida en Publicar, que la vista previa muestra antes de subirla
+            "img-src 'self' data: blob:",
             "form-action 'self'",
             "frame-ancestors 'none'",
             "base-uri 'self'");
@@ -99,7 +100,7 @@ public class SecurityConfig {
                         AuthorizationFilter.class)
                 .authorizeHttpRequests(rutas -> rutas
                         .requestMatchers("/", "/login", "/registro", "/recuperar", "/recuperar/**",
-                                "/css/**", "/js/**", "/img/**", "/error").permitAll()
+                                "/css/**", "/js/**", "/img/**", "/fotos/**", "/error").permitAll()
                         // estas rutas solo existen con kolab.desarrollo=true; fuera de eso dan 404
                         .requestMatchers("/desarrollo/**").permitAll()
                         .requestMatchers("/actuator/health").permitAll()
