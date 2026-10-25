@@ -21,6 +21,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.access.intercept.AuthorizationFilter;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
+import org.springframework.security.web.csrf.CsrfException;
 import org.springframework.security.web.header.writers.ReferrerPolicyHeaderWriter.ReferrerPolicy;
 
 /**
@@ -67,10 +68,12 @@ public class SecurityConfig {
                 .authorizeHttpRequests(rutas -> rutas
                         .requestMatchers("/admin/login").permitAll()
                         .anyRequest().hasRole("ADMINISTRADOR"))
-                // a quien no administra, el panel le responde igual que una ruta que no existe
+                // a quien no administra, el panel le responde igual que una ruta que no existe; un
+                // formulario sin token sigue siendo un 403, como en el mercado
                 .exceptionHandling(errores -> errores
-                        .accessDeniedHandler((pedido, respuesta, e) ->
-                                respuesta.sendError(HttpServletResponse.SC_NOT_FOUND)))
+                        .accessDeniedHandler((pedido, respuesta, e) -> respuesta.sendError(
+                                e instanceof CsrfException ? HttpServletResponse.SC_FORBIDDEN
+                                        : HttpServletResponse.SC_NOT_FOUND)))
                 .formLogin(login -> login
                         .loginPage("/admin/login")
                         .loginProcessingUrl("/admin/login")
