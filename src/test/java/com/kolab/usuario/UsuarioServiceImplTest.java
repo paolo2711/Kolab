@@ -1,5 +1,6 @@
 package com.kolab.usuario;
 
+import static com.kolab.CuentasDePrueba.CLAVE;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
@@ -54,12 +55,12 @@ class UsuarioServiceImplTest {
     void nuncaGuardaLaContrasenaEnClaro() {
         RegistroForm form = formularioValido("cliente@kolab.pe");
         when(usuarioRepository.existsByEmail(anyString())).thenReturn(false);
-        when(passwordEncoder.encode("secreto123")).thenReturn("$2a$10$hashfalso");
+        when(passwordEncoder.encode(CLAVE)).thenReturn("$2a$10$hashfalso");
 
         usuarioService.registrar(form);
 
         assertThat(usuarioGuardado().getPasswordHash()).isEqualTo("$2a$10$hashfalso");
-        verify(passwordEncoder, times(1)).encode("secreto123");
+        verify(passwordEncoder, times(1)).encode(CLAVE);
     }
 
     @Test
@@ -125,8 +126,8 @@ class UsuarioServiceImplTest {
         form.setApellidos("Rodriguez Paredes");
         form.setEmail(email);
         form.setTelefono("987654321");
-        form.setPassword("secreto123");
-        form.setConfirmacion("secreto123");
+        form.setPassword(CLAVE);
+        form.setConfirmacion(CLAVE);
         return form;
     }
 }

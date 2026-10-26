@@ -1,5 +1,6 @@
 package com.kolab.mensaje;
 
+import static com.kolab.CuentasDePrueba.CLAVE;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.user;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -28,9 +29,10 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
+import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 import org.springframework.transaction.annotation.Transactional;
 
-// el formulario dice a donde volver despues de escribir; un destino de afuera no se sigue
+// el formulario solo dice a que pantalla volver y su id, la ruta la arma el controlador
 @SpringBootTest
 @AutoConfigureMockMvc
 @Transactional
@@ -45,42 +47,56 @@ class VolverDeMensajesTest {
     @Autowired private SolicitudService solicitudService;
     @Autowired private OfertaService ofertaService;
 
+    private Long idPide;
     private Long oferta;
     private Long solicitud;
     private UsuarioAutenticado quienPide;
 
     @BeforeEach
     void unaOfertaConSuConversacion() {
-        Long pide = registrar("pide.volver@kolab.pe");
+        idPide = registrar("pide.volver@kolab.pe");
         Long ofrece = registrar("ofrece.volver@kolab.pe");
         perfilService.guardarCategorias(ofrece, List.of(MUSICA));
-        solicitud = solicitudService.publicar(solicitud(), pide);
+        solicitud = solicitudService.publicar(solicitud(), idPide);
         oferta = ofertaService.ofertar(solicitud, ofertaDe("90"), ofrece);
         quienPide = detalles.cargar("pide.volver@kolab.pe", Rol.USUARIO);
     }
 
+    @Test
+    void desdeElDetalleDeLaSolicitudVuelveAEl() throws Exception {
+        escribir("solicitud", String.valueOf(solicitud)).andExpect(redirectedUrl("/mis-solicitudes/" + solicitud));
+    }
+
+    @Test
+    void desdeElDetalleDelServicioVuelveAEl() throws Exception {
+        Long servicio = ofertaService.aceptar(oferta, idPide);
+
+        escribir("servicio", String.valueOf(servicio)).andExpect(redirectedUrl("/servicios/" + servicio));
+    }
+
+    // la ruta nunca sale del formulario: cualquier otra cosa se queda en la conversacion
     @ParameterizedTest
-    @ValueSource(strings = {"https://otro-sitio.com", "//otro-sitio.com", "/\\otro-sitio.com",
-                            "/\t/otro-sitio.com", "javascript:alert(1)", "otro-sitio.com", "http:/otro-sitio.com"})
-    void unDestinoDeAfueraVuelveALaBandeja(String volver) throws Exception {
-        escribir(volver).andExpect(redirectedUrl("/mensajes"));
+    @ValueSource(strings = {"https://otro-sitio.com", "//otro-sitio.com", "/mis-solicitudes/1", "SERVICIO",
+                            "javascript:alert(1)"})
+    void unValorFueraDeLaListaSeQuedaEnLaConversacion(String volver) throws Exception {
+        escribir(volver, "1").andExpect(redirectedUrl("/mensajes/" + oferta));
     }
 
     @Test
-    void unaRutaDeLaAppSeRespeta() throws Exception {
-        escribir("/mis-solicitudes/" + solicitud).andExpect(redirectedUrl("/mis-solicitudes/" + solicitud));
+    void sinDestinoOSinIdSeQuedaEnLaConversacion() throws Exception {
+        escribir("", null).andExpect(redirectedUrl("/mensajes/" + oferta));
+        escribir("solicitud", null).andExpect(redirectedUrl("/mensajes/" + oferta));
     }
 
-    @Test
-    void sinDestinoSeQuedaEnLaConversacion() throws Exception {
-        escribir("").andExpect(redirectedUrl("/mensajes/" + oferta));
-    }
-
-    private ResultActions escribir(String volver) throws Exception {
-        return mockMvc.perform(post("/mensajes/{id}", oferta)
+    private ResultActions escribir(String volver, String id) throws Exception {
+        MockHttpServletRequestBuilder pedido = post("/mensajes/{id}", oferta)
                 .param("contenido", "¿El sábado a las diez?")
                 .param("volver", volver)
-                .with(csrf()).with(user(quienPide)));
+                .with(csrf()).with(user(quienPide));
+        if (id != null) {
+            pedido.param("id", id);
+        }
+        return mockMvc.perform(pedido);
     }
 
     private SolicitudForm solicitud() {
@@ -106,8 +122,8 @@ class VolverDeMensajesTest {
         form.setNombre("Persona");
         form.setApellidos("Prueba");
         form.setEmail(email);
-        form.setPassword("secreto123");
-        form.setConfirmacion("secreto123");
+        form.setPassword(CLAVE);
+        form.setConfirmacion(CLAVE);
         return usuarioService.registrar(form).getId();
     }
 }

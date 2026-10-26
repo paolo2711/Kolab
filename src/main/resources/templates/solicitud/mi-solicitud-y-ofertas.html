@@ -104,7 +104,8 @@
                                     Todavía no se han escrito.</p>
                             </div>
                             <form class="k-chat-envio" th:action="@{/mensajes/{id}(id=${o.id})}" method="post">
-                                <input type="hidden" name="volver" th:value="@{/mis-solicitudes/{id}(id=${solicitud.id})}">
+                                <input type="hidden" name="volver" value="solicitud">
+                                <input type="hidden" name="id" th:value="${solicitud.id}">
                                 <input type="text" name="contenido" placeholder="Escribe un mensaje" autocomplete="off" required>
                                 <button type="submit" class="k-btn k-btn-principal">Enviar</button>
                             </form>

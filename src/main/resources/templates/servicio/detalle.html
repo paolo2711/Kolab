@@ -99,7 +99,8 @@
             <p class="k-vacio k-sin-margen k-relleno-1" th:if="${#lists.isEmpty(servicio.mensajes)}">
                 Todavía no se han escrito.</p>
             <form class="k-chat-envio" th:action="@{/mensajes/{id}(id=${servicio.idOferta})}" method="post">
-                <input type="hidden" name="volver" th:value="@{/servicios/{id}(id=${servicio.id})}">
+                <input type="hidden" name="volver" value="servicio">
+                <input type="hidden" name="id" th:value="${servicio.id}">
                 <input type="text" name="contenido" placeholder="Escribe un mensaje" autocomplete="off" required>
                 <button type="submit" class="k-btn k-btn-principal">Enviar</button>
             </form>

@@ -1,5 +1,6 @@
 package com.kolab.administracion;
 
+import static com.kolab.CuentasDePrueba.CLAVE;
 import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.not;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestBuilders.formLogin;
@@ -47,7 +48,6 @@ import org.springframework.test.web.servlet.MockMvc;
 @Import(SecurityConfig.class)
 class AdministracionControllerTest {
 
-    private static final String CLAVE = "kolab1234";
 
     @Autowired
     private MockMvc mockMvc;

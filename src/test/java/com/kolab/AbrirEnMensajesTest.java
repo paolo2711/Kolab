@@ -1,5 +1,6 @@
 package com.kolab;
 
+import static com.kolab.CuentasDePrueba.CLAVE;
 import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.not;
@@ -127,8 +128,8 @@ class AbrirEnMensajesTest {
         form.setNombre("Persona");
         form.setApellidos("Prueba");
         form.setEmail(email);
-        form.setPassword("secreto123");
-        form.setConfirmacion("secreto123");
+        form.setPassword(CLAVE);
+        form.setConfirmacion(CLAVE);
         return usuarioService.registrar(form).getId();
     }
 }
