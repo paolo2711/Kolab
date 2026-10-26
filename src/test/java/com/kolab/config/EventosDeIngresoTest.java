@@ -1,5 +1,6 @@
 package com.kolab.config;
 
+import static com.kolab.CuentasDePrueba.CLAVE;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.kolab.common.BitacoraDeSeguridad;
@@ -36,6 +37,6 @@ class EventosDeIngresoTest {
     }
 
     private UsernamePasswordAuthenticationToken intento() {
-        return UsernamePasswordAuthenticationToken.unauthenticated("luis@kolab.pe", "kolab1234");
+        return UsernamePasswordAuthenticationToken.unauthenticated("luis@kolab.pe", CLAVE);
     }
 }

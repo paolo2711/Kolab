@@ -1,5 +1,6 @@
 package com.kolab;
 
+import static com.kolab.CuentasDePrueba.CLAVE;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestBuilders.formLogin;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.user;
@@ -42,7 +43,6 @@ import org.springframework.transaction.annotation.Transactional;
 class SeguridadTest {
 
     private static final long MUSICA = 1L;
-    private static final String CLAVE = "secreto123";
 
     @Autowired private MockMvc mockMvc;
     @Autowired private UsuarioService usuarioService;

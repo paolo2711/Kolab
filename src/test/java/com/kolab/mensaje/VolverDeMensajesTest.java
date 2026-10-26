@@ -1,5 +1,6 @@
 package com.kolab.mensaje;
 
+import static com.kolab.CuentasDePrueba.CLAVE;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.user;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -121,8 +122,8 @@ class VolverDeMensajesTest {
         form.setNombre("Persona");
         form.setApellidos("Prueba");
         form.setEmail(email);
-        form.setPassword("secreto123");
-        form.setConfirmacion("secreto123");
+        form.setPassword(CLAVE);
+        form.setConfirmacion(CLAVE);
         return usuarioService.registrar(form).getId();
     }
 }

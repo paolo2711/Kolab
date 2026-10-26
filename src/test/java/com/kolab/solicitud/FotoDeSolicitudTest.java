@@ -1,5 +1,6 @@
 package com.kolab.solicitud;
 
+import static com.kolab.CuentasDePrueba.CLAVE;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.Matchers.containsString;
@@ -58,8 +59,8 @@ class FotoDeSolicitudTest {
         form.setNombre("Persona");
         form.setApellidos("Prueba");
         form.setEmail(EMAIL);
-        form.setPassword("secreto123");
-        form.setConfirmacion("secreto123");
+        form.setPassword(CLAVE);
+        form.setConfirmacion(CLAVE);
         usuarioService.registrar(form);
         yo = detalles.cargar(EMAIL, Rol.USUARIO);
     }

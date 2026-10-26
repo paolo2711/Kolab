@@ -1,5 +1,6 @@
 package com.kolab.solicitud;
 
+import static com.kolab.CuentasDePrueba.CLAVE;
 import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.matchesRegex;
@@ -43,8 +44,8 @@ class VistaPreviaDePublicarTest {
         form.setNombre("Persona");
         form.setApellidos("Prueba");
         form.setEmail("publica.previa@kolab.pe");
-        form.setPassword("secreto123");
-        form.setConfirmacion("secreto123");
+        form.setPassword(CLAVE);
+        form.setConfirmacion(CLAVE);
         usuarioService.registrar(form);
         yo = detalles.cargar("publica.previa@kolab.pe", Rol.USUARIO);
     }
