@@ -2,6 +2,8 @@ package com.kolab.mensaje;
 
 import com.kolab.usuario.UsuarioAutenticado;
 import jakarta.validation.Valid;
+import java.net.URI;
+import java.net.URISyntaxException;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
@@ -59,11 +61,25 @@ public class MensajeController {
         return "redirect:" + destino(volver, idOferta);
     }
 
-    // solo rutas de la propia aplicación: nada de redirigir a otro sitio
-    private String destino(String volver, Long idOferta) {
-        if (volver.startsWith("/") && !volver.startsWith("//") && !volver.contains("\\")) {
-            return volver;
+    // sin destino se queda en la conversacion; uno que no es de la app manda a la bandeja
+    private static String destino(String volver, Long idOferta) {
+        if (volver.isEmpty()) {
+            return "/mensajes/" + idOferta;
         }
-        return "/mensajes/" + idOferta;
+        return esRutaInterna(volver) ? volver : "/mensajes";
+    }
+
+    // empieza con una sola barra, sin esquema ni host; un tab o un espacio tambien la invalidan
+    // porque el navegador los borra y //otro.com vuelve a aparecer
+    static boolean esRutaInterna(String ruta) {
+        if (!ruta.startsWith("/") || ruta.startsWith("//") || ruta.contains("\\")) {
+            return false;
+        }
+        try {
+            URI uri = new URI(ruta);
+            return uri.getScheme() == null && uri.getRawAuthority() == null;
+        } catch (URISyntaxException e) {
+            return false;
+        }
     }
 }
