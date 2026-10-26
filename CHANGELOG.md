@@ -6,6 +6,19 @@ Todo lo que cambia en KOLAB se anota aquí. El formato sigue
 
 ## [Sin publicar]
 
+## [0.3.2]
+
+### Cambiado
+
+- La clave de las cuentas que arman las pruebas está en una sola constante y no repetida en cada
+  clase.
+
+### Seguridad
+
+- Al escribir desde el chat de una solicitud o de un servicio, el formulario solo dice a qué
+  pantalla volver y su id. La ruta la arma la aplicación, y cualquier otro valor se queda en la
+  conversación.
+
 ## [0.3.1]
 
 ### Seguridad
