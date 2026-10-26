@@ -1,5 +1,6 @@
 package com.kolab.usuario;
 
+import static com.kolab.CuentasDePrueba.CLAVE;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
@@ -84,8 +85,8 @@ class CuentaControllerTest {
                         .param("apellidos", "Campos Llanos")
                         .param("email", "marco@kolab.pe")
                         .param("telefono", "987654321")
-                        .param("password", "secreto123")
-                        .param("confirmacion", "secreto123")
+                        .param("password", CLAVE)
+                        .param("confirmacion", CLAVE)
                         )
                 .andExpect(redirectedUrl("/login"));
     }
@@ -96,7 +97,7 @@ class CuentaControllerTest {
                         .param("nombre", "Marco")
                         .param("apellidos", "Campos Llanos")
                         .param("email", "marco@kolab.pe")
-                        .param("password", "secreto123")
+                        .param("password", CLAVE)
                         .param("confirmacion", "otracosa456")
                         )
                 .andExpect(status().isOk())
@@ -115,8 +116,8 @@ class CuentaControllerTest {
                         .param("nombre", "Marco")
                         .param("apellidos", "Campos Llanos")
                         .param("email", "marco@kolab.pe")
-                        .param("password", "secreto123")
-                        .param("confirmacion", "secreto123")
+                        .param("password", CLAVE)
+                        .param("confirmacion", CLAVE)
                         )
                 .andExpect(status().isOk())
                 .andExpect(model().attributeHasFieldErrors("registroForm", "email"));

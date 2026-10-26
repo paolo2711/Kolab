@@ -1,5 +1,6 @@
 package com.kolab.perfil;
 
+import static com.kolab.CuentasDePrueba.CLAVE;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.kolab.usuario.RegistroForm;
@@ -95,8 +96,8 @@ class PerfilConLaCuentaTest {
         form.setNombre("Persona");
         form.setApellidos("Prueba");
         form.setEmail(email);
-        form.setPassword("secreto123");
-        form.setConfirmacion("secreto123");
+        form.setPassword(CLAVE);
+        form.setConfirmacion(CLAVE);
         return usuarioService.registrar(form).getId();
     }
 }

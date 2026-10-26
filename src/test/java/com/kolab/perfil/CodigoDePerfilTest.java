@@ -1,5 +1,6 @@
 package com.kolab.perfil;
 
+import static com.kolab.CuentasDePrueba.CLAVE;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.containsString;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
@@ -148,8 +149,8 @@ class CodigoDePerfilTest {
         form.setNombre(nombre);
         form.setApellidos(apellidos);
         form.setEmail(email);
-        form.setPassword("secreto123");
-        form.setConfirmacion("secreto123");
+        form.setPassword(CLAVE);
+        form.setConfirmacion(CLAVE);
         return usuarioService.registrar(form);
     }
 }

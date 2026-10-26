@@ -1,5 +1,6 @@
 package com.kolab;
 
+import static com.kolab.CuentasDePrueba.CLAVE;
 import static org.hamcrest.Matchers.containsString;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.user;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -115,8 +116,8 @@ class EnlacesAlPerfilTest {
         form.setNombre("Persona");
         form.setApellidos("Prueba");
         form.setEmail(email);
-        form.setPassword("secreto123");
-        form.setConfirmacion("secreto123");
+        form.setPassword(CLAVE);
+        form.setConfirmacion(CLAVE);
         return usuarioService.registrar(form).getId();
     }
 }
