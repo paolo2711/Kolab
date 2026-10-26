@@ -2,8 +2,6 @@ package com.kolab.mensaje;
 
 import com.kolab.usuario.UsuarioAutenticado;
 import jakarta.validation.Valid;
-import java.net.URI;
-import java.net.URISyntaxException;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
@@ -52,34 +50,26 @@ public class MensajeController {
     @PostMapping("/mensajes/{idOferta}")
     public String enviar(@PathVariable Long idOferta, @Valid @ModelAttribute MensajeForm mensajeForm,
                          BindingResult errores, @RequestParam(defaultValue = "") String volver,
+                         @RequestParam(required = false) Long id,
                          @AuthenticationPrincipal UsuarioAutenticado usuario, RedirectAttributes flash) {
         if (errores.hasErrors()) {
             flash.addFlashAttribute("error", errores.getFieldError().getDefaultMessage());
         } else {
             mensajeService.enviar(idOferta, mensajeForm.getContenido(), usuario.getIdUsuario());
         }
-        return "redirect:" + destino(volver, idOferta);
+        return "redirect:" + destino(volver, id, idOferta);
     }
 
-    // sin destino se queda en la conversacion; uno que no es de la app manda a la bandeja
-    private static String destino(String volver, Long idOferta) {
-        if (volver.isEmpty()) {
-            return "/mensajes/" + idOferta;
+    // la ruta la arma el controlador, del formulario solo llega que pantalla y su id
+    private static String destino(String volver, Long id, Long idOferta) {
+        String conversacion = "/mensajes/" + idOferta;
+        if (id == null) {
+            return conversacion;
         }
-        return esRutaInterna(volver) ? volver : "/mensajes";
-    }
-
-    // empieza con una sola barra, sin esquema ni host; un tab o un espacio tambien la invalidan
-    // porque el navegador los borra y //otro.com vuelve a aparecer
-    static boolean esRutaInterna(String ruta) {
-        if (!ruta.startsWith("/") || ruta.startsWith("//") || ruta.contains("\\")) {
-            return false;
-        }
-        try {
-            URI uri = new URI(ruta);
-            return uri.getScheme() == null && uri.getRawAuthority() == null;
-        } catch (URISyntaxException e) {
-            return false;
-        }
+        return switch (volver) {
+            case "servicio" -> "/servicios/" + id;
+            case "solicitud" -> "/mis-solicitudes/" + id;
+            default -> conversacion;
+        };
     }
 }
