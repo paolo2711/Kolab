@@ -6,6 +6,16 @@ Todo lo que cambia en KOLAB se anota aquí. El formato sigue
 
 ## [Sin publicar]
 
+## [0.3.1]
+
+### Seguridad
+
+- Dependencias subidas a la última versión que funciona con Spring Boot 3.5.16: POI, Commons Lang,
+  Log4j, Jackson, el driver de PostgreSQL, Hibernate Validator, Guava y Logback. Spring Framework y
+  Spring Security quedan como están.
+- Al escribir un mensaje, el destino de vuelta solo se sigue si es una ruta de la aplicación. Uno de
+  afuera manda a la bandeja de Mensajes.
+
 ## [0.3.0]
 
 ### Agregado

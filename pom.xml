@@ -13,7 +13,7 @@
 
     <groupId>com.kolab</groupId>
     <artifactId>kolab</artifactId>
-    <version>0.3.0</version>
+    <version>0.3.1</version>
     <name>KOLAB</name>
     <description>Plataforma de servicios y ensenanza con precio propuesto por el cliente</description>
 
@@ -23,6 +23,14 @@
         <flyway.version>11.20.3</flyway.version>
         <!-- la ultima 10.1 que hay; la de Spring Boot 3.5.16 se queda en la 10.1.55 -->
         <tomcat.version>10.1.61</tomcat.version>
+        <!-- las que trae spring boot 3.5.16 tienen vulnerabilidades conocidas, estas son las ultimas
+             de la misma linea que las arreglan -->
+        <commons-lang3.version>3.21.0</commons-lang3.version>
+        <log4j2.version>2.26.1</log4j2.version>
+        <jackson-bom.version>2.21.8</jackson-bom.version>
+        <postgresql.version>42.7.14</postgresql.version>
+        <hibernate-validator.version>8.0.6.Final</hibernate-validator.version>
+        <logback.version>1.5.38</logback.version>
     </properties>
 
     <dependencies>
@@ -66,7 +74,7 @@
         <dependency>
             <groupId>org.apache.poi</groupId>
             <artifactId>poi-ooxml</artifactId>
-            <version>5.3.0</version>
+            <version>5.5.1</version>
         </dependency>
 
         <dependency>
@@ -77,7 +85,7 @@
         <dependency>
             <groupId>com.google.guava</groupId>
             <artifactId>guava</artifactId>
-            <version>33.3.1-jre</version>
+            <version>33.7.2-jre</version>
         </dependency>
 
         <dependency>
