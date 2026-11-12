@@ -1,6 +1,6 @@
 package db.migration.comun;
 
-import com.kolab.usuario.CodigoPublico;
+import com.kolab.util.CodigoPublico;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
