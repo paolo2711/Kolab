@@ -93,6 +93,28 @@ Corren contra H2 en memoria con las mismas migraciones, así que no necesitan Po
 Java 21, Spring Boot 3.5, Thymeleaf, Spring Security, Spring Data JPA, PostgreSQL, Flyway y Maven.
 CSS propio.
 
+## Mapa del código
+
+El código está ordenado por capas. Las carpetas de Java están en `src/main/java/com/kolab/`.
+
+| Carpeta | Qué contiene | Ejemplo |
+|---|---|---|
+| `controlador/` | Una clase por pantalla: recibe el pedido, llama al servicio y elige la vista | `SolicitudController` |
+| `servicio/` | Las interfaces de lo que hace la aplicación | `SolicitudService` |
+| `servicio/impl/` | Las implementaciones de esas interfaces y las piezas que arman sus resultados | `SolicitudServiceImpl` |
+| `servicio/excepcion/` | Los errores del negocio que lanzan los servicios | `RecursoNoEncontradoException` |
+| `dao/` | El acceso a la base: repositorios de Spring Data JPA | `SolicitudRepository` |
+| `modelo/entidad/` | Las tablas como clases JPA y sus estados | `Solicitud` |
+| `modelo/dto/` | Formularios y datos que llegan a las vistas | `SolicitudForm` |
+| `seguridad/` | Ingreso, permisos, bloqueo por intentos, sesión suspendida y bitácora | `SecurityConfig` |
+| `configuracion/` | Configuración web y la carga de datos de ejemplo en desarrollo | `WebConfig` |
+| `util/` | Piezas compartidas: fechas, fotos, Excel, código público | `Tiempo` |
+| `src/main/resources/templates/` | Las vistas en Thymeleaf | `solicitud/detalle.html` |
+| `src/main/resources/db/migration/` | Las migraciones de Flyway, que crean la base | `comun/V7__solicitud_oferta_servicio_mensaje_calificacion.sql` |
+
+Las pruebas siguen las mismas carpetas en `src/test/java/com/kolab/`. Las que recorren varias capas
+a la vez, como `FlujoPrincipalTest` y `SeguridadTest`, están en la raíz.
+
 ## Cómo trabaja el equipo
 
 Ramas:

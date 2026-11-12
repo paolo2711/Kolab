@@ -1,6 +1,8 @@
 package com.kolab.servicio;
 
-import com.kolab.calificacion.CalificacionForm;
+import com.kolab.modelo.dto.CalificacionForm;
+import com.kolab.modelo.dto.ServicioDetalle;
+import com.kolab.modelo.dto.ServicioResumen;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 

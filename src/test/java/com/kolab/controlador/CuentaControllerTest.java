@@ -1,0 +1,133 @@
+package com.kolab.controlador;
+
+import static com.kolab.CuentasDePrueba.CLAVE;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.verify;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrl;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
+
+import com.kolab.seguridad.BitacoraDeSeguridad;
+import com.kolab.seguridad.DetallesUsuarioService;
+import com.kolab.seguridad.SecurityConfig;
+import com.kolab.servicio.MensajeService;
+import com.kolab.servicio.OfertaService;
+import com.kolab.servicio.SolicitudService;
+import com.kolab.servicio.UsuarioService;
+import com.kolab.servicio.excepcion.EmailYaRegistradoException;
+import com.kolab.util.Fotos;
+import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.context.annotation.Import;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
+import org.springframework.test.web.servlet.MockMvc;
+
+@WebMvcTest(CuentaController.class)
+@Import(SecurityConfig.class)
+class CuentaControllerTest {
+
+    @Autowired
+    private MockMvc mockMvc;
+
+    @MockitoBean
+    private BitacoraDeSeguridad bitacora;
+
+    @MockitoBean
+    private UsuarioService usuarioService;
+
+    @MockitoBean
+    private DetallesUsuarioService detallesUsuarioService;
+
+    @MockitoBean
+    private Fotos fotos;
+
+    @MockitoBean
+    private MensajeService mensajeService;
+
+    @MockitoBean
+    private SolicitudService solicitudService;
+
+    @MockitoBean
+    private OfertaService ofertaService;
+
+    @Test
+    void laPantallaDeLoginEsPublica() throws Exception {
+        mockMvc.perform(get("/login"))
+                .andExpect(status().isOk())
+                .andExpect(view().name("cuenta/login"));
+    }
+
+    @Test
+    void fueraDeDesarrolloElLoginNoMuestraLasHerramientas() throws Exception {
+        mockMvc.perform(get("/login"))
+                .andExpect(content().string(org.hamcrest.Matchers.not(
+                        org.hamcrest.Matchers.containsString("reiniciar datos"))));
+    }
+
+    @Test
+    void elRegistroSeAbreSinPedirTipoDeCuenta() throws Exception {
+        mockMvc.perform(get("/registro"))
+                .andExpect(status().isOk())
+                .andExpect(view().name("cuenta/registro"))
+                .andExpect(model().attributeExists("registroForm"));
+    }
+
+    @Test
+    void unRegistroValidoRedirigeAlLogin() throws Exception {
+        mockMvc.perform(post("/registro").with(csrf())
+                        .param("nombre", "Marco")
+                        .param("apellidos", "Campos Llanos")
+                        .param("email", "marco@kolab.pe")
+                        .param("telefono", "987654321")
+                        .param("password", CLAVE)
+                        .param("confirmacion", CLAVE)
+                        )
+                .andExpect(redirectedUrl("/login"));
+    }
+
+    @Test
+    void siLasContrasenasNoCoincidenVuelveAlFormulario() throws Exception {
+        mockMvc.perform(post("/registro").with(csrf())
+                        .param("nombre", "Marco")
+                        .param("apellidos", "Campos Llanos")
+                        .param("email", "marco@kolab.pe")
+                        .param("password", CLAVE)
+                        .param("confirmacion", "otracosa456")
+                        )
+                .andExpect(status().isOk())
+                .andExpect(view().name("cuenta/registro"))
+                .andExpect(model().attributeHasFieldErrors("registroForm", "confirmacion"));
+
+        verify(usuarioService, never()).registrar(any());
+    }
+
+    @Test
+    void elCorreoRepetidoSeMuestraComoErrorDelCampo() throws Exception {
+        Mockito.when(usuarioService.registrar(any()))
+                .thenThrow(new EmailYaRegistradoException("marco@kolab.pe"));
+
+        mockMvc.perform(post("/registro").with(csrf())
+                        .param("nombre", "Marco")
+                        .param("apellidos", "Campos Llanos")
+                        .param("email", "marco@kolab.pe")
+                        .param("password", CLAVE)
+                        .param("confirmacion", CLAVE)
+                        )
+                .andExpect(status().isOk())
+                .andExpect(model().attributeHasFieldErrors("registroForm", "email"));
+    }
+
+    @Test
+    void unaRutaPrivadaMandaAlLogin() throws Exception {
+        mockMvc.perform(get("/servicios"))
+                .andExpect(status().is3xxRedirection());
+    }
+}
