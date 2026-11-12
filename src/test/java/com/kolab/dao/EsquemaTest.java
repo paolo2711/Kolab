@@ -7,6 +7,7 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import javax.sql.DataSource;
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -15,6 +16,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 // validate, Hibernate compara cada entidad contra el esquema. si una migracion y una entidad
 // dejan de coincidir, esta prueba se cae antes de que lo haga la aplicacion.
 @SpringBootTest
+@Tag("integracion")
 class EsquemaTest {
 
     @Autowired

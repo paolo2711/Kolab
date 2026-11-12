@@ -27,3 +27,15 @@ jobs:
 
       - name: Correr las pruebas
         run: ./mvnw -B test
+
+      # el reporte se arma aunque alguna prueba falle, que es cuando mas sirve
+      - name: Armar el reporte de pruebas
+        if: always()
+        run: ./mvnw -B surefire-report:report-only
+
+      - name: Guardar el reporte
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: reporte-de-pruebas
+          path: target/reports/

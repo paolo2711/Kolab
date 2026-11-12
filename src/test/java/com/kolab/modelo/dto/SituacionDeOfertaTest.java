@@ -4,8 +4,10 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import com.kolab.modelo.entidad.EstadoOferta;
 import com.kolab.modelo.entidad.EstadoSolicitud;
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
+@Tag("unitaria")
 class SituacionDeOfertaTest {
 
     @Test

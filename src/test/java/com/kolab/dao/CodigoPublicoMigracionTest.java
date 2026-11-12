@@ -8,10 +8,12 @@ import java.sql.SQLException;
 import java.util.List;
 import org.flywaydb.core.Flyway;
 import org.h2.jdbcx.JdbcDataSource;
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.springframework.jdbc.core.JdbcTemplate;
 
 // la V14 sobre una base con cuentas: H2 aparte hasta la V13, se cargan cuentas y recien ahi migra
+@Tag("integracion")
 class CodigoPublicoMigracionTest {
 
     @Test

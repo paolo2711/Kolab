@@ -148,6 +148,16 @@
                     <outputDirectory>${project.build.directory}/seguridad</outputDirectory>
                 </configuration>
             </plugin>
+            <!-- .\mvnw.cmd surefire-report:report corre las pruebas y deja el reporte en
+                 target/reports/surefire.html -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-report-plugin</artifactId>
+                <version>${maven-surefire-plugin.version}</version>
+                <configuration>
+                    <linkXRef>false</linkXRef>
+                </configuration>
+            </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
