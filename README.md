@@ -84,9 +84,27 @@ Nada de esto existe en el servidor. Depende de `KOLAB_DESARROLLO`, que solo deja
 
 ## Pruebas
 
-    mvnw.cmd -B test
+    mvnw.cmd test
 
 Corren contra H2 en memoria con las mismas migraciones, así que no necesitan PostgreSQL.
+
+Cada clase de prueba lleva una etiqueta con su tipo, y se puede correr un tipo solo:
+
+| Tipo | Qué prueba | Ejemplo | Comando |
+|---|---|---|---|
+| Unitaria | Una clase sola, sin levantar Spring; con Mockito cuando depende de otras | `UsuarioServiceImplTest` | `mvnw.cmd test -Dgroups=unitaria` |
+| Controlador | Un controlador con MockMvc: ruta, vista y validaciones, con los servicios simulados | `CuentaControllerTest` | `mvnw.cmd test -Dgroups=controlador` |
+| Integración | La aplicación completa contra H2: servicios, base y pantallas juntos | `FlujoPrincipalTest` | `mvnw.cmd test -Dgroups=integracion` |
+| Seguridad | Ingreso, bloqueo por intentos, CSRF, lo ajeno, redirecciones y política de contenido | `SeguridadTest` | `mvnw.cmd test -Dgroups=seguridad` |
+
+Una sola prueba: `mvnw.cmd test -Dtest=UsuarioServiceImplTest#nuncaGuardaLaContrasenaEnClaro`.
+
+Reporte en HTML, con el total, los fallos, las omitidas y la duración:
+
+    mvnw.cmd surefire-report:report
+
+Queda en `target/reports/surefire.html`. GitHub Actions lo arma en cada Pull Request y lo guarda
+como artefacto `reporte-de-pruebas`, en la página de la ejecución.
 
 ## Stack
 
