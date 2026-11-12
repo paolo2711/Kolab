@@ -18,6 +18,7 @@ import com.kolab.modelo.entidad.Usuario;
 import com.kolab.servicio.excepcion.EmailYaRegistradoException;
 import com.kolab.util.CodigoPublico;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
@@ -26,6 +27,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 @ExtendWith(MockitoExtension.class)
+@Tag("unitaria")
 class UsuarioServiceImplTest {
 
     @Mock

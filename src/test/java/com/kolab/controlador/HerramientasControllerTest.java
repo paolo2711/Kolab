@@ -17,6 +17,7 @@ import com.kolab.servicio.MensajeService;
 import com.kolab.servicio.OfertaService;
 import com.kolab.servicio.SolicitudService;
 import com.kolab.util.Fotos;
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -29,6 +30,7 @@ import org.springframework.test.web.servlet.request.RequestPostProcessor;
 @WebMvcTest(HerramientasController.class)
 @Import(SecurityConfig.class)
 @TestPropertySource(properties = "kolab.desarrollo=true")
+@Tag("controlador")
 class HerramientasControllerTest {
 
     @Autowired

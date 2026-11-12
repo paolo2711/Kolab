@@ -13,6 +13,7 @@ import com.kolab.servicio.UsuarioService;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -23,6 +24,7 @@ import org.springframework.transaction.annotation.Transactional;
 // el perfil nace una sola vez, al registrarse; lo demas solo lo usa
 @SpringBootTest
 @Transactional
+@Tag("integracion")
 class PerfilConLaCuentaTest {
 
     private static final long MUSICA = 1L;

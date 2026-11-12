@@ -3,6 +3,7 @@ package com.kolab.seguridad;
 import static com.kolab.CuentasDePrueba.CLAVE;
 import static org.assertj.core.api.Assertions.assertThat;
 
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -11,6 +12,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.authentication.event.AuthenticationFailureBadCredentialsEvent;
 import org.springframework.security.authentication.event.AuthenticationFailureDisabledEvent;
 
+@Tag("seguridad")
 class EventosDeIngresoTest {
 
     private final ControlDeIntentos intentos = new ControlDeIntentos(5, 15);

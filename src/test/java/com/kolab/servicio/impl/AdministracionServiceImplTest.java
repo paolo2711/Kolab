@@ -20,9 +20,11 @@ import java.time.YearMonth;
 import java.util.List;
 import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
+@Tag("unitaria")
 class AdministracionServiceImplTest {
 
     private final UsuarioRepository usuarios = Mockito.mock(UsuarioRepository.class);
