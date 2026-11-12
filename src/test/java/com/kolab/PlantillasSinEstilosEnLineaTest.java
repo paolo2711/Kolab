@@ -11,10 +11,12 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Stream;
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
 // la politica de contenido ya no admite estilos en linea: uno nuevo no rompe la compilacion, rompe
 // la pantalla en silencio. esta prueba lo atrapa antes
+@Tag("seguridad")
 class PlantillasSinEstilosEnLineaTest {
 
     private static final Path PLANTILLAS = Path.of("src/main/resources/templates");

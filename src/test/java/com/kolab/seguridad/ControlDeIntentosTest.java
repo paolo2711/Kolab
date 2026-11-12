@@ -2,8 +2,10 @@ package com.kolab.seguridad;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
+@Tag("seguridad")
 class ControlDeIntentosTest {
 
     private final ControlDeIntentos control = new ControlDeIntentos(5, 15);

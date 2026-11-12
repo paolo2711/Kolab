@@ -19,6 +19,7 @@ import com.kolab.seguridad.DetallesUsuarioService;
 import com.kolab.seguridad.UsuarioAutenticado;
 import com.kolab.servicio.UsuarioService;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -30,6 +31,7 @@ import org.springframework.transaction.annotation.Transactional;
 @SpringBootTest
 @AutoConfigureMockMvc
 @Transactional
+@Tag("integracion")
 class VistaPreviaDePublicarTest {
 
     @Autowired private MockMvc mockMvc;

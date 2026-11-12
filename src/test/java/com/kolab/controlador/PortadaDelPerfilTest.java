@@ -19,6 +19,7 @@ import com.kolab.servicio.PerfilService;
 import com.kolab.servicio.UsuarioService;
 import com.kolab.servicio.impl.Personas;
 import java.util.List;
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -30,6 +31,7 @@ import org.springframework.transaction.annotation.Transactional;
 @SpringBootTest
 @AutoConfigureMockMvc
 @Transactional
+@Tag("integracion")
 class PortadaDelPerfilTest {
 
     private static final long MUSICA = 1L;

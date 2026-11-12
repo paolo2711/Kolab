@@ -10,11 +10,13 @@ import com.kolab.modelo.entidad.Usuario;
 import com.kolab.servicio.UsuarioService;
 import com.kolab.util.Fotos;
 import java.util.Optional;
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.security.authentication.LockedException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
+@Tag("seguridad")
 class DetallesUsuarioServiceTest {
 
     private final UsuarioService usuarioService = Mockito.mock(UsuarioService.class);

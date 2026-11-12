@@ -11,10 +11,12 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Stream;
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
 // script-src no admite codigo escrito en la plantilla, ni en etiquetas ni en atributos onclick,
 // onsubmit y demas: el navegador lo ignora sin avisar y la pantalla queda a medias. todo va en static/js
+@Tag("seguridad")
 class PlantillasSinScriptsEnLineaTest {
 
     private static final Path PLANTILLAS = Path.of("src/main/resources/templates");

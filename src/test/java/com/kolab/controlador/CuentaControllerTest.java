@@ -22,6 +22,7 @@ import com.kolab.servicio.SolicitudService;
 import com.kolab.servicio.UsuarioService;
 import com.kolab.servicio.excepcion.EmailYaRegistradoException;
 import com.kolab.util.Fotos;
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,6 +33,7 @@ import org.springframework.test.web.servlet.MockMvc;
 
 @WebMvcTest(CuentaController.class)
 @Import(SecurityConfig.class)
+@Tag("controlador")
 class CuentaControllerTest {
 
     @Autowired
