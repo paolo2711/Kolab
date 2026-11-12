@@ -3,6 +3,7 @@ package com.kolab.modelo.dto;
 import com.kolab.modelo.entidad.Modalidad;
 import jakarta.validation.constraints.DecimalMax;
 import jakarta.validation.constraints.DecimalMin;
+import jakarta.validation.constraints.FutureOrPresent;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
@@ -31,6 +32,7 @@ public class SolicitudForm {
     private String descripcion;
 
     @NotNull(message = "Indica para cuándo lo necesitas")
+    @FutureOrPresent(message = "La fecha tiene que ser hoy o más adelante")
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
     private LocalDate fechaDeseada;
 
