@@ -126,3 +126,17 @@ arrancar y los enlaces vencen al reiniciar.
 
 Con `setx` hay que cerrar y volver a abrir el editor o la terminal. Las pruebas no necesitan
 ninguna de estas variables.
+
+## Servidor en Azure
+
+KOLAB está publicado en Azure App Service (Linux, Java 21) con un PostgreSQL flexible aparte. El jar
+lo compila y lo sube el workflow `.github/workflows/develop_kolab-g4.yml` cada vez que algo entra a
+`develop`. La configuración va en las variables de entorno de la App Web, no en el código.
+
+En Azure la aplicación se conecta con `kolabadmin`, el usuario que crea Azure con la base, y no con
+los dos roles de arriba. Es una base de curso que se arma solo desde el portal, sin consola. Por eso
+ahí se define `SPRING_FLYWAY_LOCATIONS=classpath:db/migration/comun`, que salta la migración de
+permisos de `kolab_app` (ese rol no existe en Azure). En la PC de cada uno siguen los dos roles.
+
+Los logs se guardan en `/home/logs` porque el comando de inicio entra a `/home` antes de arrancar el
+jar, y `/home` es la única carpeta que App Service no borra al reiniciar.
