@@ -3,6 +3,7 @@ package com.kolab.controlador;
 import com.kolab.modelo.dto.NuevaClaveForm;
 import com.kolab.modelo.dto.RecuperarForm;
 import com.kolab.seguridad.BitacoraDeSeguridad;
+import com.kolab.servicio.CorreoService;
 import com.kolab.servicio.RecuperacionService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
@@ -23,14 +24,20 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 public class RecuperacionController {
 
     private final RecuperacionService recuperacionService;
+    private final CorreoService correoService;
     private final BitacoraDeSeguridad bitacora;
     private final boolean desarrollo;
+    private final String urlPublica;
 
-    public RecuperacionController(RecuperacionService recuperacionService, BitacoraDeSeguridad bitacora,
-                                  @Value("${kolab.desarrollo:false}") boolean desarrollo) {
+    public RecuperacionController(RecuperacionService recuperacionService, CorreoService correoService,
+                                  BitacoraDeSeguridad bitacora,
+                                  @Value("${kolab.desarrollo:false}") boolean desarrollo,
+                                  @Value("${kolab.url-publica:http://localhost:8080}") String urlPublica) {
         this.recuperacionService = recuperacionService;
+        this.correoService = correoService;
         this.bitacora = bitacora;
         this.desarrollo = desarrollo;
+        this.urlPublica = urlPublica;
     }
 
     @GetMapping
@@ -46,11 +53,14 @@ public class RecuperacionController {
         if (errores.hasErrors()) {
             return "cuenta/recuperar";
         }
-        Optional<String> codigo = recuperacionService.generarCodigo(recuperarForm.getEmail());
-        bitacora.pidioRecuperar(recuperarForm.getEmail(), pedido.getRemoteAddr(), codigo.isPresent());
+        String email = recuperarForm.getEmail().trim();
+        Optional<String> codigo = recuperacionService.generarCodigo(email);
+        bitacora.pidioRecuperar(email, pedido.getRemoteAddr(), codigo.isPresent());
+        // el enlace se arma con la direccion configurada y no con el Host del pedido, que lo cambia cualquiera
+        codigo.ifPresent(c -> correoService.enviarEnlaceDeRecuperacion(email, urlPublica + "/recuperar/" + c));
         model.addAttribute("enviado", true);
-        model.addAttribute("correo", recuperarForm.getEmail().trim());
-        // sin servidor de correo, en una máquina de desarrollo el enlace se muestra en la pantalla
+        model.addAttribute("correo", email);
+        // en una maquina de desarrollo el enlace sale tambien en la pantalla
         if (desarrollo) {
             codigo.ifPresent(c -> model.addAttribute("enlaceDePrueba", "/recuperar/" + c));
         }

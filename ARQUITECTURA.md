@@ -140,3 +140,8 @@ permisos de `kolab_app` (ese rol no existe en Azure). En la PC de cada uno sigue
 
 Los logs se guardan en `/home/logs` porque el comando de inicio entra a `/home` antes de arrancar el
 jar, y `/home` es la única carpeta que App Service no borra al reiniciar.
+
+El correo para recuperar la contraseña sale por la API de Brevo. En la App Web van
+`KOLAB_BREVO_CLAVE` (la clave de la API), `KOLAB_CORREO_REMITENTE` (el correo de la cuenta de Brevo) y
+`KOLAB_URL_PUBLICA` (la dirección de KOLAB en Azure, con la que se arma el enlace). El enlace no se arma
+con el Host del pedido porque cualquiera lo puede cambiar y mandar el correo con un enlace a otro sitio.

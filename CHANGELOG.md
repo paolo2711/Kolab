@@ -15,6 +15,8 @@ Todo lo que cambia en KOLAB se anota aquí. El formato sigue
 - Botón para ver la contraseña mientras se escribe, en el ingreso, el registro y el cambio de clave.
 - Tarea programada cada hora: anota en el log el estado de KOLAB (peticiones, memoria, disco y base) y
   avisa con WARN si la memoria o el disco pasan del 80 % o si la base no responde. Se ve en el Historial.
+- El enlace para poner una contraseña nueva llega al correo, enviado con la API de Brevo. Se configura
+  con `KOLAB_BREVO_CLAVE`, `KOLAB_CORREO_REMITENTE` y `KOLAB_URL_PUBLICA`; sin clave no se manda nada.
 
 ### Corregido
 
