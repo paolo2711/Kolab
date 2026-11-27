@@ -149,7 +149,7 @@ El código está ordenado por capas. Las carpetas de Java están en `src/main/ja
 |---|---|---|
 | `controlador/` | Una clase por pantalla: recibe el pedido, llama al servicio y elige la vista | `SolicitudController` |
 | `servicio/` | Las interfaces de lo que hace la aplicación | `SolicitudService` |
-| `servicio/impl/` | Las implementaciones de esas interfaces y las piezas que arman sus resultados | `SolicitudServiceImpl` |
+| `servicio/impl/` | Las implementaciones de esas interfaces y las piezas que arman sus resultados, como el envío de correos con Brevo | `SolicitudServiceImpl`, `CorreoServiceImpl` |
 | `servicio/excepcion/` | Los errores del negocio que lanzan los servicios | `RecursoNoEncontradoException` |
 | `dao/` | El acceso a los datos: repositorios de Spring Data JPA y lo que no es de una tabla, como el estado de la base y el archivo de log | `SolicitudRepository`, `ArchivoDeLog` |
 | `modelo/entidad/` | Las tablas como clases JPA y sus estados | `Solicitud` |
