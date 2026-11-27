@@ -17,6 +17,7 @@ Todo lo que cambia en KOLAB se anota aquí. El formato sigue
 ### Corregido
 
 - La hora de lectura de Monitoreo sale en hora de Lima. En el servidor de Azure salía en UTC.
+- El Historial lleva el menú del panel del administrador y no el del mercado.
 
 ### Eliminado
 

@@ -1,6 +1,7 @@
 package com.kolab.controlador;
 
 import static org.hamcrest.Matchers.containsString;
+import static org.hamcrest.Matchers.not;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.user;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
@@ -60,6 +61,16 @@ class HistorialControllerTest {
                 .andExpect(view().name("administracion/historial"))
                 .andExpect(content().string(containsString("error inesperado en /servicios/5")))
                 .andExpect(content().string(containsString("k-nivel-error")));
+    }
+
+    @Test
+    void llevaElMenuDelPanelYNoElDelMercado() throws Exception {
+        Mockito.when(historialService.leer(null, null)).thenReturn(new Historial(List.of(), 0, 0, 0));
+
+        mockMvc.perform(get("/admin/historial").with(user(sesion(Rol.ADMINISTRADOR))))
+                .andExpect(status().isOk())
+                .andExpect(content().string(containsString("href=\"/admin/monitoreo\"")))
+                .andExpect(content().string(not(containsString("href=\"/mis-solicitudes/nueva\""))));
     }
 
     @Test
