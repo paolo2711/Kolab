@@ -1,12 +1,12 @@
 package com.kolab.servicio;
 
 /**
- * Manda los correos de KOLAB. Por ahora solo el enlace para recuperar la contraseña.
+ * manda los correos de kolab, como el enlace para recuperar la contrasena
  */
 public interface CorreoService {
 
     /**
-     * Manda el enlace a ese correo. Si el envio falla queda en el log y la pantalla sigue igual.
+     * manda el enlace a ese correo. si falla queda en el log y la pantalla sigue igual
      */
     void enviarEnlaceDeRecuperacion(String email, String enlace);
 }

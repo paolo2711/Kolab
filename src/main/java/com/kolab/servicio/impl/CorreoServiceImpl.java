@@ -12,23 +12,24 @@ import org.springframework.web.client.RestClient;
 import org.springframework.web.client.RestClientException;
 
 /**
- * Implementacion de {@link CorreoService} con la API de Brevo. Sin clave no manda nada: en una
- * maquina de desarrollo el enlace sale en la pantalla.
+ * {@link CorreoService} con la api de brevo. sin clave no manda nada, en desarrollo el enlace sale en pantalla
  */
 @Service
 public class CorreoServiceImpl implements CorreoService {
 
     private static final Logger log = LoggerFactory.getLogger(CorreoServiceImpl.class);
-    private static final String BREVO = "https://api.brevo.com/v3/smtp/email";
 
     private final RestClient brevo;
+    private final String url;
     private final String clave;
     private final String remitente;
 
     public CorreoServiceImpl(RestClient.Builder builder,
+                             @Value("${kolab.correo.url-brevo}") String url,
                              @Value("${kolab.correo.clave-brevo:}") String clave,
                              @Value("${kolab.correo.remitente:}") String remitente) {
         this.brevo = builder.build();
+        this.url = url;
         this.clave = clave;
         this.remitente = remitente;
     }
@@ -40,7 +41,7 @@ public class CorreoServiceImpl implements CorreoService {
             return;
         }
         try {
-            brevo.post().uri(BREVO)
+            brevo.post().uri(url)
                     .header("api-key", clave)
                     .contentType(MediaType.APPLICATION_JSON)
                     .body(mensaje(email, enlace))

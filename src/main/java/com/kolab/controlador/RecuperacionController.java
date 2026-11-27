@@ -32,7 +32,7 @@ public class RecuperacionController {
     public RecuperacionController(RecuperacionService recuperacionService, CorreoService correoService,
                                   BitacoraDeSeguridad bitacora,
                                   @Value("${kolab.desarrollo:false}") boolean desarrollo,
-                                  @Value("${kolab.url-publica:http://localhost:8080}") String urlPublica) {
+                                  @Value("${kolab.url-publica}") String urlPublica) {
         this.recuperacionService = recuperacionService;
         this.correoService = correoService;
         this.bitacora = bitacora;

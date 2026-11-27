@@ -22,6 +22,7 @@ import org.springframework.web.client.RestClient;
 @Tag("unitaria")
 class CorreoServiceImplTest {
 
+    private static final String BREVO = "https://api.brevo.com/v3/smtp/email";
     private static final String ENLACE = "https://kolab.pe/recuperar/abc.def";
 
     private RestClient.Builder builder;
@@ -35,7 +36,7 @@ class CorreoServiceImplTest {
 
     @Test
     void mandaElEnlaceAlCorreoConLaClaveDeBrevo() {
-        brevo.expect(requestTo("https://api.brevo.com/v3/smtp/email"))
+        brevo.expect(requestTo(BREVO))
                 .andExpect(method(HttpMethod.POST))
                 .andExpect(header("api-key", "clave-de-prueba"))
                 .andExpect(jsonPath("$.to[0].email").value("paolo@kolab.pe"))
@@ -57,7 +58,7 @@ class CorreoServiceImplTest {
 
     @Test
     void siBrevoRechazaLaClaveLaPantallaSigueIgual() {
-        brevo.expect(requestTo("https://api.brevo.com/v3/smtp/email"))
+        brevo.expect(requestTo(BREVO))
                 .andRespond(withUnauthorizedRequest());
 
         assertThatCode(() -> servicio("clave-vencida").enviarEnlaceDeRecuperacion("paolo@kolab.pe", ENLACE))
@@ -66,6 +67,6 @@ class CorreoServiceImplTest {
     }
 
     private CorreoServiceImpl servicio(String clave) {
-        return new CorreoServiceImpl(builder, clave, "kolab@correo.pe");
+        return new CorreoServiceImpl(builder, BREVO, clave, "kolab@correo.pe");
     }
 }
