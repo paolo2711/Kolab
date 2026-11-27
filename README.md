@@ -155,7 +155,7 @@ El código está ordenado por capas. Las carpetas de Java están en `src/main/ja
 | `modelo/entidad/` | Las tablas como clases JPA y sus estados | `Solicitud` |
 | `modelo/dto/` | Formularios y datos que llegan a las vistas | `SolicitudForm` |
 | `seguridad/` | Ingreso, permisos, bloqueo por intentos, sesión suspendida y bitácora | `SecurityConfig` |
-| `configuracion/` | Configuración web y la carga de datos de ejemplo en desarrollo | `WebConfig` |
+| `configuracion/` | Configuración web, las tareas programadas (cron) y la carga de datos de ejemplo en desarrollo | `WebConfig`, `TareasProgramadas` |
 | `util/` | Piezas compartidas: fechas, fotos, Excel, código público | `Tiempo` |
 | `src/main/resources/templates/` | Las vistas en Thymeleaf | `solicitud/detalle.html` |
 | `src/main/resources/db/migration/` | Las migraciones de Flyway, que crean la base | `comun/V7__solicitud_oferta_servicio_mensaje_calificacion.sql` |
