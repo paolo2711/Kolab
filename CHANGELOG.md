@@ -13,6 +13,8 @@ Todo lo que cambia en KOLAB se anota aquí. El formato sigue
   se busca por texto.
 - El log anota quién publica, cancela, oferta, acepta, cierra y califica, con el número de su cuenta.
 - Botón para ver la contraseña mientras se escribe, en el ingreso, el registro y el cambio de clave.
+- Tarea programada cada hora: anota en el log el estado de KOLAB (peticiones, memoria, disco y base) y
+  avisa con WARN si la memoria o el disco pasan del 80 % o si la base no responde. Se ve en el Historial.
 
 ### Corregido
 
