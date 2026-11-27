@@ -18,6 +18,16 @@ Todo lo que cambia en KOLAB se anota aquí. El formato sigue
 
 - La hora de lectura de Monitoreo sale en hora de Lima. En el servidor de Azure salía en UTC.
 
+### Eliminado
+
+- El perfil `https` para probar con certificado en la PC y su script: el servidor de Azure ya da
+  HTTPS.
+
+### Cambiado
+
+- El workflow de Azure tiene nombres en español y compila con `package` en vez de `install`.
+- `ARQUITECTURA.md` explica el servidor en Azure y con qué usuario se conecta ahí la aplicación.
+
 ## [0.3.2]
 
 ### Cambiado
