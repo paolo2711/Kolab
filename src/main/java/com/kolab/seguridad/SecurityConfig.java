@@ -68,8 +68,8 @@ public class SecurityConfig {
                 .authorizeHttpRequests(rutas -> rutas
                         .requestMatchers("/admin/login").permitAll()
                         .anyRequest().hasRole("ADMINISTRADOR"))
-                // a quien no administra, el panel le responde igual que una ruta que no existe; un
-                // formulario sin token sigue siendo un 403, como en el mercado
+                // a quien no administra, el panel le responde igual que una ruta que no existe; un formulario
+                // sin token es un 403, como en el mercado, menos el ingreso vencido, que vuelve al ingreso
                 .exceptionHandling(errores -> errores
                         .accessDeniedHandler((pedido, respuesta, e) -> {
                             if (ingresoVencido(pedido, e, "/admin/login")) {
@@ -113,7 +113,7 @@ public class SecurityConfig {
                         // un error de javascript puede pasar antes de iniciar sesion; igual pide el token csrf
                         .requestMatchers(HttpMethod.POST, "/errores-cliente").permitAll()
                         .anyRequest().hasRole("USUARIO"))
-                // quien administra vuelve a su panel; el resto, como un formulario sin token, es un 403
+                // el ingreso vencido vuelve al ingreso y quien administra a su panel; lo demas, sin token, es un 403
                 .exceptionHandling(errores -> errores
                         .accessDeniedHandler((pedido, respuesta, e) -> {
                             if (ingresoVencido(pedido, e, "/login")) {
