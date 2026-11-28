@@ -1,11 +1,13 @@
 package com.kolab;
 
 import static com.kolab.CuentasDePrueba.CLAVE;
+import static org.hamcrest.Matchers.containsString;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestBuilders.formLogin;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.user;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrl;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrlPattern;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -164,12 +166,24 @@ class SeguridadTest {
 
     @Test
     void unFormularioSinTokenSeRechazaSinSesion() throws Exception {
-        mockMvc.perform(post("/login").param("email", "paolo@kolab.pe").param("password", CLAVE))
-                .andExpect(status().isForbidden());
         mockMvc.perform(post("/registro").param("email", "nuevo@kolab.pe"))
                 .andExpect(status().isForbidden());
         mockMvc.perform(post("/recuperar").param("email", "paolo@kolab.pe"))
                 .andExpect(status().isForbidden());
+    }
+
+    // la pagina de ingreso abierta mas que la sesion ya no tiene token valido: no entra y vuelve al ingreso
+    @Test
+    void unIngresoConLaPaginaVencidaVuelveAlIngresoConAviso() throws Exception {
+        mockMvc.perform(post("/login").param("email", "paolo@kolab.pe").param("password", CLAVE))
+                .andExpect(redirectedUrl("/login?vencida"));
+        mockMvc.perform(post("/admin/login").param("email", "paolo@kolab.pe").param("password", CLAVE))
+                .andExpect(redirectedUrl("/admin/login?vencida"));
+
+        mockMvc.perform(get("/login").param("vencida", ""))
+                .andExpect(content().string(containsString("La página estuvo abierta mucho tiempo")));
+        mockMvc.perform(get("/admin/login").param("vencida", ""))
+                .andExpect(content().string(containsString("La página estuvo abierta mucho tiempo")));
     }
 
     @Test
