@@ -17,11 +17,16 @@ Todo lo que cambia en KOLAB se anota aquí. El formato sigue
   avisa con WARN si la memoria o el disco pasan del 80 % o si la base no responde. Se ve en el Historial.
 - El enlace para poner una contraseña nueva llega al correo, enviado con la API de Brevo. Se configura
   con `KOLAB_BREVO_CLAVE`, `KOLAB_CORREO_REMITENTE` y `KOLAB_URL_PUBLICA`; sin clave no se manda nada.
+- `docs/GUIA-DE-USO.md`: cómo se usa KOLAB pantalla por pantalla, con capturas, también el panel del
+  administrador.
+- `docs/GUIA-DE-INSTALACION.md`: instalar en la PC, variables de entorno, desplegar en Azure, monitoreo y
+  mantenimiento.
 
 ### Corregido
 
 - La hora de lectura de Monitoreo sale en hora de Lima. En el servidor de Azure salía en UTC.
 - El Historial lleva el menú del panel del administrador y no el del mercado.
+- El Javadoc de `UsuarioService` nombraba una excepción sin su paquete y `mvnw javadoc:javadoc` fallaba.
 - Si la página de ingreso quedó abierta más de 30 minutos, al enviar vuelve al ingreso con un aviso en vez de
   mostrar la página de error. Vale para el mercado y para el panel.
 
@@ -34,6 +39,7 @@ Todo lo que cambia en KOLAB se anota aquí. El formato sigue
 
 - El workflow de Azure tiene nombres en español y compila con `package` en vez de `install`.
 - `ARQUITECTURA.md` explica el servidor en Azure y con qué usuario se conecta ahí la aplicación.
+- El README enlaza las guías, dice dónde está publicado KOLAB y ya no dice que falta el correo.
 
 ## [0.3.2]
 

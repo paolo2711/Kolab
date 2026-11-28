@@ -6,6 +6,20 @@ Una misma cuenta sirve para pedir y para ofrecer.
 
 Proyecto del curso Integrador I: Sistemas - Software, Universidad Tecnológica del Perú, 2026.
 
+Está publicado en Azure: https://kolab-g4-fwhfebbqgdaphca3.chilecentral-01.azurewebsites.net (el
+panel del administrador entra por `/admin/login`). Fuera de las demostraciones queda en el plan
+gratuito y la primera carga puede tardar.
+
+## Documentación
+
+- [Guía de uso](docs/GUIA-DE-USO.md): cómo se usa KOLAB pantalla por pantalla, también el panel del
+  administrador.
+- [Guía de instalación y despliegue](docs/GUIA-DE-INSTALACION.md): instalar en la PC, variables de
+  entorno, desplegar en Azure, monitoreo y mantenimiento.
+- [Arquitectura](ARQUITECTURA.md): módulos, capas, base de datos y servidor.
+- [Registro de cambios](CHANGELOG.md).
+- El código lleva Javadoc; en HTML se genera con `mvnw.cmd javadoc:javadoc`.
+
 ## Equipo
 
 | Integrante | Rol | GitHub |
@@ -76,8 +90,8 @@ Al pie de la pantalla de ingreso están las cuentas de ejemplo y dos enlaces:
   `ejemplos` o cuando la base quedó desordenada.
 - cargar ejemplos: los carga solo si la base está vacía.
 
-Para recuperar una contraseña todavía no hay correo: después de poner tu correo, la misma pantalla
-muestra el enlace para cambiarla.
+Para recuperar una contraseña, en desarrollo la misma pantalla muestra el enlace para cambiarla. En el
+servidor el enlace llega al correo, enviado con la API de Brevo.
 
 Nada de esto existe en el servidor. Depende de `KOLAB_DESARROLLO`, que solo deja puesto
 `instalar-base.cmd`.
@@ -139,7 +153,8 @@ seguridad:
 ## Stack
 
 Java 21, Spring Boot 3.5, Thymeleaf, Spring Security, Spring Data JPA, PostgreSQL, Flyway y Maven.
-CSS propio.
+Logback y Spring Boot Actuator con Micrometer para el monitoreo, y la API de Brevo para el correo.
+CSS propio. En el servidor, Azure App Service y Azure Database for PostgreSQL.
 
 ## Mapa del código
 
