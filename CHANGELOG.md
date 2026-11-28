@@ -22,6 +22,8 @@ Todo lo que cambia en KOLAB se anota aquí. El formato sigue
 
 - La hora de lectura de Monitoreo sale en hora de Lima. En el servidor de Azure salía en UTC.
 - El Historial lleva el menú del panel del administrador y no el del mercado.
+- Si la página de ingreso quedó abierta más de 30 minutos, al enviar vuelve al ingreso con un aviso en vez de
+  mostrar la página de error. Vale para el mercado y para el panel.
 
 ### Eliminado
 

@@ -1,12 +1,14 @@
 package com.kolab.seguridad;
 
 import com.kolab.modelo.entidad.Rol;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.security.Principal;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpMethod;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication.AuthenticationEventPublisher;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.DisabledException;
@@ -69,9 +71,14 @@ public class SecurityConfig {
                 // a quien no administra, el panel le responde igual que una ruta que no existe; un
                 // formulario sin token sigue siendo un 403, como en el mercado
                 .exceptionHandling(errores -> errores
-                        .accessDeniedHandler((pedido, respuesta, e) -> respuesta.sendError(
-                                e instanceof CsrfException ? HttpServletResponse.SC_FORBIDDEN
-                                        : HttpServletResponse.SC_NOT_FOUND)))
+                        .accessDeniedHandler((pedido, respuesta, e) -> {
+                            if (ingresoVencido(pedido, e, "/admin/login")) {
+                                respuesta.sendRedirect(pedido.getContextPath() + "/admin/login?vencida");
+                            } else {
+                                respuesta.sendError(e instanceof CsrfException ? HttpServletResponse.SC_FORBIDDEN
+                                        : HttpServletResponse.SC_NOT_FOUND);
+                            }
+                        }))
                 .formLogin(login -> login
                         .loginPage("/admin/login")
                         .loginProcessingUrl("/admin/login")
@@ -109,7 +116,9 @@ public class SecurityConfig {
                 // quien administra vuelve a su panel; el resto, como un formulario sin token, es un 403
                 .exceptionHandling(errores -> errores
                         .accessDeniedHandler((pedido, respuesta, e) -> {
-                            if (administra(pedido.getUserPrincipal())) {
+                            if (ingresoVencido(pedido, e, "/login")) {
+                                respuesta.sendRedirect(pedido.getContextPath() + "/login?vencida");
+                            } else if (administra(pedido.getUserPrincipal())) {
                                 respuesta.sendRedirect(pedido.getContextPath() + "/admin");
                             } else {
                                 respuesta.sendError(HttpServletResponse.SC_FORBIDDEN);
@@ -128,6 +137,11 @@ public class SecurityConfig {
                         .logoutSuccessUrl("/login?cerrada")
                         .deleteCookies("JSESSIONID"));
         return http.build();
+    }
+
+    // la pagina de ingreso quedo abierta mas que la sesion y su token ya no vale: se vuelve a pedir el ingreso
+    private static boolean ingresoVencido(HttpServletRequest pedido, AccessDeniedException e, String ingreso) {
+        return e instanceof CsrfException && pedido.getRequestURI().equals(pedido.getContextPath() + ingreso);
     }
 
     /**

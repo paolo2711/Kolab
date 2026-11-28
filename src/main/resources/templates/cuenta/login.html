@@ -17,6 +17,7 @@
 
             <div class="k-aviso" th:if="${aviso}" th:text="${aviso}"></div>
             <div class="k-aviso" th:if="${param.cerrada}">Cerraste sesión.</div>
+            <div class="k-aviso" th:if="${param.vencida}">La página estuvo abierta mucho tiempo. Vuelve a ingresar.</div>
             <div class="k-aviso k-aviso-error" th:if="${param.error}">
                 El correo o la contraseña no coinciden.
             </div>
