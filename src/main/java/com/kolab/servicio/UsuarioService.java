@@ -13,7 +13,7 @@ public interface UsuarioService {
      * crea la cuenta con la clave en BCrypt, el correo en minusculas y sin espacios, su perfil
      * vacio y su codigo publico
      *
-     * @throws EmailYaRegistradoException si ese correo ya tiene cuenta
+     * @throws com.kolab.servicio.excepcion.EmailYaRegistradoException si ese correo ya tiene cuenta
      */
     Usuario registrar(RegistroForm form);
 
